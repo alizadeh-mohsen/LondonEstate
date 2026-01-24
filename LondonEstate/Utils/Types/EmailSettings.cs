@@ -1,4 +1,4 @@
-﻿namespace LondonEstate
+﻿namespace LondonEstate.Utils.Types
 {
     public class EmailSettings
     {
@@ -9,8 +9,8 @@
         public int Port { get; set; }
         public string Username { get; set; } = default!;
         public string Password { get; set; } = default!;
-        public bool UseSsl { get; set; }
-        public bool UseStartTls { get; set; }
-        public byte TimeoutSeconds { get; set; }
+        //public bool UseSsl { get; set; }
+        //public bool UseStartTls { get; set; }
+        //public byte TimeoutSeconds { get; set; }
     }
 }

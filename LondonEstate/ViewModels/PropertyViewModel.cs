@@ -1,7 +1,7 @@
 ﻿using LondonEstate.Utils.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace LondonEstate.ModelViews
+namespace LondonEstate.ViewModels
 {
     public class PropertyViewModel
     {

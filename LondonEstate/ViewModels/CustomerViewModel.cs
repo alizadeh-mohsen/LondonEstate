@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LondonEstate.ModelViews
+namespace LondonEstate.ViewModels
 {
     public class CustomerViewModel
     {

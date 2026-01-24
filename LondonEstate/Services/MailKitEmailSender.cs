@@ -1,4 +1,5 @@
 ﻿using LondonEstate.Models;
+using LondonEstate.Utils.Types;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
@@ -6,7 +7,7 @@ using MimeKit;
 using System.Net;
 using System.Text;
 
-namespace LondonEstate
+namespace LondonEstate.Services
 {
     public class MailKitEmailSender : IEmailSender
     {
@@ -17,7 +18,8 @@ namespace LondonEstate
             _settings = options.Value;
         }
 
-        public async Task SendAsync(Customer customer, Property property, string? attachmentFilePath)
+        //public async Task SendAsync(Customer customer, Property property, string? attachmentFilePath)
+        public async Task SendEstimateRequestEmailAsync(Customer customer, Property property)
         {
             if (customer is null) throw new ArgumentNullException(nameof(customer));
             if (property is null) throw new ArgumentNullException(nameof(property));

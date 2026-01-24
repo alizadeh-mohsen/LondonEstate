@@ -3,64 +3,94 @@
 
 @{
     ViewData["Title"] = "Dashboard";
+
+    var start = Model.TotalCount == 0 ? 0 : ((Model.PageIndex - 1) * Model.PageSize) + 1;
+    var end = start == 0 ? 0 : start + (Model.Customer?.Count ?? 0) - 1;
 }
 
 <h1>Dashboard</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer[0].Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer[0].Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer[0].CountryCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer[0].PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer[0].Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer[0].CreatedAt)
-            </th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>CountryCode</th>
+            <th>PhoneNumber</th>
+            <th>Description</th>
+            <th>CreatedAt</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Customer) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CountryCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Customer)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CountryCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <div>
+        <strong>Showing</strong> @start - @end <strong>of</strong> @Model.TotalCount
+    </div>
+
+    <div class="d-flex align-items-center">
+        <form method="get" class="me-3">
+            <label for="pageSize" class="form-label visually-hidden">Page size</label>
+            <select id="pageSize" name="pageSize" class="form-select" onchange="this.form.submit()">
+                @{
+                    var sizes = new[] { 5, 10, 20, 50 };
+                }
+                @foreach (var s in sizes)
+                {
+                    <option value="@s" selected="@(s == Model.PageSize ? "selected" : null)">@s</option>
+                }
+            </select>
+            <input type="hidden" name="pageIndex" value="1" />
+        </form>
+
+        <nav aria-label="Customer pagination">
+            <ul class="pagination mb-0">
+                <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                    <a class="page-link" asp-route-pageIndex="@(Model.PageIndex - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                </li>
+
+                @for (var i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                        <a class="page-link" asp-route-pageIndex="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                    <a class="page-link" asp-route-pageIndex="@(Model.PageIndex + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
