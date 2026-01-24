@@ -4,8 +4,8 @@
 @{
     ViewData["Title"] = "Dashboard";
 
-    var start = Model.TotalCount == 0 ? 0 : ((Model.PageIndex - 1) * Model.PageSize) + 1;
-    var end = start == 0 ? 0 : start + (Model.Customer?.Count ?? 0) - 1;
+    var start = Model.MetaData.TotalCount == 0 ? 0 : ((Model.MetaData.CurrentPage - 1) * Model.MetaData.PageSize) + 1;
+    var end = start == 0 ? 0 : start + (Model.Customers?.Count ?? 0) - 1;
 }
 
 <h1>Dashboard</h1>
@@ -15,40 +15,28 @@
     <thead>
         <tr>
             <th>Name</th>
-            <th>Email</th>
-            <th>CountryCode</th>
             <th>PhoneNumber</th>
-            <th>Description</th>
-            <th>CreatedAt</th>
+            <th>Email</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Customer)
+        @foreach (var item in Model.Customers)
         {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CountryCode)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.PhoneNumber)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
+                    @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedAt)
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    @* <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> | *@
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> @*|
+                     <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a> *@
                 </td>
             </tr>
         }
@@ -56,7 +44,7 @@
 </table>
 <div class="d-flex justify-content-between align-items-center mt-3">
     <div>
-        <strong>Showing</strong> @start - @end <strong>of</strong> @Model.TotalCount
+        <strong>Showing</strong> @start - @end <strong>of</strong> @Model.MetaData.TotalCount
     </div>
 
     <div class="d-flex align-items-center">
@@ -68,27 +56,27 @@
                 }
                 @foreach (var s in sizes)
                 {
-                    <option value="@s" selected="@(s == Model.PageSize ? "selected" : null)">@s</option>
+                    <option value="@s" selected="@(s == Model.MetaData.PageSize ? "selected" : null)">@s</option>
                 }
             </select>
-            <input type="hidden" name="pageIndex" value="1" />
+            <input type="hidden" name="pageNumber" value="1" />
         </form>
 
         <nav aria-label="Customer pagination">
             <ul class="pagination mb-0">
-                <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
-                    <a class="page-link" asp-route-pageIndex="@(Model.PageIndex - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                <li class="page-item @(Model.MetaData.HasPreviousPage ? "" : "disabled")">
+                    <a class="page-link" asp-route-pageNumber="@(Model.MetaData.CurrentPage - 1)" asp-route-pageSize="@Model.MetaData.PageSize">Previous</a>
                 </li>
 
-                @for (var i = 1; i <= Model.TotalPages; i++)
+                @for (var i = 1; i <= Model.MetaData.TotalPages; i++)
                 {
-                    <li class="page-item @(i == Model.PageIndex ? "active" : "")">
-                        <a class="page-link" asp-route-pageIndex="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    <li class="page-item @(i == Model.MetaData.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-route-pageNumber="@i" asp-route-pageSize="@Model.MetaData.PageSize">@i</a>
                     </li>
                 }
 
-                <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
-                    <a class="page-link" asp-route-pageIndex="@(Model.PageIndex + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                <li class="page-item @(Model.MetaData.HasNextPage ? "" : "disabled")">
+                    <a class="page-link" asp-route-pageNumber="@(Model.MetaData.CurrentPage + 1)" asp-route-pageSize="@Model.MetaData.PageSize">Next</a>
                 </li>
             </ul>
         </nav>

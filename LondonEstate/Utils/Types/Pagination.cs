@@ -5,7 +5,7 @@
         private const int MaxPageSize = 50;
         private int _pageSize = 10;
 
-        public int PageIndex { get; private set; }
+        public int CurrentPage { get; private set; }
         public int PageSize
         {
             get => _pageSize;
@@ -13,8 +13,8 @@
         }
         public int TotalPages { get; private set; }
         public int TotalCount { get; private set; }
-        public bool HasPreviousPage => PageIndex > 1;
-        public bool HasNextPage => PageIndex < TotalPages;
+        public bool HasPreviousPage => CurrentPage > 1;
+        public bool HasNextPage => CurrentPage < TotalPages;
 
 
     }
