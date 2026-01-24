@@ -1,0 +1,102 @@
+[
+  {
+    "code": "AW",
+    "prefix": "+297",
+    "text": "AW +297"
+  },
+  {
+    "code": "AF",
+    "prefix": "+93",
+    "text": "AF +93"
+  },
+  {
+    "code": "AL",
+    "prefix": "+355",
+    "text": "AL +355"
+  },
+  {
+    "code": "AD",
+    "prefix": "+376",
+    "text": "AD +376"
+  },
+  {
+    "code": "AE",
+    "prefix": "+971",
+    "text": "AE +971"
+  },
+  {
+    "code": "AR",
+    "prefix": "+54",
+    "text": "AR +54"
+  },
+  {
+    "code": "AU",
+    "prefix": "+61",
+    "text": "AU +61"
+  },
+  {
+    "code": "AT",
+    "prefix": "+43",
+    "text": "AT +43"
+  },
+  {
+    "code": "BE",
+    "prefix": "+32",
+    "text": "BE +32"
+  },
+  {
+    "code": "BR",
+    "prefix": "+55",
+    "text": "BR +55"
+  },
+  {
+    "code": "CA",
+    "prefix": "+1",
+    "text": "CA +1"
+  },
+  {
+    "code": "CN",
+    "prefix": "+86",
+    "text": "CN +86"
+  },
+  {
+    "code": "FR",
+    "prefix": "+33",
+    "text": "FR +33"
+  },
+  {
+    "code": "DE",
+    "prefix": "+49",
+    "text": "DE +49"
+  },
+  {
+    "code": "GB",
+    "prefix": "+44",
+    "text": "GB +44"
+  },
+  {
+    "code": "IN",
+    "prefix": "+91",
+    "text": "IN +91"
+  },
+  {
+    "code": "IT",
+    "prefix": "+39",
+    "text": "IT +39"
+  },
+  {
+    "code": "IR",
+    "prefix": "+98",
+    "text": "IR +98"
+  },
+  {
+    "code": "JP",
+    "prefix": "+81",
+    "text": "JP +81"
+  },
+  {
+    "code": "US",
+    "prefix": "+1",
+    "text": "US +1"
+  }
+]

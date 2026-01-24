@@ -1,0 +1,25 @@
+﻿@page
+@model TestModel
+@{
+    ViewData["Title"] = "Country Selection";
+}
+
+<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    <label for="countryCode" class="block text-sm font-medium text-gray-700 mb-2">
+        Select Country Dialing Code
+    </label>
+
+    <select id="countryCode" name="countryCode"
+            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+
+        <option value="">-- Please Select --</option>
+
+        @* Assuming the list is passed from the PageModel *@
+        @foreach (var country in Model.CountryList)
+        {
+            <option value="@country.Prefix">
+                @country.Text
+            </option>
+        }
+    </select>
+</div>

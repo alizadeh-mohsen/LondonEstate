@@ -1,0 +1,115 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="max-w-3xl mx-auto p-4">
+    <h1 class="text-2xl font-semibold mb-4">Add property & customer</h1>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
+        <div asp-validation-summary="ModelOnly" class="text-red-600"></div>
+
+        <fieldset>
+            <legend class="font-medium">Customer</legend>
+
+            <div>
+                <label asp-for="Customer.Name">Name</label>
+                <input asp-for="Customer.Name" class="block w-full border rounded px-2 py-1" />
+                <span asp-validation-for="Customer.Name" class="text-red-600"></span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+                <div>
+                    <label asp-for="Customer.CountryCode">Country code</label>
+                    <input asp-for="Customer.CountryCode" class="block w-full border rounded px-2 py-1" />
+                    <span asp-validation-for="Customer.CountryCode" class="text-red-600"></span>
+                </div>
+                <div class="col-span-2">
+                    <label asp-for="Customer.Phone">Phone</label>
+                    <input asp-for="Customer.Phone" class="block w-full border rounded px-2 py-1" />
+                    <span asp-validation-for="Customer.Phone" class="text-red-600"></span>
+                </div>
+            </div>
+
+            <div>
+                <label asp-for="Customer.Email">Email</label>
+                <input asp-for="Customer.Email" type="email" class="block w-full border rounded px-2 py-1" />
+                <span asp-validation-for="Customer.Email" class="text-red-600"></span>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend class="font-medium">Property</legend>
+
+            <div>
+                <label asp-for="Property.Address">Address</label>
+                <input asp-for="Property.Address" class="block w-full border rounded px-2 py-1" />
+                <span asp-validation-for="Property.Address" class="text-red-600"></span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label asp-for="Property.NumberOfBeds">Number of beds</label>
+                    <select asp-for="Property.NumberOfBeds" class="block w-full border rounded px-2 py-1">
+                        @foreach (var v in Enum.GetValues(typeof(LondonEstate.Utils.Enums.NumberOfBeds)).Cast<LondonEstate.Utils.Enums.NumberOfBeds>())
+                        {
+                            <option value="@( (int)v )">@v.ToString()</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Property.NumberOfBeds" class="text-red-600"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Property.SquareMeter">Square meter</label>
+                    <input asp-for="Property.SquareMeter" type="number" min="1" class="block w-full border rounded px-2 py-1" />
+                    <span asp-validation-for="Property.SquareMeter" class="text-red-600"></span>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend class="font-medium">Image</legend>
+
+            <div>
+                <label for="ImageFile">Upload image</label>
+                <input id="ImageFile" name="ImageFile" type="file" accept="image/*" class="block" />
+                <span asp-validation-for="ImageFile" class="text-red-600"></span>
+            </div>
+
+            <div class="mt-2">
+                <div>Preview</div>
+                <img id="imgPreview" src="#" alt="preview" style="display:none; max-height:300px;" />
+            </div>
+        </fieldset>
+
+        <div>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const input = document.getElementById('ImageFile');
+            const preview = document.getElementById('imgPreview');
+
+            input?.addEventListener('change', function (e) {
+                const file = input.files && input.files[0];
+                if (!file) {
+                    preview.style.display = 'none';
+                    preview.src = '#';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    preview.src = ev.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            });
+        })();
+    </script>
+}

@@ -1,0 +1,120 @@
+﻿@page "{id:guid}"
+@model LondonEstate.Pages.Admin.ViewImagesModel
+
+@{
+    ViewData["Title"] = "Property Images";
+}
+
+<h1>Property Images</h1>
+
+<div class="mb-4">
+    <h4>Property Information</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Address</dt>
+        <dd class="col-sm-10">@Model.Property.Address</dd>
+
+        <dt class="col-sm-2">Customer</dt>
+        <dd class="col-sm-10">@Model.Property.Customer.Name (@Model.Property.Customer.Email)</dd>
+
+        <dt class="col-sm-2">Beds</dt>
+        <dd class="col-sm-10">@Model.Property.NumberOfBeds</dd>
+
+        <dt class="col-sm-2">Square Meter</dt>
+        <dd class="col-sm-10">@Model.Property.SquareMeter m²</dd>
+
+        <dt class="col-sm-2">Estimated Price</dt>
+        <dd class="col-sm-10">@(Model.Property.EstimatedPrice?.ToString("C") ?? "N/A")</dd>
+    </dl>
+</div>
+
+<div>
+    <h4>Images (@Model.Images.Count)</h4>
+    <hr />
+
+    @if (Model.Images.Any())
+    {
+        <div class="row">
+            @foreach (var image in Model.Images)
+            {
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="card">
+                        <img src="@image.PicturePath"
+                             class="card-img-top"
+                             alt="Property Image"
+                             style="height: 250px; object-fit: cover; cursor: pointer;"
+                             data-bs-toggle="modal"
+                             data-bs-target="#imageModal-@image.Id" />
+                        <div class="card-body">
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Uploaded: @image.CreatedAt.ToString("MMM dd, yyyy")
+                                </small>
+                            </p>
+                            <a href="@image.PicturePath"
+                               target="_blank"
+                               class="btn btn-sm btn-primary">
+                                Open Full Size
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Modal for this image -->
+                    <div class="modal fade" id="imageModal-@image.Id" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Property Image</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img src="@image.PicturePath"
+                                         class="img-fluid"
+                                         alt="Property Image" />
+                                </div>
+                                <div class="modal-footer">
+                                    <small class="text-muted me-auto">Uploaded: @image.CreatedAt.ToString("MMM dd, yyyy HH:mm")</small>
+                                    <a href="@image.PicturePath"
+                                       target="_blank"
+                                       class="btn btn-primary btn-sm">
+                                        Open in New Tab
+                                    </a>
+                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> No images have been uploaded for this property yet.
+        </div>
+    }
+</div>
+
+<div class="mt-4">
+    <a asp-page="./Details" asp-route-id="@Model.Property.CustomerId" class="btn btn-secondary">
+        Back to Customer Details
+    </a>
+    <a asp-page="./Dashboard" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+
+@section Scripts {
+    <script>
+        // Optional: Add keyboard navigation for modals
+        document.addEventListener('DOMContentLoaded', function() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.addEventListener('shown.bs.modal', function() {
+                    // Focus on close button when modal opens
+                    const closeBtn = modal.querySelector('.btn-close');
+                    if (closeBtn) closeBtn.focus();
+                });
+            });
+        });
+    </script>
+}
