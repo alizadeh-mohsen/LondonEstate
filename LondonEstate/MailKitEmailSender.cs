@@ -24,7 +24,7 @@ namespace LondonEstate
 
             // Build subject
             var subject = $"" +
-                $"New property submitted by {customer.Name}";
+                $"Estimate-{customer.Name ?? customer.Email}";
 
             // Build HTML body
             var sb = new StringBuilder();
