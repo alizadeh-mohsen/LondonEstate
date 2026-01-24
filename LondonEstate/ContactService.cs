@@ -11,11 +11,11 @@
 
         public async Task SendContactEmail()
         {
-            await _emailSender.SendAsync(
-                "kelarens@gmail.com",
-                "IONOS",
-                "<p>New message received</p>"
-            );
+            //await _emailSender.SendAsync(
+            //    "kelarens@gmail.com",
+            //    "IONOS",
+            //    "<p>New message received</p>"
+            //);
         }
     }
 

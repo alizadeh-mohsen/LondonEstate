@@ -128,24 +128,17 @@ namespace LondonEstate.Pages
 
             var bodyLines = new List<string>
             {
-                "A new property and customer have been submitted:",
+                "A new property have been submitted:",
                 "",
                 "Customer:",
                 $"  Name: {customer.Name}",
                 $"  Email: {customer.Email}",
-                $"  CountryCode: {customer.CountryCode}",
                 $"  PhoneNumber: {customer.PhoneNumber}",
-                $"  Description: {customer.Description}",
-                $"  CreatedAt: {customer.CreatedAt:O}",
                 "",
                 "Property:",
                 $"  Address: {property.Address}",
                 $"  NumberOfBeds: {property.NumberOfBeds}",
                 $"  SquareMeter: {property.SquareMeter}",
-                $"  EstimatedPrice: {property.EstimatedPrice?.ToString() ?? "N/A"}",
-                $"  EstimateStatus: {property.EstimateStatus}",
-                $"  Description: {property.Description}",
-                $"  CreatedAt: {property.CreatedAt:O}"
             };
 
             //message.Body = string.Join(Environment.NewLine, bodyLines);
@@ -170,9 +163,7 @@ namespace LondonEstate.Pages
             {
                 //await client.SendMailAsync(message);
                 await _emailSender.SendAsync(
-               "kelarens@gmail.com",
-               "IONOS",
-               string.Join(Environment.NewLine, bodyLines)
+               customer, property, attachmentFilePath
            );
 
             }
