@@ -34,7 +34,7 @@ namespace LondonEstate.Services
                 var fileName = $"{Guid.NewGuid()}{fileExt}";
                 var filePath = Path.Combine(uploads, fileName);
 
-                await using (var stream = System.IO.File.Create(filePath))
+                await using (var stream = File.Create(filePath))
                 {
                     await ImageFile.CopyToAsync(stream);
                 }
@@ -57,6 +57,11 @@ namespace LondonEstate.Services
             }
             catch (Exception ex)
             {
+                if (savedFilePath != null && File.Exists(savedFilePath))
+                {
+                    File.Delete(savedFilePath);
+                }
+                throw; // rethrow the exception after cleanup
             }
         }
     }

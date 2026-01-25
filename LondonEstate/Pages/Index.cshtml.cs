@@ -3,6 +3,7 @@ using LondonEstate.Services;
 using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Serilog;
 
 namespace LondonEstate.Pages
 {
@@ -11,14 +12,6 @@ namespace LondonEstate.Pages
         private readonly IEstimateRequestService _estimateRequestService;
         private readonly ILogger<IndexModel> _logger;
         private readonly IEmailSender _emailSender;
-
-        public IndexModel(IEmailSender emailSender,
-            IEstimateRequestService estimateRequestService, ILogger<IndexModel> logger)
-        {
-            _estimateRequestService = estimateRequestService;
-            _logger = logger;
-            _emailSender = emailSender;
-        }
 
         [BindProperty]
         public CustomerViewModel Customer { get; set; } = new();
@@ -29,8 +22,18 @@ namespace LondonEstate.Pages
         [BindProperty]
         public IFormFile? ImageFile { get; set; }
 
+
+        public IndexModel(IEmailSender emailSender,
+            IEstimateRequestService estimateRequestService, ILogger<IndexModel> logger)
+        {
+            _estimateRequestService = estimateRequestService;
+            _logger = logger;
+            _emailSender = emailSender;
+        }
+
         public void OnGet()
         {
+            Log.Information("Index page visited at {Time}", DateTime.UtcNow);
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -40,7 +43,6 @@ namespace LondonEstate.Pages
                 return Page();
             }
 
-            // create customer
             var customer = new Customer
             {
                 Name = Customer.Name,
@@ -49,8 +51,6 @@ namespace LondonEstate.Pages
                 PhoneNumber = Customer.Phone
             };
 
-
-            // create property
             var property = new Property
             {
                 Address = Property.Address,

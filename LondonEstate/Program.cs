@@ -3,6 +3,7 @@ using LondonEstate.Services;
 using LondonEstate.Utils.Types;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,15 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
 builder.Services.AddScoped<IEstimateRequestService, EstimateRequestService>();
 
+Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
 var app = builder.Build();
+
+
+
 await ApplyMigrationsAsync(app);
 
 // Configure the HTTP request pipeline.
@@ -33,6 +42,7 @@ else
 {
     app.UseExceptionHandler("/Error");
 }
+
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -42,6 +52,7 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.Run();
+
 async Task ApplyMigrationsAsync(WebApplication app)
 {
     using var scope = app.Services.CreateScope();
