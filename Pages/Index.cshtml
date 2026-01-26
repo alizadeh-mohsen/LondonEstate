@@ -1,0 +1,158 @@
+@page
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+@using LondonEstate.ViewModels
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="container my-4">
+
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @success
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    else if (TempData["ErrorMessage"] is string error)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @error
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <input asp-for="Customer.Name" placeholder="Name" class="form-control" />
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-4">
+                <select asp-for="Customer.CountryCode" class="form-select">
+                    @foreach (var country in Model.CountryList)
+                    {
+                        <option value="@country.Prefix">
+                            @country.Text
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="Customer.CountryCode" class="text-danger"></span>
+            </div>
+            <div class="col-8">
+                <input asp-for="Customer.Phone" placeholder="Phone" class="form-control" />
+                <span asp-validation-for="Customer.Phone" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <input asp-for="Customer.Email" placeholder="Email" type="email" class="form-control" />
+            <span asp-validation-for="Customer.Email" class="text-danger small"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="Property.Address" class="form-control" placeholder="Address" />
+            <span asp-validation-for="Property.Address" class="text-danger"></span>
+        </div>
+        <div class="row g-2">
+            <div class="col-md-6">
+                <select asp-for="Property.NumberOfBeds" class="form-select">
+                    <option value="" class="text-muted">No. of beds</option>
+                    @foreach (var v in Enum.GetValues(typeof(LondonEstate.Utils.Enums.NumberOfBeds)).Cast<LondonEstate.Utils.Enums.NumberOfBeds>())
+                    {
+                        var member = v.GetType().GetMember(v.ToString()).First();
+                        var displayAttr = member.GetCustomAttributes(typeof(DisplayAttribute), false)
+                        .OfType<DisplayAttribute>()
+                        .FirstOrDefault();
+                        var label = displayAttr?.GetName() ?? v.ToString();
+                        <option value="@( (int)v )">@label</option>
+                    }
+                </select>
+                <span asp-validation-for="Property.NumberOfBeds" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input asp-for="Property.SquareMeter" placeholder="Size" type="number" class="form-control" />
+                <span asp-validation-for="Property.SquareMeter" class="text-danger"></span>
+            </div>
+        </div>
+
+        <fieldset class="border p-3 mb-3">
+            <legend class="text-muted">Upload images</legend>
+            <div class="mb-2 small text-muted">
+                Allowed: .jpg, .jpeg, .png, .gif — Max 5 files — 5 MB per file
+            </div>
+            <div class="mb-3">
+                <input id="ImageFiles" asp-for="ImageFiles" name="ImageFiles" placeholder="Upload images" type="file" accept="image/*" class="form-control" multiple />
+                <span asp-validation-for="ImageFiles" class="text-danger small"></span>
+            </div>
+
+            <div class="mt-2">
+                <div class="fw-medium mb-2">Preview</div>
+                <div id="imgPreviews" class="d-flex flex-wrap gap-2"></div>
+            </div>
+        </fieldset>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const input = document.getElementById('ImageFiles');
+            const previews = document.getElementById('imgPreviews');
+
+            function clearPreviews() {
+                while (previews.firstChild) {
+                    const child = previews.firstChild;
+                    if (child.tagName === 'IMG' && child.dataset.objectUrl) {
+                        URL.revokeObjectURL(child.dataset.objectUrl);
+                    }
+                    previews.removeChild(child);
+                }
+            }
+
+            input?.addEventListener('change', function (e) {
+                clearPreviews();
+
+                const files = input.files || [];
+                if (!files.length) {
+                    return;
+                }
+
+                // limit previews to first 5 (matches server-side max)
+                const maxPreview = 5;
+                for (let i = 0; i < Math.min(files.length, maxPreview); i++) {
+                    const file = files[i];
+                    if (!file.type.startsWith('image/')) {
+                        continue;
+                    }
+
+                    const img = document.createElement('img');
+                    img.style.maxHeight = '150px';
+                    img.style.objectFit = 'cover';
+                    img.className = 'img-thumbnail';
+                    const objectUrl = URL.createObjectURL(file);
+                    img.src = objectUrl;
+                    img.dataset.objectUrl = objectUrl;
+                    previews.appendChild(img);
+                }
+
+                // show notice if more files selected than previewed
+                if (files.length > maxPreview) {
+                    const note = document.createElement('div');
+                    note.className = 'small text-muted';
+                    note.innerText = `Showing first ${maxPreview} of ${files.length} files.`;
+                    previews.appendChild(note);
+                }
+            });
+
+            window.addEventListener('beforeunload', clearPreviews);
+        })();
+    </script>
+}

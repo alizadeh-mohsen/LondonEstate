@@ -1,9 +1,11 @@
 using LondonEstate.Models;
 using LondonEstate.Services;
+using LondonEstate.Utils.Types;
 using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Serilog;
+using System.Text.Json;
 
 namespace LondonEstate.Pages
 {
@@ -13,15 +15,24 @@ namespace LondonEstate.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly IEmailSender _emailSender;
 
+        public List<CountryEntry> CountryList { get; set; } = new();
+
         [BindProperty]
         public CustomerViewModel Customer { get; set; } = new();
 
         [BindProperty]
         public PropertyViewModel Property { get; set; } = new();
 
+        // changed to a collection to support multiple uploads
         [BindProperty]
-        public IFormFile? ImageFile { get; set; }
+        public List<IFormFile>? ImageFiles { get; set; }
 
+        // TempData properties used to show a Bootstrap alert after redirect
+        [TempData]
+        public string? AlertMessage { get; set; }
+
+        [TempData]
+        public string? AlertType { get; set; }  // e.g. "success", "danger", "warning", "info"
 
         public IndexModel(IEmailSender emailSender,
             IEstimateRequestService estimateRequestService, ILogger<IndexModel> logger)
@@ -33,7 +44,16 @@ namespace LondonEstate.Pages
 
         public void OnGet()
         {
-            Log.Information("Index page visited at {Time}", DateTime.UtcNow);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data\\countryCodes.json");
+            var jsonData = System.IO.File.ReadAllText(filePath);
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            CountryList = JsonSerializer.Deserialize<List<CountryEntry>>(jsonData, options) ?? new();
+
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -54,24 +74,30 @@ namespace LondonEstate.Pages
             var property = new Property
             {
                 Address = Property.Address,
-                NumberOfBeds = Property.NumberOfBeds,
-                SquareMeter = Property.SquareMeter,
+                NumberOfBeds = (Utils.Enums.NumberOfBeds)Property.NumberOfBeds!,
+                SquareMeter = Property.SquareMeter!.Value,
                 Customer = customer,
                 CustomerId = customer.Id
             };
 
             try
             {
-                await _estimateRequestService.SubmitEstimateRequest(customer, property, ImageFile);
-                //await _emailSender.SendAsync(customer, property, savedFilePath);
+                // pass the collection of files to the service which includes validation
+                await _estimateRequestService.SubmitEstimateRequest(customer, property, ImageFiles);
                 await _emailSender.SendEstimateRequestEmailAsync(customer, property);
+
+                TempData["SuccessMessage"] = "Operation completed successfully!";
+
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to send submission email.");
+                Log.Error(ex, "Error Submitting estimate");
+                // surface validation or other errors to the user
+                TempData["ErrorMessage"] = "An error occurred: " + ex.Message;
             }
 
             return RedirectToPage("/Index");
         }
     }
 }
+

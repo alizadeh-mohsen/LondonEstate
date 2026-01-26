@@ -9,6 +9,7 @@
         public int Port { get; set; }
         public string Username { get; set; } = default!;
         public string Password { get; set; } = default!;
+        public string? CcEmail { get; internal set; }
         //public bool UseSsl { get; set; }
         //public bool UseStartTls { get; set; }
         //public byte TimeoutSeconds { get; set; }

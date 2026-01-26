@@ -65,6 +65,7 @@ namespace LondonEstate.Services
             var email = new MimeMessage();
             email.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));
             email.To.Add(MailboxAddress.Parse(_settings.ToEmail));
+            //email.Cc.Add(MailboxAddress.Parse(_settings.CcEmail));
             email.Subject = subject;
 
             var builder = new BodyBuilder

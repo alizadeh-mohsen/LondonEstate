@@ -1,5 +1,10 @@
 [
   {
+    "code": "GB",
+    "prefix": "+44",
+    "text": "GB +44"
+  },
+  {
     "code": "AW",
     "prefix": "+297",
     "text": "AW +297"
@@ -69,11 +74,7 @@
     "prefix": "+49",
     "text": "DE +49"
   },
-  {
-    "code": "GB",
-    "prefix": "+44",
-    "text": "GB +44"
-  },
+
   {
     "code": "IN",
     "prefix": "+91",

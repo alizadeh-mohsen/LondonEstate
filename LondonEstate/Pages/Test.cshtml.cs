@@ -1,3 +1,4 @@
+using LondonEstate.Utils.Types;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -19,16 +20,4 @@ public class TestModel : PageModel
 
         CountryList = JsonSerializer.Deserialize<List<CountryEntry>>(jsonData, options) ?? new();
     }
-}
-
-public class CountryEntry
-{
-    [JsonPropertyName("code")]
-    public string? Code { get; set; }
-
-    [JsonPropertyName("prefix")]
-    public string? Prefix { get; set; }
-
-    [JsonPropertyName("text")]
-    public string? Text { get; set; }
 }
