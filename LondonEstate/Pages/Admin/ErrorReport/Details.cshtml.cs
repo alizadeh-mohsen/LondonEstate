@@ -1,12 +1,11 @@
 using LondonEstate.Data;
 using LondonEstate.Models;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace LondonEstate.Pages.Admin.ErrorReport
 {
+    [Authorize]
     public class DetailsModel : PageModel
     {
         private readonly ApplicationDbContext _context;

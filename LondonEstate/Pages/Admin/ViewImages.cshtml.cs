@@ -1,11 +1,13 @@
 using LondonEstate.Data;
 using LondonEstate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin
 {
+    [Authorize]
     public class ViewImagesModel : PageModel
     {
         private readonly ApplicationDbContext _context;
