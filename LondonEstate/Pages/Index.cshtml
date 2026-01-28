@@ -9,7 +9,7 @@
 
 <div class="container my-4">
 
-    @if (TempData["SuccessMessage"] is string success)
+  @*   @if (TempData["SuccessMessage"] is string success)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             @success
@@ -22,12 +22,10 @@
             @error
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    }
+    } *@
 
     <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-
             <div class="mb-3">
                 @* <label asp-for="Customer.Name" class="form-label">Name</label> *@
                 <input asp-for="Customer.Name" placeholder="Name" class="form-control" />
@@ -49,17 +47,17 @@
                     <span asp-validation-for="Customer.CountryCode" class="text-danger"></span>
                 </div>
                 <div class="col-8">
-                    <input asp-for="Customer.Phone" placeholder="Phone" class="form-control" />
+                    <input asp-for="Customer.Phone" placeholder="Phone *" class="form-control" />
                     <span asp-validation-for="Customer.Phone" class="text-danger small"></span>
                 </div>
             </div>
 
             <div class="mb-3">
-                <input asp-for="Customer.Email" placeholder="Email" type="email" class="form-control" />
+                <input asp-for="Customer.Email" placeholder="Email *" type="email" class="form-control" />
                 <span asp-validation-for="Customer.Email" class="text-danger small"></span>
             </div>
             <div class="mb-3">
-                <input asp-for="Property.Address" class="form-control" placeholder="Address" />
+                <input asp-for="Property.Address" class="form-control" placeholder="Address *" />
                 <span asp-validation-for="Property.Address" class="text-danger"></span>
             </div>
             <div class="row g-2">
@@ -79,47 +77,87 @@
                     <span asp-validation-for="Property.NumberOfBeds" class="text-danger"></span>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <input asp-for="Property.SquareMeter" placeholder="Size" type="number"  class="form-control" />
+                    <input asp-for="Property.SquareMeter" placeholder="Size *" type="number"  class="form-control" />
                     <span asp-validation-for="Property.SquareMeter" class="text-danger"></span>
                 </div>
             </div>
         <fieldset class="border p-3 mb-3">
-            <legend class="text-muted">Upload images</legend>
             <div class="mb-3">
-                <input id="ImageFile" name="ImageFile" placeholder="Upload image" type="file" accept="image/*" class="form-control" />
+                <label for="ImageFiles" class="form-label">Upload Images (Multiple)</label>
+                <input id="ImageFiles" name="ImageFiles" type="file" accept="image/*" multiple class="form-control" />
+                <div class="form-text">You can select multiple images at once. Maximum 5 images.</div>
+                <span asp-validation-for="ImageFiles" class="text-danger"></span>
             </div>
-            <div class="mt-2">
-                <div class="fw-medium mb-2">Preview</div>
-                <img id="imgPreview" src="#" alt="preview" style="display:none; max-height:300px;" class="img-fluid" />
+
+            <div class="mt-3">
+                <h6 class="fw-medium mb-2">Preview</h6>
+                <div id="imagePreviewContainer" class="row g-2"></div>
             </div>
         </fieldset>
-        <div>
-            <button type="submit" class="btn btn-primary">Save</button>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> REQUEST ESTIMATION
+            </button>
+            <a href="/" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </div>
 
-@section Scripts {
-    <script>
-        (function () {
-            const input = document.getElementById('ImageFile');
-            const preview = document.getElementById('imgPreview');
 
-            input?.addEventListener('change', function (e) {
-                const file = input.files && input.files[0];
-                if (!file) {
-                    preview.style.display = 'none';
-                    preview.src = '#';
-                    return;
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.getElementById('ImageFiles').addEventListener('change', function(e) {
+            const files = e.target.files;
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = '';
+
+            if (files.length > 5) {
+                alert('Maximum 5 images allowed');
+                this.value = '';
+                return;
+            }
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                if (!file.type.startsWith('image/')) {
+                    continue;
                 }
 
                 const reader = new FileReader();
-                reader.onload = function (ev) {
-                    preview.src = ev.target.result;
-                    preview.style.display = 'block';
+                reader.onload = function(event) {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-3 col-sm-4 col-6';
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.className = 'card-img-top';
+                    img.style.height = '200px';
+                    img.style.objectFit = 'cover';
+                    img.alt = file.name;
+
+                    const cardBody = document.createElement('div');
+                    cardBody.className = 'card-body p-2';
+
+                    const fileName = document.createElement('small');
+                    fileName.className = 'text-muted d-block text-truncate';
+                    fileName.textContent = file.name;
+                    fileName.title = file.name;
+
+                    cardBody.appendChild(fileName);
+                    card.appendChild(img);
+                    card.appendChild(cardBody);
+                    col.appendChild(card);
+                    container.appendChild(col);
                 };
                 reader.readAsDataURL(file);
-            });
-        })();
+            }
+        });
     </script>
 }

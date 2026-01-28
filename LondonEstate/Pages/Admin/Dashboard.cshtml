@@ -11,7 +11,7 @@
 <h1>Dashboard</h1>
 
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Name</th>
@@ -25,13 +25,13 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @item.Name
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    @($"{item.CountryCode} {item.PhoneNumber}")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Email)
+                    @item.Email
                 </td>
                 <td>
                     @* <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> | *@

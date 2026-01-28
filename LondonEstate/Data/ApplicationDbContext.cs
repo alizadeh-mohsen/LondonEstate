@@ -6,6 +6,7 @@ namespace LondonEstate.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
+        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -14,6 +15,7 @@ namespace LondonEstate.Data
         public DbSet<Customer> Customer { get; set; } = default!;
         public DbSet<Property> Property { get; set; } = default!;
         public DbSet<PropertyImage> PropertyImage { get; set; } = default!;
+        public DbSet<ErrorLog> ErrorLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

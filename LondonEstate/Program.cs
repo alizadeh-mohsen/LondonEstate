@@ -21,6 +21,7 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 
 builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
 builder.Services.AddScoped<IEstimateRequestService, EstimateRequestService>();
+builder.Services.AddScoped<ILogError, LogError>();
 
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()

@@ -1,0 +1,16 @@
+﻿@page
+@model DetailsModel
+
+<div class="container mt-4">
+    <h2>Error Log Details</h2>
+    <hr />
+
+    <div class="card p-3">
+        <p><strong>Message:</strong> @Model.ErrorLog.Message</p>
+        <p><strong>Area:</strong> @Model.ErrorLog.Area</p>
+        <p><strong>Error Detail:</strong> @Model.ErrorLog.ErrorDetail</p>
+        <p><strong>Created At:</strong> @Model.ErrorLog.CreatedAt</p>
+    </div>
+
+    <a asp-page="Index" class="btn btn-secondary mt-3">Back</a>
+</div>
