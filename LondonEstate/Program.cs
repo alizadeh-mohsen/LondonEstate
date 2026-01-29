@@ -30,8 +30,6 @@ Log.Logger = new LoggerConfiguration()
 
 var app = builder.Build();
 
-
-
 await ApplyMigrationsAsync(app);
 
 // Configure the HTTP request pipeline.
@@ -43,7 +41,7 @@ else
 {
     app.UseExceptionHandler("/Error");
 }
-
+app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
