@@ -100,7 +100,7 @@ namespace LondonEstate.Pages
 
                 await _emailSender.SendEstimateRequestEmailAsync(customer, property);
 
-                TempData["SuccessMessage"] = "Operation completed successfully!";
+                //TempData["SuccessMessage"] = "Operation completed successfully!";
             }
 
             catch (Exception ex)
