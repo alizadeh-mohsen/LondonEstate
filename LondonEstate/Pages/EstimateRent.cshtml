@@ -12,12 +12,12 @@
 
     <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-        <div class="mb-3">
+        <div class="mb-2">
             @* <label asp-for="Customer.Name" class="form-label">Name</label> *@
             <input asp-for="Customer.Name" placeholder="Name" class="form-control" />
         </div>
 
-        <div class="row g-3 mb-3">
+        <div class="row g-3 mb-2">
             <div class="col-4">
                 @* <label asp-for="Customer.CountryCode" class="form-label">Country code</label> *@
                 <select asp-for="Customer.CountryCode" class="form-select">
@@ -38,11 +38,11 @@
             </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-2">
             <input asp-for="Customer.Email" placeholder="Email *" type="email" class="form-control" />
             <span asp-validation-for="Customer.Email" class="text-danger small"></span>
         </div>
-        <div class="mb-3">
+        <div class="mb-2">
             <input asp-for="Property.Address" class="form-control" placeholder="Address *" />
             <span asp-validation-for="Property.Address" class="text-danger"></span>
         </div>
@@ -62,13 +62,13 @@
                 </select>
                 <span asp-validation-for="Property.NumberOfBeds" class="text-danger"></span>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-2">
                 <input asp-for="Property.SquareMeter" placeholder="Size *" type="number" class="form-control" />
                 <span asp-validation-for="Property.SquareMeter" class="text-danger"></span>
             </div>
         </div>
-        <fieldset class="border p-3 mb-3">
-            <div class="mb-3">
+        <fieldset class="border p-3 mb-2">
+            <div class="mb-2">
                 <label for="ImageFiles" class="form-label">Upload Images (Multiple)</label>
                 <input id="ImageFiles" name="ImageFiles" type="file" accept="image/*" multiple class="form-control" />
                
@@ -76,7 +76,7 @@
                 <span asp-validation-for="ImageFiles" class="text-danger"></span>
             </div>
 
-            <div class="mt-3">
+            <div class="mt-2">
                 <h6 class="fw-medium mb-2">Preview</h6>
                 <div id="imagePreviewContainer" class="row g-2"></div>
             </div>
