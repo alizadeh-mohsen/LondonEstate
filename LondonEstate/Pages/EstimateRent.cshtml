@@ -63,7 +63,8 @@
                 <span asp-validation-for="Estimation.NumberOfBeds" class="text-danger"></span>
             </div>
             <div class="col-md-6 mb-2">
-                <input asp-for="Estimation.SquareMeter" placeholder="Size *" type="number" class="form-control" />
+                <input asp-for="Estimation.SquareMeter" placeholder="Size *" type="number" class="form-control" data-max-files="7"
+                       data-max-size="7340032" />
                 <span asp-validation-for="Estimation.SquareMeter" class="text-danger"></span>
             </div>
         </div>
@@ -108,6 +109,13 @@
             }
 
             for (let i = 0; i < files.length; i++) {
+
+                if (file.size > 7 * 1024 * 1024) {
+                alert(`File ${file.name} exceeds 7MB`);
+                this.value = '';
+            return;
+            }
+                
                 const file = files[i];
 
                 if (!file.type.startsWith('image/')) {
