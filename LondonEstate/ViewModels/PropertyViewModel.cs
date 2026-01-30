@@ -11,7 +11,7 @@ namespace LondonEstate.ViewModels
         [Required(ErrorMessage = "Required")]
         public NumberOfBeds? NumberOfBeds { get; set; }
 
-        [Required(ErrorMessage = "Required"), Range(1, int.MaxValue)]
+        [Required(ErrorMessage = "Required")]
         public int? SquareMeter { get; set; }
     }
 }

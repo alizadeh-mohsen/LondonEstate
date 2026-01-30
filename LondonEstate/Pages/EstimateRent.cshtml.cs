@@ -18,10 +18,7 @@ namespace LondonEstate.Pages
         public List<CountryEntry> CountryList { get; set; } = new();
 
         [BindProperty]
-        public CustomerViewModel Customer { get; set; } = new();
-
-        [BindProperty]
-        public PropertyViewModel Property { get; set; } = new();
+        public EstimationViewModel Estimation { get; set; } = new();
 
         [BindProperty]
         public List<IFormFile>? ImageFiles { get; set; }
@@ -67,17 +64,17 @@ namespace LondonEstate.Pages
 
             var customer = new Customer
             {
-                Name = Customer.Name,
-                Email = Customer.Email,
-                CountryCode = Customer.CountryCode,
-                PhoneNumber = Customer.Phone
+                Name = Estimation.Name,
+                Email = Estimation.Email,
+                CountryCode = Estimation.CountryCode,
+                PhoneNumber = Estimation.Phone
             };
 
             var property = new Property
             {
-                Address = Property.Address,
-                NumberOfBeds = (Utils.Enums.NumberOfBeds)Property.NumberOfBeds!,
-                SquareMeter = Property.SquareMeter!.Value,
+                Address = Estimation.Address,
+                NumberOfBeds = (Utils.Enums.NumberOfBeds)Estimation.NumberOfBeds!,
+                SquareMeter = (decimal)Estimation.SquareMeter!.Value,
                 CustomerId = customer.Id
             };
 

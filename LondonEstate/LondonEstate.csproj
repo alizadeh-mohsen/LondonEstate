@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-LondonEstate-9affa6d1-09ba-49f1-8f12-87785f3dd857</UserSecretsId>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -26,9 +27,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\uploads\" />
+		<Folder Include="wwwroot\uploads\" />
 	</ItemGroup>
-	<!--<Target Name="Tailwind" BeforeTargets="Build">
-		<Exec Command="npx tailwindcss -i ./LondonEstate/Styles/input.css -o ./LondonEstate/wwwroot/css/tailwind.css dash dash minify" />
-	</Target>-->
 </Project>

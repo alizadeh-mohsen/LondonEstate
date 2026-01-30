@@ -2,7 +2,7 @@
 @using System.Reflection
 @using System.ComponentModel.DataAnnotations
 @using LondonEstate.ViewModels
-@model IndexModel
+@model EstimateRentModel
 @{
     ViewData["Title"] = "Estimate Rent";
     Layout = "_LayoutFront";
@@ -14,13 +14,13 @@
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
         <div class="mb-2">
             @* <label asp-for="Customer.Name" class="form-label">Name</label> *@
-            <input asp-for="Customer.Name" placeholder="Name" class="form-control" />
+            <input asp-for="Estimation.Name" placeholder="Name" class="form-control" />
         </div>
 
         <div class="row g-3 mb-2">
             <div class="col-4">
                 @* <label asp-for="Customer.CountryCode" class="form-label">Country code</label> *@
-                <select asp-for="Customer.CountryCode" class="form-select">
+                <select asp-for="Estimation.CountryCode" class="form-select">
 
                     @* <option value="+44"></option> *@
                     @foreach (var country in Model.CountryList)
@@ -30,25 +30,25 @@
                         </option>
                     }
                 </select>
-                <span asp-validation-for="Customer.CountryCode" class="text-danger"></span>
+                <span asp-validation-for="Estimation.CountryCode" class="text-danger"></span>
             </div>
             <div class="col-8">
-                <input asp-for="Customer.Phone" placeholder="Phone *" class="form-control" />
-                <span asp-validation-for="Customer.Phone" class="text-danger small"></span>
+                <input asp-for="Estimation.Phone" placeholder="Phone *" class="form-control" />
+                <span asp-validation-for="Estimation.Phone" class="text-danger small"></span>
             </div>
         </div>
 
         <div class="mb-2">
-            <input asp-for="Customer.Email" placeholder="Email *" type="email" class="form-control" />
-            <span asp-validation-for="Customer.Email" class="text-danger small"></span>
+            <input asp-for="Estimation.Email" placeholder="Email *" type="email" class="form-control" />
+            <span asp-validation-for="Estimation.Email" class="text-danger small"></span>
         </div>
         <div class="mb-2">
-            <input asp-for="Property.Address" class="form-control" placeholder="Address *" />
-            <span asp-validation-for="Property.Address" class="text-danger"></span>
+            <input asp-for="Estimation.Address" class="form-control" placeholder="Address *" />
+            <span asp-validation-for="Estimation.Address" class="text-danger"></span>
         </div>
         <div class="row g-2">
             <div class="col-md-6">
-                <select asp-for="Property.NumberOfBeds" class="form-select">
+                <select asp-for="Estimation.NumberOfBeds" class="form-select">
                     <option value="" class="text-muted">No. of beds</option>
                     @foreach (var v in Enum.GetValues(typeof(LondonEstate.Utils.Enums.NumberOfBeds)).Cast<LondonEstate.Utils.Enums.NumberOfBeds>())
                     {
@@ -60,11 +60,11 @@
                         <option value="@( (int)v )">@label</option>
                     }
                 </select>
-                <span asp-validation-for="Property.NumberOfBeds" class="text-danger"></span>
+                <span asp-validation-for="Estimation.NumberOfBeds" class="text-danger"></span>
             </div>
             <div class="col-md-6 mb-2">
-                <input asp-for="Property.SquareMeter" placeholder="Size *" type="number" class="form-control" />
-                <span asp-validation-for="Property.SquareMeter" class="text-danger"></span>
+                <input asp-for="Estimation.SquareMeter" placeholder="Size *" type="number" class="form-control" />
+                <span asp-validation-for="Estimation.SquareMeter" class="text-danger"></span>
             </div>
         </div>
         <fieldset class="border p-3 mb-2">

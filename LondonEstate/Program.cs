@@ -60,32 +60,27 @@ async Task ApplyMigrationsAsync(WebApplication app)
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        var logger = services.GetRequiredService<ILogger<Program>>();
-
-        logger.LogInformation("Checking for pending migrations...");
 
         var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
 
         if (pendingMigrations.Any())
         {
-            logger.LogWarning("Applying {Count} pending migrations...", pendingMigrations.Count());
+            Log.Warning("Applying {Count} pending migrations...", pendingMigrations.Count());
             await context.Database.MigrateAsync();
-            logger.LogInformation("Migrations applied successfully.");
+            Log.Information("Migrations applied successfully.");
         }
         else
         {
-            logger.LogInformation("Database is up to date.");
+            Log.Information("Database is up to date.");
         }
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database.");
-
-        // In production, you might want to fail fast if migrations fail
-        if (!app.Environment.IsDevelopment())
-        {
-            throw;
-        }
+        Log.Error(ex, "An error occurred while migrating the database.");
+        
+        //if (!app.Environment.IsDevelopment())
+        //{
+        //    throw;
+        //}
     }
 }

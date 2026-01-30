@@ -22,9 +22,9 @@ namespace LondonEstate.Models
         public required NumberOfBeds NumberOfBeds { get; set; }
 
         [Range(1, int.MaxValue)]
-        public required int SquareMeter { get; set; }
+        public required decimal SquareMeter { get; set; }
 
-        public decimal? EstimatedPrice { get; set; }
+        public float? EstimatedPrice { get; set; }
 
         public EstimateStatus EstimateStatus { get; set; }
 

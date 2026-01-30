@@ -48,7 +48,7 @@ namespace LondonEstate.Services
                 sb.AppendLine("<table style=\"border-collapse:collapse; width:100%; max-width:600px;\">");
                 AppendRow(sb, "Name", customer.Name);
                 AppendRow(sb, "Email", customer.Email);
-                AppendRow(sb, "Phone Number", customer.PhoneNumber);
+                AppendRow(sb, "Phone Number", customer.CountryCode + " " + customer.PhoneNumber);
                 //sb.AppendLine("</table>");
 
                 // Property section
