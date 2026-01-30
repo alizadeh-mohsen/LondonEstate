@@ -24,7 +24,7 @@ namespace LondonEstate.Models
         [Range(1, int.MaxValue)]
         public required decimal SquareMeter { get; set; }
 
-        public float? EstimatedPrice { get; set; }
+        public decimal? EstimatedPrice { get; set; }
 
         public EstimateStatus EstimateStatus { get; set; }
 

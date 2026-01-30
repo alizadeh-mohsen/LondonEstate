@@ -1,5 +1,6 @@
 using LondonEstate.Data;
 using LondonEstate.Models;
+using LondonEstate.Utils.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -47,6 +48,22 @@ namespace LondonEstate.Pages.Admin
                 .ToListAsync();
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostMarkCompletedAsync(Guid propertyId, decimal estimatedPrice)
+        {
+            var property = await _context.Property
+                .FirstOrDefaultAsync(p => p.Id == propertyId);
+
+            if (property == null)
+                return NotFound();
+
+            property.EstimatedPrice = estimatedPrice;
+            property.EstimateStatus = EstimateStatus.Completed;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage();
         }
     }
 }

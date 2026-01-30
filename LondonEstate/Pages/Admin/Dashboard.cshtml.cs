@@ -24,16 +24,13 @@ namespace LondonEstate.Pages.Admin
         public async Task OnGetAsync([FromQuery] QueryParams queryParams)
         {
             var query = _context.Customer.AsNoTracking().AsQueryable();
-            //todo: show only customers who have properties with EstimateStatus.Received
-            //todo: add search, filter, orderby functionality later
-
-            query = query
-                .Where(c => c.Properties.Any(p => p.EstimateStatus == Utils.Enums.EstimateStatus.Received))
-                .OrderBy(c => c.CreatedAt);
+            query = query.Where(c => c.Properties.Any(c=>c.EstimatedPrice==null));
+            query = query.OrderBy(c => c.CreatedAt);
 
             var customers = await PagedList<Customer>.ToPagedList(query, queryParams.PageNumber, queryParams.PageSize);
             MetaData = customers.MetaData;
             Customers = customers;
         }
+
     }
 }
