@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LondonEstate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LondonEstate.Data;
-using LondonEstate.Models;
 
 namespace LondonEstate.Pages.Admin.Customers
 {
+    [Authorize]
     public class EditModel : PageModel
     {
         private readonly LondonEstate.Data.ApplicationDbContext _context;
@@ -30,7 +26,7 @@ namespace LondonEstate.Pages.Admin.Customers
                 return NotFound();
             }
 
-            var customer =  await _context.Customer.FirstOrDefaultAsync(m => m.Id == id);
+            var customer = await _context.Customer.FirstOrDefaultAsync(m => m.Id == id);
             if (customer == null)
             {
                 return NotFound();
