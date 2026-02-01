@@ -1,0 +1,35 @@
+﻿@page
+@model LondonEstate.Pages.Admin.ConfirmEmailModel
+@{
+    ViewData["Title"] = "Confirm Email";
+}
+
+<div class="container">
+
+   
+    <div class="row my-4">
+        <form method="post" class="d-flex gap-2 align-items-end">
+
+            
+
+            <div>
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Confirm Email
+            </button>
+        </form>
+    </div>
+    <div class="row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    </div>
+</div>
+
+
+@if (TempData["Success"] != null)
+{
+    <p style="color: green">@TempData["Success"]</p>
+}

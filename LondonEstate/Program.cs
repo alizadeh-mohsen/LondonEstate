@@ -77,7 +77,7 @@ async Task ApplyMigrationsAsync(WebApplication app)
     catch (Exception ex)
     {
         Log.Error(ex, "An error occurred while migrating the database.");
-        
+
         //if (!app.Environment.IsDevelopment())
         //{
         //    throw;
