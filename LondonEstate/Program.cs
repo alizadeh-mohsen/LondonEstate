@@ -15,8 +15,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>() 
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddRazorPages();
+
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
@@ -25,7 +28,7 @@ builder.Services.AddScoped<ILogError, LogError>();
 
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
-            .WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day)
+            .WriteTo.File("logs/LEGroup.log", rollingInterval: RollingInterval.Day)
             .CreateLogger();
 
 var app = builder.Build();
@@ -56,9 +59,14 @@ async Task ApplyMigrationsAsync(WebApplication app)
 {
     using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var configuration = services.GetRequiredService<IConfiguration>();
 
     try
     {
+        await DatabaseSeeder.SeedData(userManager, roleManager, configuration);
+
         var context = services.GetRequiredService<ApplicationDbContext>();
 
         var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
