@@ -8,90 +8,143 @@
     Layout = "_LayoutFront";
 }
 
-<div class="container">
+<style>
+    :root {
+        --primary-color: #1a3a52;
+        --secondary-color: #c9a961;
+    }
 
-    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-        <div class="mb-2">
-            @* <label asp-for="Customer.Name" class="form-label">Name</label> *@
-            <input asp-for="Estimation.Name" placeholder="Name" class="form-control" />
-        </div>
+    .btn-primary {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
 
-        <div class="row g-3 mb-2">
-            <div class="col-4">
-                @* <label asp-for="Customer.CountryCode" class="form-label">Country code</label> *@
-                <select asp-for="Estimation.CountryCode" class="form-select">
+        .btn-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
 
-                    @* <option value="+44"></option> *@
-                    @foreach (var country in Model.CountryList)
-                    {
-                        <option value="@country.Prefix">
-                            @country.Text
-                        </option>
-                    }
-                </select>
-                <span asp-validation-for="Estimation.CountryCode" class="text-danger"></span>
-            </div>
-            <div class="col-8">
-                <input asp-for="Estimation.Phone" placeholder="Phone *" class="form-control" />
-                <span asp-validation-for="Estimation.Phone" class="text-danger small"></span>
-            </div>
-        </div>
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.25rem rgba(201, 169, 97, 0.25);
+    }
 
-        <div class="mb-2">
-            <input asp-for="Estimation.Email" placeholder="Email *" type="email" class="form-control" />
-            <span asp-validation-for="Estimation.Email" class="text-danger small"></span>
-        </div>
-        <div class="mb-2">
-            <input asp-for="Estimation.Address" class="form-control" placeholder="Address *" />
-            <span asp-validation-for="Estimation.Address" class="text-danger"></span>
-        </div>
-        <div class="row g-2">
-            <div class="col-md-6">
-                <select asp-for="Estimation.NumberOfBeds" class="form-select">
-                    <option value="" class="text-muted">No. of beds</option>
-                    @foreach (var v in Enum.GetValues(typeof(LondonEstate.Utils.Enums.NumberOfBeds)).Cast<LondonEstate.Utils.Enums.NumberOfBeds>())
-                    {
-                        var member = v.GetType().GetMember(v.ToString()).First();
-                        var displayAttr = member.GetCustomAttributes(typeof(DisplayAttribute), false)
-                        .OfType<DisplayAttribute>()
-                        .FirstOrDefault();
-                        var label = displayAttr?.GetName() ?? v.ToString();
-                        <option value="@( (int)v )">@label</option>
-                    }
-                </select>
-                <span asp-validation-for="Estimation.NumberOfBeds" class="text-danger"></span>
-            </div>
-            <div class="col-md-6 mb-2">
-                <input asp-for="Estimation.SquareMeter" placeholder="Size *" type="number" class="form-control" data-max-files="7"
-                       data-max-size="7340032" />
-                <span asp-validation-for="Estimation.SquareMeter" class="text-danger"></span>
-            </div>
-        </div>
-        <fieldset class="border p-3 mb-2">
-            <div class="mb-2">
-                <label for="ImageFiles" class="form-label">Upload Images (Multiple)</label>
-                <input id="ImageFiles" name="ImageFiles" type="file" accept="image/*" multiple class="form-control" />
-               
-                <div class="form-text">You can select multiple images at once. Maximum 5 images.</div>
-                <span asp-validation-for="ImageFiles" class="text-danger"></span>
-            </div>
+    .page-title {
+        font-family: 'Playfair Display', serif;
+        color: var(--primary-color);
+    }
 
-            <div class="mt-2">
-                <h6 class="fw-medium mb-2">Preview</h6>
-                <div id="imagePreviewContainer" class="row g-2"></div>
-            </div>
-        </fieldset>
+    .text-secondary-custom {
+        color: var(--secondary-color);
+    }
 
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">
-                REQUEST ESTIMATION
-            </button>
-            <a href="/" class="btn btn-secondary">Cancel</a>
+    /* Ensure proper spacing from fixed navbar */
+    .estimate-rent-container {
+        min-height: calc(100vh - 76px - 400px); /* viewport - navbar - footer approx */
+    }
+</style>
+
+<!-- Full width container with background -->
+<div class="bg-light py-5 estimate-rent-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-body p-4 p-md-5">
+                        <h1 class="page-title text-center fw-bold mb-1 display-6">Request Rent Estimation</h1>
+                        <p class="text-center text-muted mb-4">
+                            <i class="fas fa-calculator text-secondary-custom me-2"></i>
+                            Fill in your property details and we'll provide a comprehensive rental estimate
+                        </p>
+
+                        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            <div asp-validation-summary="ModelOnly" class="alert alert-warning rounded-3 mb-4"></div>
+
+                            <div class="mb-1">
+                                <input asp-for="Estimation.Name" placeholder="Name" class="form-control form-control-lg rounded-3" />
+                                <span asp-validation-for="Estimation.Name" class="text-danger small"></span>
+                            </div>
+
+                            <div class="row g-1 mb-1">
+                                <div class="col-4">
+                                    <select asp-for="Estimation.CountryCode" class="form-select form-select-lg rounded-3">
+                                        @foreach (var country in Model.CountryList)
+                                        {
+                                            <option value="@country.Prefix">
+                                                @country.Text
+                                            </option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Estimation.CountryCode" class="text-danger small"></span>
+                                </div>
+                                <div class="col-8">
+                                    <input asp-for="Estimation.Phone" placeholder="Phone *" class="form-control form-control-lg rounded-3" />
+                                    <span asp-validation-for="Estimation.Phone" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-1">
+                                <input asp-for="Estimation.Email" placeholder="Email *" type="email" class="form-control form-control-lg rounded-3" />
+                                <span asp-validation-for="Estimation.Email" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-1">
+                                <input asp-for="Estimation.Address" class="form-control form-control-lg rounded-3" placeholder="Address *" />
+                                <span asp-validation-for="Estimation.Address" class="text-danger small"></span>
+                            </div>
+
+                            <div class="row g-1 mb-1">
+                                <div class="col-md-6">
+                                    <select asp-for="Estimation.NumberOfBeds" class="form-select form-select-lg rounded-3">
+                                        <option value="" class="text-muted">No. of beds</option>
+                                        @foreach (var v in Enum.GetValues(typeof(LondonEstate.Utils.Enums.NumberOfBeds)).Cast<LondonEstate.Utils.Enums.NumberOfBeds>())
+                                        {
+                                            var member = v.GetType().GetMember(v.ToString()).First();
+                                            var displayAttr = member.GetCustomAttributes(typeof(DisplayAttribute), false)
+                                            .OfType<DisplayAttribute>()
+                                            .FirstOrDefault();
+                                            var label = displayAttr?.GetName() ?? v.ToString();
+                                            <option value="@( (int)v )">@label</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Estimation.NumberOfBeds" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <input asp-for="Estimation.SquareMeter" placeholder="Size *" type="number" class="form-control form-control-lg rounded-3"
+                                           data-max-files="7" data-max-size="7340032" />
+                                    <span asp-validation-for="Estimation.SquareMeter" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="bg-light border border-2 rounded-4 p-4 mb-3">
+                                <div class="mb-1">
+                                    <label for="ImageFiles" class="form-label fw-bold fs-5 text-secondary-custom">
+                                        <i class="fas fa-images me-2"></i>Upload Images (Multiple)
+                                    </label>
+                                    <input id="ImageFiles" name="ImageFiles" type="file" accept="image/*" multiple class="form-control form-control-lg rounded-3" />
+                                    <div class="form-text">You can select multiple images at once. Maximum 5 images.</div>
+                                    <span asp-validation-for="ImageFiles" class="text-danger small"></span>
+                                </div>
+                                <div class="mt-3" id="previewSection" style="display: none;">
+                                    <h6 class="fw-bold mb-1">Preview</h6>
+                                    <div id="imagePreviewContainer" class="row g-3"></div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2 justify-content-center">
+                                <button type="submit" class="btn btn-primary px-5">
+                                    <i class="fas fa-paper-plane me-2"></i>REQUEST ESTIMATION
+                                </button>
+                                <a href="/" class="btn btn-secondary px-4">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </form>
+    </div>
 </div>
-
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
@@ -99,50 +152,53 @@
         document.getElementById('ImageFiles').addEventListener('change', function(e) {
             const files = e.target.files;
             const container = document.getElementById('imagePreviewContainer');
+            const previewSection = document.getElementById('previewSection');
             container.innerHTML = '';
+
+            if (files.length === 0) {
+                previewSection.style.display = 'none';
+                return;
+            }
 
             if (files.length > 5) {
                 alert('Maximum 5 images allowed');
                 this.value = '';
+                previewSection.style.display = 'none';
                 return;
             }
 
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];  
+            previewSection.style.display = 'block';
 
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
                 if (file.size > 7 * 1024 * 1024) {
-                    alert(`File ${file.name} exceeds 7MB`);  
+                    alert(`File ${file.name} exceeds 7MB`);
                     this.value = '';
+                    container.innerHTML = '';
+                    previewSection.style.display = 'none';
                     return;
                 }
-
                 if (!file.type.startsWith('image/')) {
                     continue;
                 }
-
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     const col = document.createElement('div');
-                    col.className = 'col-md-3 col-sm-4 col-6';
-
+                    col.className = 'col-md-4 col-sm-6';
                     const card = document.createElement('div');
-                    card.className = 'card';
-
+                    card.className = 'card shadow-sm border-0 rounded-3';
                     const img = document.createElement('img');
                     img.src = event.target.result;
-                    img.className = 'card-img-top';
+                    img.className = 'card-img-top rounded-top';
                     img.style.height = '200px';
                     img.style.objectFit = 'cover';
                     img.alt = file.name;
-
                     const cardBody = document.createElement('div');
                     cardBody.className = 'card-body p-2';
-
                     const fileName = document.createElement('small');
                     fileName.className = 'text-muted d-block text-truncate';
                     fileName.textContent = file.name;
                     fileName.title = file.name;
-
                     cardBody.appendChild(fileName);
                     card.appendChild(img);
                     card.appendChild(cardBody);

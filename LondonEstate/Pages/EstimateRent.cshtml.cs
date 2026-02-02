@@ -108,7 +108,7 @@ namespace LondonEstate.Pages
                 TempData["ErrorMessage"] = "Something unexpected happened please try again later";
             }
 
-            return RedirectToPage("/Index");
+            return Redirect("/Success.html");
         }
     }
 }

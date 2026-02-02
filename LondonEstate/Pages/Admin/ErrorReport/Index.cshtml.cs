@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin.ErrorReport
 {
-    [Authorize]
+    //[Authorize]
     public class IndexModel : PageModel
     {
         private readonly ApplicationDbContext _context;
