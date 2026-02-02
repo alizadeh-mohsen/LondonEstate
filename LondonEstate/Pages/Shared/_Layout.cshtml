@@ -21,8 +21,8 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    @if (User.Identity != null && User.Identity.IsAuthenticated)
-                    {
+                    @* @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    { *@
                         <ul class="navbar-nav flex-grow-1">
                             @* <li class="nav-item">
                             <a class="nav-link @(Context.Request.Path == "/Index" ? "active" : "")" asp-area="" asp-page="/Index">Home</a>
@@ -50,7 +50,7 @@
                             <a class="nav-link @(Context.Request.Path == "/Sample" ? "active" : "")" asp-area="" asp-page="/Sample">Sample</a>
                         </li> *@
                         </ul>
-                    }
+                    @* } *@
 
                     <partial name="_LoginPartial" />
                 </div>

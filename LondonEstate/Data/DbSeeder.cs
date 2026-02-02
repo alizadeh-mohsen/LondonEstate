@@ -12,7 +12,7 @@ namespace LondonEstate.Data
         {
             // Seed Roles
             string[] roleNames = { "Admin", "Guest" };
-            
+
             foreach (var roleName in roleNames)
             {
                 if (!await roleManager.RoleExistsAsync(roleName))
@@ -23,7 +23,7 @@ namespace LondonEstate.Data
 
             // Get password from configuration (User Secrets in dev, Environment Variables in prod)
             var adminPassword = configuration["EmailSettings:Password"];
-            
+
             if (string.IsNullOrEmpty(adminPassword))
             {
                 Log.Error(
@@ -31,9 +31,9 @@ namespace LondonEstate.Data
             }
 
             // Seed Admin User
-            var adminEmail = "kelarens@gmail.com";
+            var adminEmail = "q@q.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
-            
+
             if (adminUser == null)
             {
                 adminUser = new IdentityUser
@@ -44,7 +44,7 @@ namespace LondonEstate.Data
                 };
 
                 var result = await userManager.CreateAsync(adminUser, adminPassword);
-                
+
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(adminUser, "Admin");
