@@ -95,7 +95,6 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
     <script>
         document.getElementById('ImageFiles').addEventListener('change', function(e) {
             const files = e.target.files;
@@ -109,14 +108,13 @@
             }
 
             for (let i = 0; i < files.length; i++) {
+                const file = files[i];  
 
                 if (file.size > 7 * 1024 * 1024) {
-                alert(`File ${file.name} exceeds 7MB`);
-                this.value = '';
-            return;
-            }
-                
-                const file = files[i];
+                    alert(`File ${file.name} exceeds 7MB`);  
+                    this.value = '';
+                    return;
+                }
 
                 if (!file.type.startsWith('image/')) {
                     continue;
