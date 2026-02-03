@@ -59,7 +59,13 @@ namespace LondonEstate.Services
                 AppendRow(sb, "Square Meter", property.SquareMeter.ToString());
                 sb.AppendLine("</table>");
                 var customerId = customer.Id;
-                sb.AppendLine($"<div style=\"margin-top:1rem;\"><a href='https://LondonEstateGroup.co.uk/Admin/Details/{customerId}'/>View details</div>");
+                sb.AppendLine(
+                    $"<div style=\"margin-top:1rem;\">" +
+                    $"<a href=\"https://LondonEstateGroup.co.uk/Admin/Details/{customerId}\" " +
+                    $"style=\"color:#1a73e8; text-decoration:underline;\">" +
+                    $"View details</a></div>"
+);
+
 
                 //sb.AppendLine("<p style=\"color:#888; font-size:0.9rem; margin-top:1rem;\">This message was generated automatically.</p>");
                 sb.AppendLine("</body>");
@@ -79,7 +85,8 @@ namespace LondonEstate.Services
 
                 var builder = new BodyBuilder
                 {
-                    HtmlBody = htmlBody
+                    HtmlBody = htmlBody,
+                    TextBody = $"View details: https://LondonEstateGroup.co.uk/Admin/Details/{customerId}"
                 };
 
                 // Attach file if provided and exists
