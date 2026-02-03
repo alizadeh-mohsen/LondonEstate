@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin
 {
-    //[Authorize]
+    [Authorize]
     public class DashboardModel : PageModel
     {
         private readonly ApplicationDbContext _context;
