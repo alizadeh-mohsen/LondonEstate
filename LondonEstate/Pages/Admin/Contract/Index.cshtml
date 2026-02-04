@@ -1,0 +1,88 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Guest Agreement Generator";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="mb-0">Guest Agreement Generator</h2>
+                    <p class="mb-0 mt-2"><small>Fill in the details to generate a PDF agreement</small></p>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @Model.Message
+                        </div>
+                    }
+
+                
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="SortCode" class="form-label">
+                                Sort Code:
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="SortCode" 
+                                   name="SortCode" 
+                                   asp-for="SortCode" 
+                                   @* placeholder="e.g., 12-34-56"  *@
+                                   required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Account" class="form-label">
+                                Account Number:
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="Account" 
+                                   name="Account" 
+                                   asp-for="Account" 
+                                   @* placeholder="e.g., 12345678"  *@
+                                   required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Rent" class="form-label">
+                                Rent Amount:
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="Rent" 
+                                   name="Rent" 
+                                   asp-for="Rent" 
+                                   @* placeholder="e.g., 150.00"  *@
+                                   required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="GuestName" class="form-label">
+                                Guest Name:
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="GuestName" 
+                                   name="GuestName" 
+                                   asp-for="GuestName" 
+                                   @* placeholder="e.g., John Smith"  *@
+                                   required />
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-download"></i> Generate & Download PDF
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
