@@ -4,7 +4,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace LondonEstate.Pages.Admin.Contract;
+namespace LondonEstate.Pages.Admin.Agreement;
 
 public class IndexModel : PageModel
 {

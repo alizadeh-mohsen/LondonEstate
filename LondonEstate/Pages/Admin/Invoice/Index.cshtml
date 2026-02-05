@@ -1,0 +1,161 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Guest Agreement Generator";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="mb-0">Guest Agreement Generator</h2>
+
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @Model.Message
+                        </div>
+                    }
+
+                    <form method="post">
+                        @* <h5 class="border-bottom pb-2 mb-2">Company Information</h5> *@
+
+                        <div class="mb-2">
+                            <label for="CompanyName" class="form-label">
+                                <strong>Company Name:</strong>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="CompanyName"
+                                   asp-for="CompanyName"
+                                   @* placeholder="e.g., ABC Properties Ltd"  *@
+                                   required />
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="Date" class="form-label">
+                                <strong>Date:</strong>
+                            </label>
+                            <input type="date"
+                                   class="form-control"
+                                   id="Date"
+                                   asp-for="Date"
+                                   @* placeholder="e.g., Jane Doe"  *@
+                                   required />
+                        </div>
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Payment Details</h5> *@
+
+                        <div class="col-md-6 mb-2">
+                            <label for="IssuedTo" class="form-label">
+                                <strong>Issued To:</strong>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="IssuedTo"
+                                   asp-for="IssuedTo"
+                                   @* placeholder="e.g., 12-34-56"  *@
+                                   required />
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <label for="Property" class="form-label">
+                                <strong>Property:</strong>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="Property"
+                                   asp-for="Property"
+                                   @* placeholder="e.g., 12345678"  *@
+                                   required />
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <label for="AmountPaid" class="form-label">
+                                <strong>Amount Paid (£):</strong>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="Deposit"
+                                   asp-for="AmountPaid"
+                                   @* placeholder="e.g., 100"  *@
+                                   required />
+                        </div>
+
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Guest & Host Information</h5> *@
+
+
+
+
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Dates</h5> *@
+
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <label for="PaymentDate" class="form-label">
+                                    <strong>  Payment Date:</strong>
+                                </label>
+                                <input type="date"
+                                       class="form-control"
+                                       id="PaymentDate"
+                                       asp-for="PaymentDate"
+                                       required />
+                            </div>
+
+                            <div class="col-md-4 mb-2">
+                                <label for="PaymentMethod" class="form-label">
+                                    <strong>   PaymentMethod:</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="PaymentMethod"
+                                       asp-for="PaymentMethod"
+                                       required />
+                            </div>
+
+                            <div class="mb-2">
+                                <label for="IssuedBy" class="form-label">
+                                    <strong> Issued By:</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="IssuedBy"
+                                       asp-for="IssuedBy"
+                                       @* placeholder="e.g., John Smith"  *@
+                                       required />
+                            </div>
+                            <div class="mb-2">
+                                <label for="Email" class="form-label">
+                                    <strong> Email:</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="Email"
+                                       asp-for="Email"
+                                       @* placeholder="e.g., John Smith"  *@
+                                       required />
+                            </div> <div class="mb-2">
+                                <label for="Phone" class="form-label">
+                                    <strong> Phone:</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="Phone"
+                                       asp-for="Phone"
+                                       @* placeholder="e.g., John Smith"  *@
+                                       required />
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-file-earmark-pdf"></i> Generate PDF Agreement
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
