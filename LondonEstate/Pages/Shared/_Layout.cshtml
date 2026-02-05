@@ -46,8 +46,22 @@
                             <li class="nav-item">
                                 <a class="nav-link @(Context.Request.Path == "/Admin/ConfirmEmail" ? "active" : "")" asp-area="" asp-page="/Admin/ConfirmEmail">Confirm Email</a>
                             </li>
+
+                                <li class="nav-item">
+                                    @* <div class="vr d-none d-lg-block h-100 mx-lg-2 text-light"></div> *@
+                                    <hr class="d-lg-none my-2 text-white-50">
+                                </li>
+
+                            
                             <li class="nav-item">
-                                <a class="nav-link @(Context.Request.Path == "/Admin/Contract" ? "active" : "")" asp-area="" asp-page="/Admin/Contract/Index">Create Contract</a>
+                                <a class="nav-link @(Context.Request.Path == "/Admin/Contract/Index" ? "active" : "")" asp-area="" asp-page="/Admin/Contract/Index">Guest Agreement</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(Context.Request.Path == "/Admin/Contract/Invoice" ? "active" : "")" asp-area="" asp-page="/Admin/Contract/Invoice">Invoice</a>
+                            </li>
+                            <li class="nav-item">
+                                @* <div class="vr d-none d-lg-block h-100 mx-lg-2 text-light"></div> *@
+                                <hr class="d-lg-none my-2 text-white-50">
                             </li>
                             @*   <li class="nav-item">
                             <a class="nav-link @(Context.Request.Path == "/Sample" ? "active" : "")" asp-area="" asp-page="/Sample">Sample</a>

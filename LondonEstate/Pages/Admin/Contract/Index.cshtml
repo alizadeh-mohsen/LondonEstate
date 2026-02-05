@@ -6,11 +6,11 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
+        <div class="col-md-10 col-lg-8">
             <div class="card shadow-lg">
                 <div class="card-header bg-primary text-white text-center">
                     <h2 class="mb-0">Guest Agreement Generator</h2>
-                    <p class="mb-0 mt-2"><small>Fill in the details to generate a PDF agreement</small></p>
+                    
                 </div>
                 <div class="card-body">
                     @if (!string.IsNullOrEmpty(Model.Message))
@@ -20,64 +20,141 @@
                         </div>
                     }
 
-                
-
                     <form method="post">
-                        <div class="mb-3">
-                            <label for="SortCode" class="form-label">
-                                Sort Code:
+                        @* <h5 class="border-bottom pb-2 mb-2">Company Information</h5> *@
+                        
+                        <div class="mb-2">
+                            <label for="CompanyName" class="form-label">
+                                <strong>Company Name:</strong>
                             </label>
                             <input type="text" 
                                    class="form-control" 
-                                   id="SortCode" 
-                                   name="SortCode" 
-                                   asp-for="SortCode" 
-                                   @* placeholder="e.g., 12-34-56"  *@
+                                   id="CompanyName" 
+                                   asp-for="CompanyName" 
+                                   @* placeholder="e.g., ABC Properties Ltd"  *@
                                    required />
                         </div>
 
-                        <div class="mb-3">
-                            <label for="Account" class="form-label">
-                                Account Number:
+                        <div class="mb-2">
+                            <label for="OwnerName" class="form-label">
+                                <strong>Host/Owner Name:</strong>
                             </label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="Account" 
-                                   name="Account" 
-                                   asp-for="Account" 
-                                   @* placeholder="e.g., 12345678"  *@
+                            <input type="text"
+                                   class="form-control"
+                                   id="OwnerName"
+                                   asp-for="OwnerName"
+                                   @* placeholder="e.g., Jane Doe"  *@
                                    required />
                         </div>
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Payment Details</h5> *@
 
-                        <div class="mb-3">
-                            <label for="Rent" class="form-label">
-                                Rent Amount:
-                            </label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="Rent" 
-                                   name="Rent" 
-                                   asp-for="Rent" 
-                                   @* placeholder="e.g., 150.00"  *@
-                                   required />
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label for="SortCode" class="form-label">
+                                    <strong>Sort Code:</strong>
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="SortCode" 
+                                       asp-for="SortCode" 
+                                       @* placeholder="e.g., 12-34-56"  *@
+                                       required />
+                            </div>
+
+                            <div class="col-md-6 mb-2">
+                                <label for="Account" class="form-label">
+                                    <strong>Account Number:</strong>
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="Account" 
+                                       asp-for="Account" 
+                                       @* placeholder="e.g., 12345678"  *@
+                                       required />
+                            </div>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label for="Deposit" class="form-label">
+                                    <strong>Security Deposit (£):</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="Deposit"
+                                       asp-for="Deposit"
+                                       @* placeholder="e.g., 100"  *@
+                                       required />
+                            </div> <div class="col-md-6 mb-2">
+                                <label for="Rent" class="form-label">
+                                    <strong> Rent (£):</strong>
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="Rent" 
+                                       asp-for="Rent" 
+                                       @* placeholder="e.g., 250.00"  *@
+                                       required />
+                            </div>
+
+                          
+                        </div>
+
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Guest & Host Information</h5> *@
+
+                        <div class="mb-2">
                             <label for="GuestName" class="form-label">
-                                Guest Name:
+                                <strong> Guest Name:</strong>
                             </label>
                             <input type="text" 
                                    class="form-control" 
                                    id="GuestName" 
-                                   name="GuestName" 
                                    asp-for="GuestName" 
                                    @* placeholder="e.g., John Smith"  *@
                                    required />
                         </div>
 
+
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Dates</h5> *@
+
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <label for="Today" class="form-label">
+                                    <strong>  Agreement Date:</strong>
+                                </label>
+                                <input type="date" 
+                                       class="form-control" 
+                                       id="Today" 
+                                       asp-for="Today" 
+                                       required />
+                            </div>
+
+                            <div class="col-md-4 mb-2">
+                                <label for="CheckInDate" class="form-label">
+                                    <strong>   Check-in Date:</strong>
+                                </label>
+                                <input type="date" 
+                                       class="form-control" 
+                                       id="CheckInDate" 
+                                       asp-for="CheckInDate" 
+                                       required />
+                            </div>
+
+                            <div class="col-md-4 mb-2">
+                                <label for="CheckOutDate" class="form-label">
+                                    <strong>  Check-out Date:</strong>
+                                </label>
+                                <input type="date" 
+                                       class="form-control" 
+                                       id="CheckOutDate" 
+                                       asp-for="CheckOutDate" 
+                                       required />
+                            </div>
+                        </div>
+
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-download"></i> Generate & Download PDF
+                                <i class="bi bi-file-earmark-pdf"></i> Generate PDF Agreement
                             </button>
                         </div>
                     </form>
