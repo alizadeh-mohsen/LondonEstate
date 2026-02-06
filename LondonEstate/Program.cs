@@ -7,7 +7,6 @@ using QuestPDF.Infrastructure;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-QuestPDF.Settings.License = LicenseType.Community;
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -66,7 +65,7 @@ async Task ApplyMigrationsAsync(WebApplication app)
 
     try
     {
-        await DatabaseSeeder.SeedData(userManager, roleManager, configuration);
+        //await DatabaseSeeder.SeedData(userManager, roleManager, configuration);
 
         var context = services.GetRequiredService<ApplicationDbContext>();
 

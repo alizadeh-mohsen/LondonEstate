@@ -220,8 +220,7 @@ public class IndexModel : PageModel
                         row.RelativeItem().Column(col =>
                         {
                             col.Item().Text($"Guest Signature:");
-                            col.Item().Text(GuestName).FontFamily("Segoe Script").FontSize(14).Italic();
-
+                            col.Item().Text("                  ").FontFamily("Segoe Script").FontSize(14).Italic(); ;
                             col.Item().PaddingTop(5).Text($"Date: {CheckInDate:dd/MM/yyyy}");
                         });
 
