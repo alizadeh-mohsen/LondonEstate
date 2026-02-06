@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using QuestPDF.Fluent;
@@ -6,6 +7,7 @@ using QuestPDF.Infrastructure;
 
 namespace LondonEstate.Pages.Admin.Agreement;
 
+[Authorize]
 public class IndexModel : PageModel
 {
     [BindProperty]
