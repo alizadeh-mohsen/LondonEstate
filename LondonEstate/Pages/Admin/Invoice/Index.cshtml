@@ -30,7 +30,7 @@
                             <input type="text"
                                    class="form-control"
                                    id="CompanyName"
-                                   asp-for="CompanyName"
+                                   asp-for="InvoiceViewModel.CompanyName"
                                    @* placeholder="e.g., ABC Properties Ltd"  *@
                                    required />
                         </div>
@@ -42,7 +42,7 @@
                             <input type="date"
                                    class="form-control"
                                    id="Date"
-                                   asp-for="Date"
+                                   asp-for="InvoiceViewModel.Date"
                                    @* placeholder="e.g., Jane Doe"  *@
                                    required />
                         </div>
@@ -55,7 +55,7 @@
                             <input type="text"
                                    class="form-control"
                                    id="IssuedTo"
-                                   asp-for="IssuedTo"
+                                   asp-for="InvoiceViewModel.IssuedTo"
                                    @* placeholder="e.g., 12-34-56"  *@
                                    required />
                         </div>
@@ -67,7 +67,7 @@
                             <input type="text"
                                    class="form-control"
                                    id="Property"
-                                   asp-for="Property"
+                                   asp-for="InvoiceViewModel.Property"
                                    @* placeholder="e.g., 12345678"  *@
                                    required />
                         </div>
@@ -78,8 +78,8 @@
                             </label>
                             <input type="text"
                                    class="form-control"
-                                   id="Deposit"
-                                   asp-for="AmountPaid"
+                                   id="AmountPaid"
+                                   asp-for="InvoiceViewModel.AmountPaid"
                                    @* placeholder="e.g., 100"  *@
                                    required />
                         </div>
@@ -99,7 +99,7 @@
                                 <input type="date"
                                        class="form-control"
                                        id="PaymentDate"
-                                       asp-for="PaymentDate"
+                                       asp-for="InvoiceViewModel.PaymentDate"
                                        required />
                             </div>
 
@@ -110,7 +110,7 @@
                                 <input type="text"
                                        class="form-control"
                                        id="PaymentMethod"
-                                       asp-for="PaymentMethod"
+                                       asp-for="InvoiceViewModel.PaymentMethod"
                                        required />
                             </div>
 
@@ -121,7 +121,7 @@
                                 <input type="text"
                                        class="form-control"
                                        id="IssuedBy"
-                                       asp-for="IssuedBy"
+                                       asp-for="InvoiceViewModel.IssuedBy"
                                        @* placeholder="e.g., John Smith"  *@
                                        required />
                             </div>
@@ -132,7 +132,7 @@
                                 <input type="text"
                                        class="form-control"
                                        id="Email"
-                                       asp-for="Email"
+                                       asp-for="InvoiceViewModel.Email"
                                        @* placeholder="e.g., John Smith"  *@
                                        required />
                             </div> <div class="mb-2">
@@ -142,7 +142,7 @@
                                 <input type="text"
                                        class="form-control"
                                        id="Phone"
-                                       asp-for="Phone"
+                                       asp-for="InvoiceViewModel.Phone"
                                        @* placeholder="e.g., John Smith"  *@
                                        required />
                             </div>

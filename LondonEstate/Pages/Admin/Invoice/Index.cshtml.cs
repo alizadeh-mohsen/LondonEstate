@@ -1,3 +1,4 @@
+using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,56 +15,32 @@ public class IndexModel : PageModel
 
     public IndexModel(IWebHostEnvironment env)
     {
-        _webHostEnvironment = env;  
+        _webHostEnvironment = env;
     }
 
     [BindProperty]
-    public string CompanyName { get; set; } = "Key Bridge Estate";
-    
-    //[BindProperty]
-    //public string InvoiceNumber { get; set; } 
-    
-    [BindProperty]
-    public string IssuedTo { get; set; } 
+    public InvoiceViewModel InvoiceViewModel { get; set; }
 
-    [BindProperty]
-    public string Property { get; set; } 
-
-    [BindProperty]
-    public string AmountPaid { get; set; }
-
-    [BindProperty]
-    public DateTime PaymentDate { get; set; } = DateTime.Today;
-    
-    [BindProperty]
-    public string PaymentMethod { get; set; }
-    
-    [BindProperty]
-    public string IssuedBy { get; set; } = "Key Bridge Estate Limited";
-    
-    [BindProperty]
-    public DateTime Date { get; set; } = DateTime.Now;
-    
-    [BindProperty]
-    public DateTime CheckInDate { get; set; } = DateTime.Now;
-    
-    [BindProperty]
-    public DateTime CheckOutDate { get; set; } = DateTime.Now;
-
-    [BindProperty]
-    public string Email { get; set; } = "Office@LondonEstatee.co.uk";
-
-    [BindProperty]
-    public string Phone { get; set; } = "+44 73 079 33344";
 
     public string? Message { get; set; }
 
     public void OnGet()
     {
-        // Set default values for the form
-        //Today = DateTime.Now;
-        //CheckInDate = DateTime.Now;
-        //CheckOutDate = DateTime.Now.AddDays(1);
+        InvoiceViewModel = new InvoiceViewModel
+        {
+            CompanyName = "Key Bridge Estate",
+            PaymentDate = DateTime.Today,
+            IssuedBy = "Key Bridge Estate Limited",
+            Date = DateTime.Now,
+            CheckInDate = DateTime.Now,
+            CheckOutDate = DateTime.Now,
+            Email = "Office@LondonEstatee.co.uk",
+            Phone = "+44 73 079 33344",
+            AmountPaid = string.Empty,
+            IssuedTo = string.Empty,
+            Property = string.Empty,
+            PaymentMethod = string.Empty
+        };
     }
 
     public IActionResult OnPost()
@@ -80,10 +57,9 @@ public class IndexModel : PageModel
             QuestPDF.Settings.License = LicenseType.Community;
             string logoPath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "KeyBridgeEstateLogo.png");
 
-            var model = new InvoiceDocument(logoPath);
             // Generate the PDF
             var pdfBytes = GeneratePdf();
-            
+
             // Return the PDF as a downloadable file
             return File(pdfBytes, "application/pdf", $"Invoice_{DateTime.Now:yyyyMMdd-HHmm}.pdf");
         }
@@ -108,7 +84,7 @@ public class IndexModel : PageModel
 
                 page.Header().Row(row =>
                 {
-                    row.RelativeItem(); 
+                    row.RelativeItem();
                     row.ConstantItem(150).Image(logoPath); // This adds your logo
                     row.RelativeItem();
                 });
@@ -118,7 +94,7 @@ public class IndexModel : PageModel
                     column.Spacing(5);
 
                     // Company Name (Centered, Bold, Large)
-                    column.Item().AlignCenter().Text(CompanyName)
+                    column.Item().AlignCenter().Text(InvoiceViewModel.CompanyName)
                         .FontSize(16)
                         .Bold();
 
@@ -128,7 +104,6 @@ public class IndexModel : PageModel
                     column.Item().AlignCenter().Text($"Invoice NO: {invoiceNumber}")
                         .FontSize(14)
                         .Bold();
-
                     // Separator Line
                     column.Item().LineHorizontal(1).LineColor(Colors.Grey.Medium);
 
@@ -137,18 +112,18 @@ public class IndexModel : PageModel
                     //Payment Details
                     column.Item().Row(row =>
                     {
-                       row.ConstantItem(100).Text("Issued Date:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(Date.ToString());                // Value takes remaining space
+                        row.ConstantItem(70).Text("Issued Date:").SemiBold(); // Fixed width for labels
+                        row.RelativeItem().Text(InvoiceViewModel.Date.ToString());                // Value takes remaining space
                     });
                     column.Item().Row(row =>
                     {
-                       row.ConstantItem(100).Text("Issued To:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(IssuedTo);                // Value takes remaining space
+                        row.ConstantItem(60).Text("Issued To:").SemiBold(); // Fixed width for labels
+                        row.RelativeItem().Text(InvoiceViewModel.IssuedTo);                // Value takes remaining space
                     });
                     column.Item().Row(row =>
                     {
-                       row.ConstantItem(100).Text("Property:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(Property);                // Value takes remaining space
+                        row.ConstantItem(60).Text("Property:").SemiBold(); // Fixed width for labels
+                        row.RelativeItem().Text(InvoiceViewModel.Property);                // Value takes remaining space
                     });
 
                     column.Item().PaddingTop(5);
@@ -156,57 +131,57 @@ public class IndexModel : PageModel
                     column.Item().Text("Stay Details:");
                     column.Item().Row(row =>
                     {
-                       row.ConstantItem(100).Text("• Check-In:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(CheckInDate.ToString());                // Value takes remaining space
+                        row.ConstantItem(70).Text("• Check-In:").SemiBold(); // Fixed width for labels
+                        row.RelativeItem().Text(InvoiceViewModel.CheckInDate.ToString());                // Value takes remaining space
                     });
                     column.Item().Row(row =>
                     {
-                       row.ConstantItem(100).Text("• Check-Out:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(CheckOutDate.ToString());                // Value takes remaining space
+                        row.ConstantItem(70).Text("• Check-Out:").SemiBold(); // Fixed width for labels
+                        row.RelativeItem().Text(InvoiceViewModel.CheckOutDate.ToString());                // Value takes remaining space
                     });
                     column.Item().PaddingTop(15);
 
                     column.Item().Row(row =>
                     {
-                       row.ConstantItem(100).Text("Amount Paid:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(AmountPaid);                // Value takes remaining space
+                        row.ConstantItem(80).Text("Amount Paid:").SemiBold(); // Fixed width for labels
+                        row.RelativeItem().Text("£" + InvoiceViewModel.AmountPaid);                // Value takes remaining space
                     });
 
                     column.Item().Row(row =>
                     {
-                       row.ConstantItem(100).Text("Payment Date:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(PaymentDate.ToString());                // Value takes remaining space
+                        row.ConstantItem(80).Text("Payment Date:").SemiBold(); // Fixed width for labels
+                        row.RelativeItem().Text(InvoiceViewModel.PaymentDate.ToString());                // Value takes remaining space
                     });
 
                     column.Item().Row(row =>
                     {
-                       row.ConstantItem(100).Text("Payment Method:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(PaymentMethod);                // Value takes remaining space
+                        row.ConstantItem(100).Text("Payment Method:").SemiBold(); // Fixed width for labels
+                        row.RelativeItem().Text(InvoiceViewModel.PaymentMethod);                // Value takes remaining space
                     });
 
                     column.Item().PaddingTop(10);
 
                     // Guest Information
                     column.Item().Text("Thank you for your payment. Should you require further assistance or documentation, please feel free to contact us.");
-                    
+
                     column.Item().PaddingTop(10);
 
                     column.Item().Row(row =>
                     {
-                       row.ConstantItem(100).Text("Issued By:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(IssuedBy);                // Value takes remaining space
+                        row.ConstantItem(60).Text("Issued By:").SemiBold(); // Fixed width for labels
+                        row.RelativeItem().Text(InvoiceViewModel.IssuedBy);                // Value takes remaining space
                     });
-                    
+
                     //column.Item().LineHorizontal(1).LineColor(Colors.Grey.Medium);
-                    
+
                     page.Footer().Row(row =>
                     {
-                        
+
 
                         row.ConstantItem(40).Text("Email:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(Email);                // Value takes remaining space
+                        row.RelativeItem().Text(InvoiceViewModel.Email);                // Value takes remaining space
                         row.ConstantItem(40).Text("Phone:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(Phone);
+                        row.RelativeItem().Text(InvoiceViewModel.Phone);
                     });
 
                 });

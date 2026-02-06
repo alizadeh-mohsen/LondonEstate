@@ -1,3 +1,4 @@
+using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,43 +12,25 @@ namespace LondonEstate.Pages.Admin.Agreement;
 public class IndexModel : PageModel
 {
     [BindProperty]
-    public string CompanyName { get; set; } = "London Estate & Letting Agents Ltd";
-    
-    [BindProperty]
-    public string SortCode { get; set; } = "30-99-50";
+    public required AgreementViewModel AgreementViewModel { get; set; }
 
-    [BindProperty]
-    public string Account { get; set; } = "26105560";
-
-    [BindProperty]
-    public string Rent { get; set; } = string.Empty;
-    
-    [BindProperty]
-    public string Deposit { get; set; } = "100";
-    
-    [BindProperty]
-    public string GuestName { get; set; } = string.Empty;
-    
-    [BindProperty]
-    public string OwnerName { get; set; } = "Sina Haghighat Parasat";
-    
-    [BindProperty]
-    public DateTime Today { get; set; } = DateTime.Now;
-    
-    [BindProperty]
-    public DateTime CheckInDate { get; set; } = DateTime.Now;
-    
-    [BindProperty]
-    public DateTime CheckOutDate { get; set; } = DateTime.Now.AddDays(1);
-    
     public string? Message { get; set; }
 
     public void OnGet()
     {
-        // Set default values for the form
-        //Today = DateTime.Now;
-        //CheckInDate = DateTime.Now;
-        //CheckOutDate = DateTime.Now.AddDays(1);
+        AgreementViewModel = new AgreementViewModel
+        {
+            CompanyName = "London Estate & Letting Agents Ltd",
+            SortCode = "30-99-50",
+            Account = "26105560",
+            Rent = string.Empty,
+            Deposit = "100",
+            GuestName = string.Empty,
+            OwnerName = "Sina Haghighat Parasat",
+            Today = DateTime.Now,
+            CheckInDate = DateTime.Now,
+            CheckOutDate = DateTime.Now.AddDays(1)
+        };
     }
 
     public IActionResult OnPost()
@@ -62,12 +45,12 @@ public class IndexModel : PageModel
         {
             // Configure QuestPDF license
             QuestPDF.Settings.License = LicenseType.Community;
-            
+
             // Generate the PDF
             var pdfBytes = GeneratePdf();
-            
+
             // Return the PDF as a downloadable file
-            return File(pdfBytes, "application/pdf", $"GuestAgreement_{GuestName}_{DateTime.Now:yyyyMMdd}.pdf");
+            return File(pdfBytes, "application/pdf", $"GuestAgreement_{AgreementViewModel.GuestName}_{DateTime.Now:yyyyMMdd}.pdf");
         }
         catch (Exception ex)
         {
@@ -91,23 +74,23 @@ public class IndexModel : PageModel
                     column.Spacing(5);
 
                     // Company Name (Centered, Bold, Large)
-                    column.Item().AlignCenter().Text(CompanyName)
+                    column.Item().AlignCenter().Text(AgreementViewModel.CompanyName)
                         .FontSize(16)
                         .Bold();
 
                     //column.Item().PaddingTop(5);
 
                     // Title
-                    column.Item().AlignCenter().Text($"Guest Agreement – {Today:dd/MM/yyyy}")
+                    column.Item().AlignCenter().Text($"Guest Agreement – {AgreementViewModel.Today:dd/MM/yyyy}")
                         .FontSize(14)
                         .Bold();
 
                     column.Item().PaddingTop(15);
 
                     // Payment Details
-                    column.Item().Text($"Sort Code: {SortCode}").Bold();
-                    column.Item().Text($"Account Number: {Account}").Bold();
-                    column.Item().Text($"Accommodation Nightly Charge: £{Rent}").Bold();
+                    column.Item().Text($"Sort Code: {AgreementViewModel.SortCode}").Bold();
+                    column.Item().Text($"Account Number: {AgreementViewModel.Account}").Bold();
+                    column.Item().Text($"Accommodation Nightly Charge: £{AgreementViewModel.Rent}").Bold();
 
                     column.Item().PaddingTop(10);
 
@@ -116,15 +99,15 @@ public class IndexModel : PageModel
                     column.Item().PaddingTop(15);
 
                     // Guest Information
-                    column.Item().Text($"Guest Name: {GuestName}").Bold();
-                    column.Item().Text($"Check-in Date: {CheckInDate:dd/MM/yyyy} – 3:00 PM");
-                    column.Item().Text($"Check-out Date: {CheckOutDate:dd/MM/yyyy} – 11:00 AM");
+                    column.Item().Text($"Guest Name: {AgreementViewModel.GuestName}");
+                    column.Item().Text($"Check-in Date: {AgreementViewModel.CheckInDate:dd/MM/yyyy} – 3:00 PM");
+                    column.Item().Text($"Check-out Date: {AgreementViewModel.CheckOutDate:dd/MM/yyyy} – 11:00 AM");
 
                     column.Item().PaddingTop(20);
-                    
+
                     // Separator Line
                     column.Item().LineHorizontal(1).LineColor(Colors.Grey.Medium);
-                    
+
                     column.Item().PaddingTop(10);
 
                     // Section 1: House Rules
@@ -138,26 +121,26 @@ public class IndexModel : PageModel
 
                     column.Item().PaddingTop(10);
 
-                    AddRuleItem(column, "No Parties or Events:", 
+                    AddRuleItem(column, "No Parties or Events:",
                         "Parties, gatherings, or events are strictly prohibited. Any such activity will result in immediate eviction without a refund.");
 
-                    AddRuleItem(column, "No Smoking:", 
+                    AddRuleItem(column, "No Smoking:",
                         "Smoking is not permitted inside the property. Evidence of smoking indoors will lead to forfeiture of the security deposit.");
 
-                    AddRuleItem(column, "Registered Guests Only:", 
+                    AddRuleItem(column, "Registered Guests Only:",
                         "Only the individuals listed in the booking are allowed to stay overnight. Unauthorized guests may result in immediate eviction and loss of the security deposit.");
 
-                    AddRuleItem(column, "Noise Levels:", 
+                    AddRuleItem(column, "Noise Levels:",
                         "Please keep noise to a minimum between 10:00 PM and 8:00 AM. The property is equipped with noise sensors to monitor sound levels.");
 
-                    AddRuleItem(column, "Smoke Detectors:", 
+                    AddRuleItem(column, "Smoke Detectors:",
                         "The property is equipped with smoke detectors for your safety. Tampering with these devices is prohibited and may result in penalties.");
 
                     column.Item().PaddingTop(10);
-                    
+
                     // Separator Line
                     column.Item().LineHorizontal(1).LineColor(Colors.Grey.Medium);
-                    
+
                     column.Item().PaddingTop(10);
 
                     // Section 2: Security Deposit
@@ -167,7 +150,7 @@ public class IndexModel : PageModel
 
                     column.Item().PaddingTop(5);
 
-                    column.Item().Text($"A security deposit of £{Deposit} is required and will be held to cover any potential damages or violations of this agreement. The deposit will be refunded within 7 days after check-out, provided:");
+                    column.Item().Text($"A security deposit of £{AgreementViewModel.Deposit} is required and will be held to cover any potential damages or violations of this agreement. The deposit will be refunded within 7 days after check-out, provided:");
 
                     column.Item().PaddingTop(5);
 
@@ -176,10 +159,10 @@ public class IndexModel : PageModel
                     column.Item().PaddingLeft(20).Text("• All keys are returned, and the property is left in good condition.");
 
                     column.Item().PaddingTop(10);
-                    
+
                     // Separator Line
                     column.Item().LineHorizontal(1).LineColor(Colors.Grey.Medium);
-                    
+
                     column.Item().PaddingTop(10);
 
                     // Section 3: Consequences of Violations
@@ -198,10 +181,10 @@ public class IndexModel : PageModel
                     column.Item().PaddingLeft(20).Text("• Additional charges for damages or extra cleaning.");
 
                     column.Item().PaddingTop(10);
-                    
+
                     // Separator Line
                     column.Item().LineHorizontal(1).LineColor(Colors.Grey.Medium);
-                    
+
                     column.Item().PaddingTop(10);
 
                     // Section 4: Acknowledgment and Agreement
@@ -214,7 +197,7 @@ public class IndexModel : PageModel
                     column.Item().Text("By signing below, you acknowledge that you have read, understood, and agree to abide by the terms outlined in this Guest Agreement.");
 
                     column.Item().PaddingTop(20);
-                    
+
 
                     // Signatures
                     column.Item().Row(row =>
@@ -223,14 +206,14 @@ public class IndexModel : PageModel
                         {
                             col.Item().Text($"Guest Signature:");
                             col.Item().Text("                  ").FontFamily("Segoe Script").FontSize(14).Italic(); ;
-                            col.Item().PaddingTop(5).Text($"Date: {CheckInDate:dd/MM/yyyy}");
+                            col.Item().PaddingTop(5).Text($"Date: {AgreementViewModel.CheckInDate:dd/MM/yyyy}");
                         });
 
                         row.RelativeItem().Column(col =>
                         {
-                            col.Item().Text($"Host Signature:"); 
-                            col.Item().Text(OwnerName).FontFamily("Segoe Script").FontSize(14).Italic(); 
-                            col.Item().PaddingTop(5).Text($"Date: {CheckOutDate:dd/MM/yyyy}");
+                            col.Item().Text($"Host Signature:");
+                            col.Item().Text(AgreementViewModel.OwnerName).FontFamily("Segoe Script").FontSize(14).Italic();
+                            col.Item().PaddingTop(5).Text($"Date: {AgreementViewModel.CheckOutDate:dd/MM/yyyy}");
                         });
                     });
                 });

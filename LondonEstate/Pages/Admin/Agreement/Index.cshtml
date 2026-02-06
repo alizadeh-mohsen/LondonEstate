@@ -30,7 +30,7 @@
                             <input type="text" 
                                    class="form-control" 
                                    id="CompanyName" 
-                                   asp-for="CompanyName" 
+                                   asp-for="AgreementViewModel.CompanyName" 
                                    @* placeholder="e.g., ABC Properties Ltd"  *@
                                    required />
                         </div>
@@ -42,7 +42,7 @@
                             <input type="text"
                                    class="form-control"
                                    id="OwnerName"
-                                   asp-for="OwnerName"
+                                   asp-for="AgreementViewModel.OwnerName"
                                    @* placeholder="e.g., Jane Doe"  *@
                                    required />
                         </div>
@@ -56,7 +56,7 @@
                                 <input type="text" 
                                        class="form-control" 
                                        id="SortCode" 
-                                       asp-for="SortCode" 
+                                       asp-for="AgreementViewModel.SortCode" 
                                        @* placeholder="e.g., 12-34-56"  *@
                                        required />
                             </div>
@@ -68,7 +68,7 @@
                                 <input type="text" 
                                        class="form-control" 
                                        id="Account" 
-                                       asp-for="Account" 
+                                       asp-for="AgreementViewModel.Account" 
                                        @* placeholder="e.g., 12345678"  *@
                                        required />
                             </div>
@@ -82,7 +82,7 @@
                                 <input type="text"
                                        class="form-control"
                                        id="Deposit"
-                                       asp-for="Deposit"
+                                       asp-for="AgreementViewModel.Deposit"
                                        @* placeholder="e.g., 100"  *@
                                        required />
                             </div> <div class="col-md-6 mb-2">
@@ -92,7 +92,7 @@
                                 <input type="text" 
                                        class="form-control" 
                                        id="Rent" 
-                                       asp-for="Rent" 
+                                       asp-for="AgreementViewModel.Rent" 
                                        @* placeholder="e.g., 250.00"  *@
                                        required />
                             </div>
@@ -109,7 +109,7 @@
                             <input type="text" 
                                    class="form-control" 
                                    id="GuestName" 
-                                   asp-for="GuestName" 
+                                   asp-for="AgreementViewModel.GuestName" 
                                    @* placeholder="e.g., John Smith"  *@
                                    required />
                         </div>
@@ -125,7 +125,7 @@
                                 <input type="date" 
                                        class="form-control" 
                                        id="Today" 
-                                       asp-for="Today" 
+                                       asp-for="AgreementViewModel.Today" 
                                        required />
                             </div>
 
@@ -136,7 +136,7 @@
                                 <input type="date" 
                                        class="form-control" 
                                        id="CheckInDate" 
-                                       asp-for="CheckInDate" 
+                                       asp-for="AgreementViewModel.CheckInDate" 
                                        required />
                             </div>
 
@@ -147,7 +147,7 @@
                                 <input type="date" 
                                        class="form-control" 
                                        id="CheckOutDate" 
-                                       asp-for="CheckOutDate" 
+                                       asp-for="AgreementViewModel.CheckOutDate" 
                                        required />
                             </div>
                         </div>
