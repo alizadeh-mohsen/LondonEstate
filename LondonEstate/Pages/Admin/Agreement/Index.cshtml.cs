@@ -90,7 +90,7 @@ public class IndexModel : PageModel
                     // Payment Details
                     column.Item().Text($"Sort Code: {AgreementViewModel.SortCode}").Bold();
                     column.Item().Text($"Account Number: {AgreementViewModel.Account}").Bold();
-                    column.Item().Text($"Accommodation Nightly Charge: £{AgreementViewModel.Rent}").Bold();
+                    column.Item().Text($"Accommodation Charge: £{AgreementViewModel.Rent}").Bold();
 
                     column.Item().PaddingTop(10);
 
