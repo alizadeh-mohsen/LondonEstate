@@ -1,0 +1,73 @@
+﻿@page
+@model LondonEstate.Pages.Admin.AgreementReports.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Agreement</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Agreement.SortCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Agreement.SortCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Agreement.Account)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Agreement.Account)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Agreement.Rent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Agreement.Rent)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Agreement.Deposit)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Agreement.Deposit)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Agreement.GuestName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Agreement.GuestName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Agreement.OwnerName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Agreement.OwnerName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Agreement.Date)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Agreement.Date)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Agreement.CheckInDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Agreement.CheckInDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Agreement.CheckOutDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Agreement.CheckOutDate)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Agreement.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

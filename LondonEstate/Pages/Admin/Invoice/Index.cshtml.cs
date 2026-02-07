@@ -1,3 +1,6 @@
+using AutoMapper;
+using LondonEstate.Data;
+using LondonEstate.Services;
 using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +15,16 @@ namespace LondonEstate.Pages.Admin.Invoice;
 public class IndexModel : PageModel
 {
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly ApplicationDbContext _dbContext;
+    private readonly IMapper _mapper;
+    private readonly ILogError _logError;
 
-    public IndexModel(IWebHostEnvironment env)
+    public IndexModel(IWebHostEnvironment env, ApplicationDbContext dbContext, IMapper mapper, ILogError logError)
     {
         _webHostEnvironment = env;
+        _dbContext = dbContext;
+        _mapper = mapper;
+        _logError = logError;
     }
 
     [BindProperty]
@@ -36,14 +45,14 @@ public class IndexModel : PageModel
             CheckOutDate = DateTime.Now,
             Email = "Office@LondonEstatee.co.uk",
             Phone = "+44 73 079 33344",
-            AmountPaid = string.Empty,
+            AmountPaid = null,
             IssuedTo = string.Empty,
             Property = string.Empty,
             PaymentMethod = string.Empty
         };
     }
 
-    public IActionResult OnPost()
+    public async Task<IActionResult> OnPost()
     {
         if (!ModelState.IsValid)
         {
@@ -60,12 +69,17 @@ public class IndexModel : PageModel
             // Generate the PDF
             var pdfBytes = GeneratePdf();
 
+            await SaveReport();
+
+
             // Return the PDF as a downloadable file
             return File(pdfBytes, "application/pdf", $"Invoice_{DateTime.Now:yyyyMMdd-HHmm}.pdf");
         }
         catch (Exception ex)
         {
             Message = $"Error generating PDF: {ex.Message}";
+            await _logError.LogErrorToDb(ex, "Invoice PDF Generation");
+
             return Page();
         }
     }
@@ -73,6 +87,7 @@ public class IndexModel : PageModel
     private byte[] GeneratePdf()
     {
         var invoiceNumber = GenerateInvoiceNumber();
+        InvoiceViewModel.InvoiceNumber = invoiceNumber;
         string logoPath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "KeyBridgeEstateLogo.png");
         var document = Document.Create(container =>
         {
@@ -191,47 +206,15 @@ public class IndexModel : PageModel
         return document.GeneratePdf();
     }
 
-    private void AddRuleItem(ColumnDescriptor column, string title, string description)
+    private async Task SaveReport()
     {
-        column.Item().PaddingBottom(8).Column(col =>
-        {
-            column.Item().Text(title).Bold();
-            column.Item().Text(description);
-        });
+
+        var invoice = _mapper.Map<Models.Invoice>(InvoiceViewModel);
+
+        _dbContext.Invoice.Add(invoice);
+        await _dbContext.SaveChangesAsync();
+
     }
-
-    //Inside your PDF generation logic
-    //public void Compose(IDocumentContainer container)
-    //{
-    //    // Combine the web root path with your logo's location
-    //    string logoPath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "KeyBridgeEstateLogo.png");
-
-    //    container.Page(page =>
-    //    {
-    //        page.Header().Row(row =>
-    //        {
-    //            //// Add the image to a column in the header
-    //            //row.RelativeItem().Column(column =>
-    //            //{
-    //            //    column.Item().Image(logoPath).FitWidth();
-    //            //});
-
-    //            //row.RelativeItem().AlignRight().Text("Invoice #12345");
-
-    //            row.ConstantItem(100).Text("150").Image(logoPath);
-
-    //            // Spacer
-    //            row.RelativeItem();
-
-    //            // Company Info Column
-    //            row.RelativeItem().Column(col =>
-    //            {
-    //                col.Item().Text(CompanyName).FontSize(20).SemiBold().FontColor(Colors.Blue.Medium);
-    //                col.Item().Text("123 Tech Lane, NY");
-    //            });
-    //        });
-    //    });
-    ////}
 
     private string GenerateInvoiceNumber()
     {

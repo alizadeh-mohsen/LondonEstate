@@ -1,0 +1,125 @@
+﻿@page
+@model LondonEstate.Pages.Admin.AgreementReports.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+    var start = Model.MetaData.TotalCount == 0 ? 0 : ((Model.MetaData.CurrentPage - 1) * Model.MetaData.PageSize) + 1;
+    var end = start == 0 ? 0 : start + (Model.Agreements?.Count ?? 0) - 1;
+}
+
+<h1>Agreement Reports</h1>
+
+@* <p>
+    <a asp-page="Create">Create New</a>
+</p> *@
+<form method="get" class="row g-3 my-3">
+
+    <div class="col-md-10">
+        <label class="form-label">Guest name:</label>
+        <input type="text"
+               name="search"
+               class="form-control"
+               value="@ViewContext.HttpContext.Request.Query["search"]" />
+    </div>
+
+    <div class="col-md-10">
+        <label class="form-label">Date:</label>
+        <input type="date"
+               name="date"
+               class="form-control"
+               value="@ViewContext.HttpContext.Request.Query["date"]" />
+    </div>
+
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+
+    <input type="hidden" name="pageSize" value="@Model.MetaData.PageSize" />
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Agreements[0].GuestName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Agreements[0].Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Agreements[0].Rent)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Agreements)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GuestName)
+                </td>
+                <td>
+                    @item.Date.ToShortDateString()
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rent)
+                </td>
+
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <div>
+        <strong>Showing</strong> @start - @end <strong>of</strong> @Model.MetaData.TotalCount
+    </div>
+
+    <div class="d-flex align-items-center">
+        <form method="get" class="me-3">
+            <label for="pageSize" class="form-label visually-hidden">Page size</label>
+            <select id="pageSize" name="pageSize" class="form-select" onchange="this.form.submit()">
+                @{
+                    var sizes = new[] { 5, 10, 20, 50 };
+                }
+                @foreach (var s in sizes)
+                {
+                    <option value="@s" selected="@(s == Model.MetaData.PageSize ? "selected" : null)">@s</option>
+                }
+            </select>
+            <input type="hidden" name="pageNumber" value="1" />
+        </form>
+
+        <nav aria-label="Customer pagination">
+            <ul class="pagination mb-0">
+                <li class="page-item @(Model.MetaData.HasPreviousPage ? "" : "disabled")">
+                    <a class="page-link"
+                       asp-route-pageNumber="@(Model.MetaData.CurrentPage - 1)"
+                       asp-route-pageSize="@Model.MetaData.PageSize"
+                       [cite_start]asp-route-search="@ViewContext.HttpContext.Request.Query["search"]">Previous</a>
+                </li>
+
+
+                @for (var i = 1; i <= Model.MetaData.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.MetaData.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-route-pageNumber="@i" asp-route-pageSize="@Model.MetaData.PageSize">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.MetaData.HasNextPage ? "" : "disabled")">
+                    <a class="page-link"
+                       asp-route-pageNumber="@(Model.MetaData.CurrentPage + 1)"
+                       asp-route-pageSize="@Model.MetaData.PageSize"
+                       [cite_start]asp-route-search="@ViewContext.HttpContext.Request.Query["search"]">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

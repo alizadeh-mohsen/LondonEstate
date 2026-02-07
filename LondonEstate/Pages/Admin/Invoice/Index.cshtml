@@ -23,16 +23,53 @@
                     <form method="post">
                         @* <h5 class="border-bottom pb-2 mb-2">Company Information</h5> *@
 
-                        <div class="mb-2">
-                            <label for="CompanyName" class="form-label">
-                                <strong>Company Name:</strong>
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="CompanyName"
-                                   asp-for="InvoiceViewModel.CompanyName"
-                                   @* placeholder="e.g., ABC Properties Ltd"  *@
-                                   required />
+                      
+                        <div class="row">
+                            <div class="mb-2">
+                                <label for="CompanyName" class="form-label">
+                                    <strong>Company Name:</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="CompanyName"
+                                       asp-for="InvoiceViewModel.CompanyName"
+                                       @* placeholder="e.g., ABC Properties Ltd"  *@
+                                       required />
+                            </div>
+                           
+
+                            <div class="mb-2">
+                                <label for="IssuedBy" class="form-label">
+                                    <strong> Issued By:</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="IssuedBy"
+                                       asp-for="InvoiceViewModel.IssuedBy"
+                                       @* placeholder="e.g., John Smith"  *@
+                                       required />
+                            </div>
+                            <div class="mb-2">
+                                <label for="Email" class="form-label">
+                                    <strong> Email:</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="Email"
+                                       asp-for="InvoiceViewModel.Email"
+                                       @* placeholder="e.g., John Smith"  *@
+                                       required />
+                            </div> <div class="mb-2">
+                                <label for="Phone" class="form-label">
+                                    <strong> Phone:</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="Phone"
+                                       asp-for="InvoiceViewModel.Phone"
+                                       @* placeholder="e.g., John Smith"  *@
+                                       required />
+                            </div>
                         </div>
 
                         <div class="mb-2">
@@ -83,14 +120,6 @@
                                    @* placeholder="e.g., 100"  *@
                                    required />
                         </div>
-
-                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Guest & Host Information</h5> *@
-
-
-
-
-                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Dates</h5> *@
-
                         <div class="row">
                             <div class="col-md-4 mb-2">
                                 <label for="PaymentDate" class="form-label">
@@ -114,39 +143,14 @@
                                        required />
                             </div>
 
-                            <div class="mb-2">
-                                <label for="IssuedBy" class="form-label">
-                                    <strong> Issued By:</strong>
-                                </label>
-                                <input type="text"
-                                       class="form-control"
-                                       id="IssuedBy"
-                                       asp-for="InvoiceViewModel.IssuedBy"
-                                       @* placeholder="e.g., John Smith"  *@
-                                       required />
-                            </div>
-                            <div class="mb-2">
-                                <label for="Email" class="form-label">
-                                    <strong> Email:</strong>
-                                </label>
-                                <input type="text"
-                                       class="form-control"
-                                       id="Email"
-                                       asp-for="InvoiceViewModel.Email"
-                                       @* placeholder="e.g., John Smith"  *@
-                                       required />
-                            </div> <div class="mb-2">
-                                <label for="Phone" class="form-label">
-                                    <strong> Phone:</strong>
-                                </label>
-                                <input type="text"
-                                       class="form-control"
-                                       id="Phone"
-                                       asp-for="InvoiceViewModel.Phone"
-                                       @* placeholder="e.g., John Smith"  *@
-                                       required />
-                            </div>
-                        </div>
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Guest & Host Information</h5> *@
+
+
+
+
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Dates</h5> *@
+
+                     
 
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">

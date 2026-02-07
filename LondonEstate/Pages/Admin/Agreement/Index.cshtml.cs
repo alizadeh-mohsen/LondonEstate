@@ -1,3 +1,6 @@
+using AutoMapper;
+using LondonEstate.Data;
+using LondonEstate.Services;
 using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +14,17 @@ namespace LondonEstate.Pages.Admin.Agreement;
 [Authorize]
 public class IndexModel : PageModel
 {
+    private readonly ApplicationDbContext _dbContext;
+    private readonly IMapper _mapper;
+    private readonly ILogError _logError;
+
+    public IndexModel(ApplicationDbContext dbContext, IMapper mapper, ILogError logError)
+    {
+        _dbContext = dbContext;
+        _mapper = mapper;
+        _logError = logError;
+    }
+
     [BindProperty]
     public required AgreementViewModel AgreementViewModel { get; set; }
 
@@ -23,17 +37,17 @@ public class IndexModel : PageModel
             CompanyName = "London Estate & Letting Agents Ltd",
             SortCode = "30-99-50",
             Account = "26105560",
-            Rent = string.Empty,
-            Deposit = "100",
+            Rent = null,
+            Deposit = 100,
             GuestName = string.Empty,
             OwnerName = "Sina Haghighat Parasat",
-            Today = DateTime.Now,
+            Date = DateTime.Now,
             CheckInDate = DateTime.Now,
             CheckOutDate = DateTime.Now.AddDays(1)
         };
     }
 
-    public IActionResult OnPost()
+    public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
@@ -49,14 +63,26 @@ public class IndexModel : PageModel
             // Generate the PDF
             var pdfBytes = GeneratePdf();
 
+            await SaveReport();
             // Return the PDF as a downloadable file
             return File(pdfBytes, "application/pdf", $"GuestAgreement_{AgreementViewModel.GuestName}_{DateTime.Now:yyyyMMdd}.pdf");
         }
         catch (Exception ex)
         {
             Message = $"Error generating PDF: {ex.Message}";
+            await _logError.LogErrorToDb(ex, "Agreement PDF Generation");
             return Page();
         }
+    }
+
+    private async Task SaveReport()
+    {
+
+        var agreement = _mapper.Map<Models.Agreement>(AgreementViewModel);
+
+        _dbContext.Agreement.Add(agreement);
+        await _dbContext.SaveChangesAsync();
+
     }
 
     private byte[] GeneratePdf()
@@ -81,7 +107,7 @@ public class IndexModel : PageModel
                     //column.Item().PaddingTop(5);
 
                     // Title
-                    column.Item().AlignCenter().Text($"Guest Agreement – {AgreementViewModel.Today:dd/MM/yyyy}")
+                    column.Item().AlignCenter().Text($"Guest Agreement – {AgreementViewModel.Date:dd/MM/yyyy}")
                         .FontSize(14)
                         .Bold();
 

@@ -1,90 +1,91 @@
 ﻿@page
 @model LondonEstate.Pages.Admin.DashboardModel
-
 @{
-    ViewData["Title"] = "Dashboard";
-
-    var start = Model.MetaData.TotalCount == 0 ? 0 : ((Model.MetaData.CurrentPage - 1) * Model.MetaData.PageSize) + 1;
-    var end = start == 0 ? 0 : start + (Model.Customers?.Count ?? 0) - 1;
+    ViewData["Title"] = "Rent estimate";
 }
 
-<h1>Dashboard</h1>
+@* <h1><strong>Admin Dashboard</strong></h1>  *@
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>PhoneNumber</th>
-            <th>Email</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Customers)
-        {
-            <tr>
-                <td>
-                    @item.Name
-                </td>
-                <td>
-                    @($"{item.CountryCode} {item.PhoneNumber}")
-                </td>
-                <td>
-                    @item.Email
-                </td>
-                <td>
-                    @* <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> | *@
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> @*|
-                     <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a> *@
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-<div class="d-flex justify-content-between align-items-center mt-3">
-    <div>
-        <strong>Showing</strong> @start - @end <strong>of</strong> @Model.MetaData.TotalCount
-    </div>
-
-    <div class="d-flex align-items-center">
-        <form method="get" class="me-3">
-            <label for="pageSize" class="form-label visually-hidden">Page size</label>
-            <select id="pageSize" name="pageSize" class="form-select" onchange="this.form.submit()">
-                @{
-                    var sizes = new[] { 5, 10, 20, 50 };
-                }
-                @foreach (var s in sizes)
-                {
-                    <option value="@s" selected="@(s == Model.MetaData.PageSize ? "selected" : null)">@s</option>
-                }
-            </select>
-            <input type="hidden" name="pageNumber" value="1" />
-        </form>
-
-        <nav aria-label="Customer pagination">
-            <ul class="pagination mb-0">
-                <li class="page-item @(Model.MetaData.HasPreviousPage ? "" : "disabled")">
-                    <a class="page-link"
-                       asp-route-pageNumber="@(Model.MetaData.CurrentPage - 1)"
-                       asp-route-pageSize="@Model.MetaData.PageSize"
-                       [cite_start]asp-route-search="@ViewContext.HttpContext.Request.Query["search"]">Previous</a>
-                </li>
+<link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
 
 
-                @for (var i = 1; i <= Model.MetaData.TotalPages; i++)
-                {
-                    <li class="page-item @(i == Model.MetaData.CurrentPage ? "active" : "")">
-                        <a class="page-link" asp-route-pageNumber="@i" asp-route-pageSize="@Model.MetaData.PageSize">@i</a>
-                    </li>
-                }
 
-                <li class="page-item @(Model.MetaData.HasNextPage ? "" : "disabled")">
-                    <a class="page-link"
-                       asp-route-pageNumber="@(Model.MetaData.CurrentPage + 1)"
-                       asp-route-pageSize="@Model.MetaData.PageSize"
-                       [cite_start]asp-route-search="@ViewContext.HttpContext.Request.Query["search"]">Next</a>
-                </li>
-            </ul>
-        </nav>
+<div class="dashboard-container">
+
+    <div class="dashboard-grid">
+        <!-- Rent Estimation Request -->
+        <a href="/Admin/RentEstimate" class="dashboard-card">
+            <div class="card-icon settings">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    <line x1="12" y1="2" x2="12" y2="9"></line>
+                    <circle cx="12" cy="7" r="1"></circle>
+                </svg>
+            </div>
+            <div class="card-content">
+                <h3>Rent Estimation Request</h3>
+            </div>
+        </a>
+        <!-- Users Management -->
+        <a href="/Admin/Agreement" class="dashboard-card">
+            <div class="card-icon pdf-generation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <div class="card-content">
+                <h3>Generate Guest Agreement</h3>
+            </div>
+        </a>
+        <div class="dashboard-grid">
+            <!-- Users Management -->
+            <a href="/Admin/Invoice" class="dashboard-card">
+                <div class="card-icon users">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h3>Generate Invoice</h3>
+                </div>
+            </a>
+
+
+            <!-- Reports -->
+            <a href="/Admin/AgreementReports" class="dashboard-card">
+                <div class="card-icon reports">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h3>Guest Agreement Reports</h3>
+                </div>
+            </a>
+            <a href="/Admin/InvoiceReports" class="dashboard-card">
+                <div class="card-icon orders">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h3>Invoice Reports</h3>
+                </div>
+            </a>
+         
+        </div>
     </div>
 </div>

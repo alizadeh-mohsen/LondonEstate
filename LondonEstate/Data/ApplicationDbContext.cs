@@ -6,7 +6,7 @@ namespace LondonEstate.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -16,6 +16,8 @@ namespace LondonEstate.Data
         public DbSet<Property> Property { get; set; } = default!;
         public DbSet<PropertyImage> PropertyImage { get; set; } = default!;
         public DbSet<ErrorLog> ErrorLogs { get; set; }
+        public DbSet<Agreement> Agreement { get; set; }
+        public DbSet<Invoice> Invoice { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,6 +67,8 @@ namespace LondonEstate.Data
                 // Decimal precision for estimated price
                 entity.Property(p => p.EstimatedPrice)
                       .HasColumnType("decimal(18,2)");
+                entity.Property(p => p.SquareMeter)
+                      .HasColumnType("decimal(18,2)");
 
                 // Index on FK to speed lookups
                 entity.HasIndex(p => p.CustomerId);
@@ -86,6 +90,28 @@ namespace LondonEstate.Data
 
                 // Index on FK for faster queries
                 entity.HasIndex(i => i.PropertyId);
+            });
+
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.HasKey(i => i.Id);
+
+                entity.Property(p => p.AmountPaid)
+                   .HasColumnType("decimal(18,2)");
+                // Index on FK for faster queries
+                entity.HasIndex(i => i.InvoiceNumber);
+            });
+
+            modelBuilder.Entity<Agreement>(entity =>
+            {
+                entity.HasKey(i => i.Id);
+
+                entity.Property(p => p.Deposit)
+                   .HasColumnType("decimal(18,2)");
+                entity.Property(p => p.Rent)
+                   .HasColumnType("decimal(18,2)");
+                // Index on FK for faster queries
+                entity.HasIndex(i => i.GuestName);
             });
         }
     }

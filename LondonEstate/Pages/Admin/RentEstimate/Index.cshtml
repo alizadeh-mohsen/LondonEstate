@@ -1,0 +1,90 @@
+﻿@page
+@model LondonEstate.Pages.Admin.RentEstimate.EstimationRequestModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+
+    var start = Model.MetaData.TotalCount == 0 ? 0 : ((Model.MetaData.CurrentPage - 1) * Model.MetaData.PageSize) + 1;
+    var end = start == 0 ? 0 : start + (Model.Customers?.Count ?? 0) - 1;
+}
+
+<h1>Dashboard</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>PhoneNumber</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Customers)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @($"{item.CountryCode} {item.PhoneNumber}")
+                </td>
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    @* <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> | *@
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> @*|
+                     <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a> *@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <div>
+        <strong>Showing</strong> @start - @end <strong>of</strong> @Model.MetaData.TotalCount
+    </div>
+
+    <div class="d-flex align-items-center">
+        <form method="get" class="me-3">
+            <label for="pageSize" class="form-label visually-hidden">Page size</label>
+            <select id="pageSize" name="pageSize" class="form-select" onchange="this.form.submit()">
+                @{
+                    var sizes = new[] { 5, 10, 20, 50 };
+                }
+                @foreach (var s in sizes)
+                {
+                    <option value="@s" selected="@(s == Model.MetaData.PageSize ? "selected" : null)">@s</option>
+                }
+            </select>
+            <input type="hidden" name="pageNumber" value="1" />
+        </form>
+
+        <nav aria-label="Customer pagination">
+            <ul class="pagination mb-0">
+                <li class="page-item @(Model.MetaData.HasPreviousPage ? "" : "disabled")">
+                    <a class="page-link"
+                       asp-route-pageNumber="@(Model.MetaData.CurrentPage - 1)"
+                       asp-route-pageSize="@Model.MetaData.PageSize"
+                       [cite_start]asp-route-search="@ViewContext.HttpContext.Request.Query["search"]">Previous</a>
+                </li>
+
+
+                @for (var i = 1; i <= Model.MetaData.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.MetaData.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-route-pageNumber="@i" asp-route-pageSize="@Model.MetaData.PageSize">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.MetaData.HasNextPage ? "" : "disabled")">
+                    <a class="page-link"
+                       asp-route-pageNumber="@(Model.MetaData.CurrentPage + 1)"
+                       asp-route-pageSize="@Model.MetaData.PageSize"
+                       [cite_start]asp-route-search="@ViewContext.HttpContext.Request.Query["search"]">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

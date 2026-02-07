@@ -74,45 +74,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-2">
-                                <label for="Deposit" class="form-label">
-                                    <strong>Security Deposit (£):</strong>
-                                </label>
-                                <input type="text"
-                                       class="form-control"
-                                       id="Deposit"
-                                       asp-for="AgreementViewModel.Deposit"
-                                       @* placeholder="e.g., 100"  *@
-                                       required />
-                            </div> <div class="col-md-6 mb-2">
-                                <label for="Rent" class="form-label">
-                                    <strong> Rent (£):</strong>
-                                </label>
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="Rent" 
-                                       asp-for="AgreementViewModel.Rent" 
-                                       @* placeholder="e.g., 250.00"  *@
-                                       required />
-                            </div>
-
-                          
-                        </div>
-
-                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Guest & Host Information</h5> *@
-
-                        <div class="mb-2">
-                            <label for="GuestName" class="form-label">
-                                <strong> Guest Name:</strong>
-                            </label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="GuestName" 
-                                   asp-for="AgreementViewModel.GuestName" 
-                                   @* placeholder="e.g., John Smith"  *@
-                                   required />
-                        </div>
+                      
 
 
                         @* <h5 class="border-bottom pb-2 mb-2 mt-4">Dates</h5> *@
@@ -124,8 +86,8 @@
                                 </label>
                                 <input type="date" 
                                        class="form-control" 
-                                       id="Today" 
-                                       asp-for="AgreementViewModel.Today" 
+                                       id="Date" 
+                                       asp-for="AgreementViewModel.Date" 
                                        required />
                             </div>
 
@@ -150,6 +112,46 @@
                                        asp-for="AgreementViewModel.CheckOutDate" 
                                        required />
                             </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label for="Deposit" class="form-label">
+                                    <strong>Security Deposit (£):</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="Deposit"
+                                       asp-for="AgreementViewModel.Deposit"
+                                       @* placeholder="e.g., 100"  *@
+                                       required />
+                            </div> <div class="col-md-6 mb-2">
+                                <label for="Rent" class="form-label">
+                                    <strong> Rent (£):</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="Rent"
+                                       asp-for="AgreementViewModel.Rent"
+                                       @* placeholder="e.g., 250.00"  *@
+                                       required />
+                            </div>
+
+
+                        </div>
+
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Guest & Host Information</h5> *@
+
+                        <div class="mb-2">
+                            <label for="GuestName" class="form-label">
+                                <strong> Guest Name:</strong>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="GuestName"
+                                   asp-for="AgreementViewModel.GuestName"
+                                   @* placeholder="e.g., John Smith"  *@
+                                   required />
                         </div>
 
                         <div class="d-grid gap-2 mt-4">
