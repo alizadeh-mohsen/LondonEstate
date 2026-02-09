@@ -23,6 +23,7 @@ namespace LondonEstate.Models
         public DateTime CheckInDate { get; set; }
         [Required]
         public DateTime CheckOutDate { get; set; }
+        public string? FileName { get; set; }
 
     }
 }

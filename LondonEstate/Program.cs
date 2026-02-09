@@ -1,12 +1,15 @@
 using LondonEstate.Data;
 using LondonEstate.Services;
+using LondonEstate.Settings;
 using LondonEstate.Utils.Types;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
+QuestPDF.Settings.License = LicenseType.Community;
 
 builder.Services.AddAutoMapper(cfg =>
 {
@@ -27,6 +30,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddRazorPages();
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<UploadSettings>(builder.Configuration.GetSection("UploadSettings"));
 
 builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
 builder.Services.AddScoped<IEstimateRequestService, EstimateRequestService>();

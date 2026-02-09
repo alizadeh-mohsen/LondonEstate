@@ -23,7 +23,7 @@ namespace LondonEstate.Pages.Admin.RentEstimate
         {
             var query = _context.Customer.AsNoTracking().AsQueryable();
             query = query.Where(c => c.Properties.Any(c => c.EstimatedPrice == null));
-            query = query.OrderBy(c => c.CreatedAt);
+            query = query.OrderByDescending(c => c.CreatedAt);
 
             var customers = await PagedList<Customer>.ToPagedList(query, queryParams.PageNumber, queryParams.PageSize);
             MetaData = customers.MetaData;

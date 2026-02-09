@@ -1,13 +1,14 @@
 using AutoMapper;
 using LondonEstate.Data;
 using LondonEstate.Services;
+using LondonEstate.Settings;
 using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
 
 namespace LondonEstate.Pages.Admin.Invoice;
 
@@ -17,14 +18,19 @@ public class IndexModel : PageModel
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly UploadSettings _uploadSettings;
     private readonly ILogError _logError;
 
-    public IndexModel(IWebHostEnvironment env, ApplicationDbContext dbContext, IMapper mapper, ILogError logError)
+    public IndexModel(IWebHostEnvironment env,
+        ApplicationDbContext dbContext, IMapper mapper, ILogError logError,
+        IOptions<UploadSettings> settings)
     {
         _webHostEnvironment = env;
         _dbContext = dbContext;
         _mapper = mapper;
         _logError = logError;
+        _uploadSettings = settings.Value;
+
     }
 
     [BindProperty]
@@ -62,18 +68,19 @@ public class IndexModel : PageModel
 
         try
         {
-            // Configure QuestPDF license
-            QuestPDF.Settings.License = LicenseType.Community;
+
             string logoPath = Path.Combine(_webHostEnvironment.WebRootPath, "img", "KeyBridgeEstateLogo.png");
 
             // Generate the PDF
             var pdfBytes = GeneratePdf();
 
-            await SaveReport();
+            var fileName = GenerateInvoiceNumber() + "-" + InvoiceViewModel.IssuedTo + ".pdf";
+            await UploadPdf(pdfBytes, fileName);
 
+            await SaveReportToDb(fileName);
 
             // Return the PDF as a downloadable file
-            return File(pdfBytes, "application/pdf", $"Invoice_{DateTime.Now:yyyyMMdd-HHmm}.pdf");
+            return File(pdfBytes, "application/pdf", fileName);
         }
         catch (Exception ex)
         {
@@ -206,13 +213,30 @@ public class IndexModel : PageModel
         return document.GeneratePdf();
     }
 
-    private async Task SaveReport()
+    private async Task SaveReportToDb(string fileName)
     {
-
         var invoice = _mapper.Map<Models.Invoice>(InvoiceViewModel);
+        invoice.FileName = fileName;
 
         _dbContext.Invoice.Add(invoice);
         await _dbContext.SaveChangesAsync();
+
+    }
+
+    private async Task UploadPdf(byte[] pdfBytes, string fileName)
+    {
+        // Ensure the uploads directory exists
+        var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, _uploadSettings.InvoiceUploadDirectory);
+        if (!Directory.Exists(uploadsPath))
+        {
+            Directory.CreateDirectory(uploadsPath);
+        }
+
+        // Generate the file path
+        var filePath = Path.Combine(uploadsPath, fileName);
+
+        // Write the PDF bytes to the file
+        await System.IO.File.WriteAllBytesAsync(filePath, pdfBytes);
 
     }
 
@@ -223,6 +247,6 @@ public class IndexModel : PageModel
         // dd: 05
         // HH: 15 (24-hour format)
         // mm: 35
-        return "KBE-" + DateTime.Now.ToString("yyyyMMdd-HHmm");
+        return "IN-" + DateTime.Now.ToString("yyyyMMdd-HHmm");
     }
 }

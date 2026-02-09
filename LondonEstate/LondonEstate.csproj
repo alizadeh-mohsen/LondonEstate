@@ -29,6 +29,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="wwwroot\uploads\" />
+		<Folder Include="wwwroot\Uploads\Estimates\" />
+		<Folder Include="wwwroot\Uploads\Invoices\" />
+		<Folder Include="wwwroot\Uploads\Agreements\" />
 	</ItemGroup>
 </Project>

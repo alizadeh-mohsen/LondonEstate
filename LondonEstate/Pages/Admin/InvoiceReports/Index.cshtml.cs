@@ -23,7 +23,7 @@ namespace LondonEstate.Pages.Admin.InvoiceReports
         public async Task OnGetAsync([FromQuery] QueryParams queryParams, string? issuedTo, DateTime? date, string? property)
 
         {
-            var query = _context.Invoice.AsQueryable().AsNoTracking();
+            var query = _context.Invoice.AsQueryable().OrderByDescending(c => c.Date).AsNoTracking();
 
             if (!string.IsNullOrWhiteSpace(issuedTo))
             {

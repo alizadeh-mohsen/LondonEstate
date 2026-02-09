@@ -22,7 +22,7 @@ namespace LondonEstate.Services
             _db = db;
             _env = env;
             _logError = logError;
-            _uploadSettings = uploadSettings?.Value ?? new UploadSettings();
+            _uploadSettings = uploadSettings.Value;
         }
 
         // now uses configuration-driven limits and validation
@@ -50,7 +50,7 @@ namespace LondonEstate.Services
                     if (files.Length > _uploadSettings.MaxFiles)
                         errorList.Add($"Too many files. Maximum allowed is {_uploadSettings.MaxFiles}.");
 
-                    var uploads = Path.Combine(_env.WebRootPath ?? "wwwroot", _uploadSettings.UploadFolder);
+                    var uploads = Path.Combine(_env.WebRootPath ?? "wwwroot", _uploadSettings.EstimationUploadDirectory);
                     if (!Directory.Exists(uploads))
                     {
                         Directory.CreateDirectory(uploads);
@@ -86,7 +86,7 @@ namespace LondonEstate.Services
                         {
                             Property = property,
                             PropertyId = property.Id,
-                            PicturePath = $"/{_uploadSettings.UploadFolder}/{fileName}"
+                            PicturePath = $"/{_uploadSettings.EstimationUploadDirectory}/{fileName}"
                         };
 
                         _db.PropertyImage.Add(imageRecord);

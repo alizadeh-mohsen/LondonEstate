@@ -22,7 +22,7 @@ namespace LondonEstate.Pages.Admin.AgreementReports
 
         public async Task OnGetAsync([FromQuery] QueryParams queryParams, string? search, DateTime? date)
         {
-            var query = _context.Agreement.AsQueryable().AsNoTracking();
+            var query = _context.Agreement.AsQueryable().OrderByDescending(c => c.Date).AsNoTracking();
             if (!string.IsNullOrWhiteSpace(search))
             {
                 string lowerSearch = search.ToLower();
