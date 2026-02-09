@@ -72,17 +72,45 @@
                             </div>
                         </div>
 
-                        <div class="mb-2">
-                            <label for="Date" class="form-label">
-                                <strong>Date:</strong>
-                            </label>
-                            <input type="date"
-                                   class="form-control"
-                                   id="Date"
-                                   asp-for="InvoiceViewModel.Date"
-                                   @* placeholder="e.g., Jane Doe"  *@
-                                   required />
+                       
+
+
+                        <div class="row">
+                            <div class="mb-2">
+                                <label for="Date" class="form-label">
+                                    <strong>Date:</strong>
+                                </label>
+                                <input type="date"
+                                       class="form-control"
+                                       id="Date"
+                                       asp-for="InvoiceViewModel.Date"
+                                       @* placeholder="e.g., Jane Doe"  *@
+                                       required />
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <label for="CheckInDate" class="form-label">
+                                    <strong>   Check-in Date:</strong>
+                                </label>
+                                <input type="date"
+                                       class="form-control"
+                                       id="CheckInDate"
+                                       asp-for="InvoiceViewModel.CheckInDate"
+                                       required />
+                            </div>
+
+                            <div class="col-md-4 mb-2">
+                                <label for="CheckOutDate" class="form-label">
+                                    <strong>  Check-out Date:</strong>
+                                </label>
+                                <input type="date"
+                                       class="form-control"
+                                       id="CheckOutDate"
+                                       asp-for="InvoiceViewModel.CheckOutDate"
+                                       required />
+                            </div>
                         </div>
+
+
                         @* <h5 class="border-bottom pb-2 mb-2 mt-4">Payment Details</h5> *@
 
                         <div class="col-md-6 mb-2">

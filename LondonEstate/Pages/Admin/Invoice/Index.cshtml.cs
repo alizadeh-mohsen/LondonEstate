@@ -48,7 +48,7 @@ public class IndexModel : PageModel
             IssuedBy = "Key Bridge Estate Limited",
             Date = DateTime.Now,
             CheckInDate = DateTime.Now,
-            CheckOutDate = DateTime.Now,
+            CheckOutDate = DateTime.Now.AddDays(1),
             Email = "Office@LondonEstatee.co.uk",
             Phone = "+44 73 079 33344",
             AmountPaid = null,
@@ -135,7 +135,7 @@ public class IndexModel : PageModel
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(70).Text("Issued Date:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.Date.ToString());                // Value takes remaining space
+                        row.RelativeItem().Text(InvoiceViewModel.Date.ToString("dd/MM/yyyy"));
                     });
                     column.Item().Row(row =>
                     {
@@ -150,16 +150,16 @@ public class IndexModel : PageModel
 
                     column.Item().PaddingTop(5);
 
-                    column.Item().Text("Stay Details:");
+                    column.Item().Text("Stay Details:").SemiBold();
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(70).Text("• Check-In:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.CheckInDate.ToString());                // Value takes remaining space
+                        row.RelativeItem().Text(InvoiceViewModel.CheckInDate.ToString("dd MMM yyyy") + ", 3:00 PM");
                     });
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(70).Text("• Check-Out:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.CheckOutDate.ToString());                // Value takes remaining space
+                        row.RelativeItem().Text(InvoiceViewModel.CheckOutDate.ToString("dd MMM yyyy") + ", 11:00 AM");                // Value takes remaining space
                     });
                     column.Item().PaddingTop(15);
 
@@ -172,7 +172,7 @@ public class IndexModel : PageModel
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(80).Text("Payment Date:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.PaymentDate.ToString());                // Value takes remaining space
+                        row.RelativeItem().Text(InvoiceViewModel.PaymentDate.ToString("dd MMM yyyy"));                // Value takes remaining space
                     });
 
                     column.Item().Row(row =>
