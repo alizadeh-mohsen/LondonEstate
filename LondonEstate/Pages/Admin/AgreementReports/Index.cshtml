@@ -1,4 +1,5 @@
 ﻿@page
+@using LondonEstate.Utils.Extensions
 @model LondonEstate.Pages.Admin.AgreementReports.IndexModel
 
 @{
@@ -60,7 +61,7 @@
                     @Html.DisplayFor(modelItem => item.GuestName)
                 </td>
                 <td>
-                    @item.Date.ToShortDateString()
+                    @item.Date.ToUkDateString()
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Rent)

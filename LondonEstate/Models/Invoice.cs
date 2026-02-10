@@ -26,5 +26,6 @@ namespace LondonEstate.Models
         [Required]
         public DateTime CheckOutDate { get; set; }
         public string? FileName { get; set; }
+        public string? ReferenceNumber { get; set; }
     }
 }

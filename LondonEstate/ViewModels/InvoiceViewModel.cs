@@ -18,5 +18,6 @@ namespace LondonEstate.ViewModels
         public required DateTime CheckOutDate { get; set; }
         public required string Email { get; set; }
         public required string Phone { get; set; }
+        public string? ReferenceNumber { get; set; }
     }
 }

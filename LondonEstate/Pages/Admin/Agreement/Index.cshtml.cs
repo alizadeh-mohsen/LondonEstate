@@ -2,6 +2,7 @@ using AutoMapper;
 using LondonEstate.Data;
 using LondonEstate.Services;
 using LondonEstate.Settings;
+using LondonEstate.Utils.Extensions;
 using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -125,7 +126,7 @@ public class IndexModel : PageModel
                     // Payment Details
                     column.Item().Text($"Sort Code: {AgreementViewModel.SortCode}").Bold();
                     column.Item().Text($"Account Number: {AgreementViewModel.Account}").Bold();
-                    column.Item().Text($"Accommodation Charge: £{AgreementViewModel.Rent}").Bold();
+                    column.Item().Text($"Accommodation Charge: £{AgreementViewModel.Rent.Value.ToUkCurrencyString()}").Bold();
 
                     column.Item().PaddingTop(10);
 
@@ -135,8 +136,8 @@ public class IndexModel : PageModel
 
                     // Guest Information
                     column.Item().Text($"Guest Name: {AgreementViewModel.GuestName}");
-                    column.Item().Text($"Check-in Date: {AgreementViewModel.CheckInDate:dd/MM/yyyy} – 3:00 PM");
-                    column.Item().Text($"Check-out Date: {AgreementViewModel.CheckOutDate:dd/MM/yyyy} – 11:00 AM");
+                    column.Item().Text($"Check-in Date: {AgreementViewModel.CheckInDate.ToUkDateString()} – 3:00 PM");
+                    column.Item().Text($"Check-out Date: {AgreementViewModel.CheckOutDate.ToUkDateString()} – 11:00 AM");
 
                     column.Item().PaddingTop(20);
 
@@ -185,7 +186,7 @@ public class IndexModel : PageModel
 
                     column.Item().PaddingTop(5);
 
-                    column.Item().Text($"A security deposit of £{AgreementViewModel.Deposit} is required and will be held to cover any potential damages or violations of this agreement. The deposit will be refunded within 7 days after check-out, provided:");
+                    column.Item().Text($"A security deposit of £{AgreementViewModel.Deposit.Value.ToUkCurrencyString()} is required and will be held to cover any potential damages or violations of this agreement. The deposit will be refunded within 7 days after check-out, provided:");
 
                     column.Item().PaddingTop(5);
 
@@ -241,14 +242,14 @@ public class IndexModel : PageModel
                         {
                             col.Item().Text($"Guest Signature:");
                             col.Item().Text("                  ").FontFamily("Segoe Script").FontSize(14).Italic(); ;
-                            col.Item().PaddingTop(5).Text($"Date: {AgreementViewModel.CheckInDate:dd/MM/yyyy}");
+                            col.Item().PaddingTop(5).Text($"Date: {AgreementViewModel.CheckInDate.ToUkDateString()}");
                         });
 
                         row.RelativeItem().Column(col =>
                         {
                             col.Item().Text($"Host Signature:");
                             col.Item().Text(AgreementViewModel.OwnerName).FontFamily("Segoe Script").FontSize(14).Italic();
-                            col.Item().PaddingTop(5).Text($"Date: {AgreementViewModel.CheckOutDate:dd/MM/yyyy}");
+                            col.Item().PaddingTop(5).Text($"Date: {AgreementViewModel.CheckOutDate.ToUkDateString()}");
                         });
                     });
                 });

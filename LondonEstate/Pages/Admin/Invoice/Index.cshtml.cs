@@ -2,6 +2,7 @@ using AutoMapper;
 using LondonEstate.Data;
 using LondonEstate.Services;
 using LondonEstate.Settings;
+using LondonEstate.Utils.Extensions;
 using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
+using System.Globalization;
 
 namespace LondonEstate.Pages.Admin.Invoice;
 
@@ -135,7 +137,7 @@ public class IndexModel : PageModel
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(70).Text("Issued Date:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.Date.ToString("dd/MM/yyyy"));
+                        row.RelativeItem().Text(InvoiceViewModel.Date.ToUkDateString());
                     });
                     column.Item().Row(row =>
                     {
@@ -154,25 +156,26 @@ public class IndexModel : PageModel
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(70).Text("• Check-In:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.CheckInDate.ToString("dd MMM yyyy") + ", 3:00 PM");
+                        row.RelativeItem().Text(InvoiceViewModel.CheckInDate.ToUkDateString() + ", 3:00 PM");
                     });
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(70).Text("• Check-Out:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.CheckOutDate.ToString("dd MMM yyyy") + ", 11:00 AM");                // Value takes remaining space
+                        row.RelativeItem().Text(InvoiceViewModel.CheckOutDate.ToUkDateString() + ", 11:00 AM");                // Value takes remaining space
                     });
                     column.Item().PaddingTop(15);
 
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(80).Text("Amount Paid:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text("£" + InvoiceViewModel.AmountPaid);                // Value takes remaining space
+                        var amountPaidFormatted = InvoiceViewModel.AmountPaid.Value.ToString("C", CultureInfo.GetCultureInfo("en-GB"));
+                        row.RelativeItem().Text($"{amountPaidFormatted}");
                     });
 
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(80).Text("Payment Date:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.PaymentDate.ToString("dd MMM yyyy"));                // Value takes remaining space
+                        row.RelativeItem().Text(InvoiceViewModel.PaymentDate.ToUkDateString());
                     });
 
                     column.Item().Row(row =>

@@ -23,7 +23,7 @@
                     <form method="post">
                         @* <h5 class="border-bottom pb-2 mb-2">Company Information</h5> *@
 
-                      
+
                         <div class="row">
                             <div class="mb-2">
                                 <label for="CompanyName" class="form-label">
@@ -36,7 +36,7 @@
                                        @* placeholder="e.g., ABC Properties Ltd"  *@
                                        required />
                             </div>
-                           
+
 
                             <div class="mb-2">
                                 <label for="IssuedBy" class="form-label">
@@ -72,7 +72,7 @@
                             </div>
                         </div>
 
-                       
+
 
 
                         <div class="row">
@@ -170,6 +170,18 @@
                                        asp-for="InvoiceViewModel.PaymentMethod"
                                        required />
                             </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="ReferenceNumber" class="form-label">
+                                <strong>Reference Number:</strong>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="ReferenceNumber"
+                                   asp-for="InvoiceViewModel.ReferenceNumber"
+                                   @* placeholder="e.g., 12345678"  *@
+                                   required />
+                        </div>
 
                         @* <h5 class="border-bottom pb-2 mb-2 mt-4">Guest & Host Information</h5> *@
 
@@ -178,7 +190,7 @@
 
                         @* <h5 class="border-bottom pb-2 mb-2 mt-4">Dates</h5> *@
 
-                     
+
 
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">

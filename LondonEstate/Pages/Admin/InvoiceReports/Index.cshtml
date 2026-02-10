@@ -1,4 +1,5 @@
 ﻿@page
+@using LondonEstate.Utils.Extensions
 @model LondonEstate.Pages.Admin.InvoiceReports.IndexModel
 
 @{
@@ -36,6 +37,13 @@
                class="form-control"
                value="@ViewContext.HttpContext.Request.Query["date"]" />
     </div>
+    <div class="col-md-10">
+        <label class="form-label">Reference Number:</label>
+        <input type="text"
+               name="referenceNumber"
+               class="form-control"
+               value="@ViewContext.HttpContext.Request.Query["referenceNumber"]" />
+    </div>
 
     <div class="col-md-2 d-flex align-items-end">
         <button type="submit" class="btn btn-primary w-100">Search</button>
@@ -57,7 +65,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Invoices[0].Date)
             </th>
-
             <th></th>
         </tr>
     </thead>
@@ -72,7 +79,7 @@
                     @Html.DisplayFor(modelItem => item.IssuedTo)
                 </td>
                 <td>
-                    @item.Date.ToShortDateString()
+                    @item.Date.ToUkDateString()
                 </td>
 
                 <td>
