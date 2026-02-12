@@ -117,7 +117,7 @@ public class IndexModel : PageModel
                     //column.Item().PaddingTop(5);
 
                     // Title
-                    column.Item().AlignCenter().Text($"Guest Agreement – {AgreementViewModel.Date:dd/MM/yyyy}")
+                    column.Item().AlignCenter().Text($"Guest Agreement – {AgreementViewModel.Date.ToUkDateString()}")
                         .FontSize(14)
                         .Bold();
 
