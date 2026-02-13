@@ -9,7 +9,7 @@ namespace LondonEstate.ViewModels
         public required string IssuedTo { get; set; }
         public required string Property { get; set; }
         [Required]
-        public decimal? AmountPaid { get; set; }
+        public required string? AmountPaid { get; set; }
         public required DateTime PaymentDate { get; set; }
         public required string PaymentMethod { get; set; }
         public required string IssuedBy { get; set; }

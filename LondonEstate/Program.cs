@@ -43,6 +43,14 @@ Log.Logger = new LoggerConfiguration()
 
 var app = builder.Build();
 
+var supportedCultures = new[] { "en-GB" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
+
 await ApplyMigrationsAsync(app);
 
 // Configure the HTTP request pipeline.

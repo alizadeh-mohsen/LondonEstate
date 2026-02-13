@@ -12,5 +12,10 @@ namespace LondonEstate.Utils.Extensions
         {
             return amount.ToString("C2", CultureInfo.GetCultureInfo("en-GB"));
         }
+        public static string ToUkCurrency(this string? input)
+        {
+            decimal amount = decimal.Parse(input, CultureInfo.InvariantCulture);
+            return amount.ToString("C2", CultureInfo.GetCultureInfo("en-GB"));
+        }
     }
 }

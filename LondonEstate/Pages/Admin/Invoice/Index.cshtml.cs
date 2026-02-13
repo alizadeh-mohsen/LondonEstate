@@ -167,7 +167,7 @@ public class IndexModel : PageModel
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(80).Text("Amount Paid:").SemiBold(); // Fixed width for labels
-                        var amountPaidFormatted = InvoiceViewModel.AmountPaid.Value.ToUkCurrencyString();
+                        var amountPaidFormatted = InvoiceViewModel.AmountPaid.ToUkCurrency();
                         row.RelativeItem().Text($"{amountPaidFormatted}");
                     });
 
