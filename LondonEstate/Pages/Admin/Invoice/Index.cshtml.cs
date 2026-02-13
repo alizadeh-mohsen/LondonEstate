@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
-using System.Globalization;
 
 namespace LondonEstate.Pages.Admin.Invoice;
 
@@ -168,7 +167,7 @@ public class IndexModel : PageModel
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(80).Text("Amount Paid:").SemiBold(); // Fixed width for labels
-                        var amountPaidFormatted = InvoiceViewModel.AmountPaid.Value.ToString("C", CultureInfo.GetCultureInfo("en-GB"));
+                        var amountPaidFormatted = InvoiceViewModel.AmountPaid.Value.ToUkCurrencyString();
                         row.RelativeItem().Text($"{amountPaidFormatted}");
                     });
 

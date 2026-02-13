@@ -1,4 +1,6 @@
-﻿namespace LondonEstate.Utils.Extensions
+﻿using System.Globalization;
+
+namespace LondonEstate.Utils.Extensions
 {
     public static class UkFormatExtensions
     {
@@ -8,7 +10,7 @@
         }
         public static string ToUkCurrencyString(this decimal amount)
         {
-            return string.Format("£{0:N2}", amount);
+            return amount.ToString("C2", CultureInfo.GetCultureInfo("en-GB"));
         }
     }
 }

@@ -97,6 +97,7 @@ public class IndexModel : PageModel
 
     private byte[] GeneratePdf()
     {
+        var agreementDate = AgreementViewModel.Date.ToUkDateString();
         var document = Document.Create(container =>
         {
             container.Page(page =>
@@ -186,7 +187,7 @@ public class IndexModel : PageModel
 
                     column.Item().PaddingTop(5);
 
-                    column.Item().Text($"A security deposit of £{AgreementViewModel.Deposit.Value.ToUkCurrencyString()} is required and will be held to cover any potential damages or violations of this agreement. The deposit will be refunded within 7 days after check-out, provided:");
+                    column.Item().Text($"A security deposit of {AgreementViewModel.Deposit.Value.ToUkCurrencyString()} is required and will be held to cover any potential damages or violations of this agreement. The deposit will be refunded within 7 days after check-out, provided:");
 
                     column.Item().PaddingTop(5);
 
@@ -242,14 +243,14 @@ public class IndexModel : PageModel
                         {
                             col.Item().Text($"Guest Signature:");
                             col.Item().Text("                  ").FontFamily("Segoe Script").FontSize(14).Italic(); ;
-                            col.Item().PaddingTop(5).Text($"Date: {AgreementViewModel.CheckInDate.ToUkDateString()}");
+                            col.Item().PaddingTop(5).Text($"Date: {agreementDate}");
                         });
 
                         row.RelativeItem().Column(col =>
                         {
                             col.Item().Text($"Host Signature:");
                             col.Item().Text(AgreementViewModel.OwnerName).FontFamily("Segoe Script").FontSize(14).Italic();
-                            col.Item().PaddingTop(5).Text($"Date: {AgreementViewModel.CheckOutDate.ToUkDateString()}");
+                            col.Item().PaddingTop(5).Text($"Date: {agreementDate}");
                         });
                     });
                 });
