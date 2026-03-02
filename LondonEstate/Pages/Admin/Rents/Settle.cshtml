@@ -1,0 +1,63 @@
+﻿@page "{id:guid}"
+@model LondonEstate.Pages.Admin.Rents.SettleModel
+
+@{
+    ViewData["Title"] = "Settle Rent";
+}
+
+<h1>Settle Rent</h1>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Rent.Address</h5>
+        <p class="card-text">Amount: @String.Format("{0:C}", Model.Rent.RentAmount)</p>
+        <p class="card-text">Due Date: @Model.Rent.DueDate</p>
+        @if (Model.LastSettlement is not null)
+        {
+            <p class="card-text">Last settled: @Model.LastSettlement.PaidDate.ToLocalTime().ToString("g")</p>
+        }
+        else
+        {
+            <p class="card-text">Last settled: <em>Never</em></p>
+        }
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-success">@Model.Message</div>
+}
+
+<form method="post" asp-route-id="@Model.Rent.Id">
+    <button type="submit" class="btn btn-primary">Settle</button>
+    <a asp-page="./Index" class="btn btn-secondary ms-2">Back to list</a>
+</form>
+
+<hr />
+
+<h3>Settlement History</h3>
+
+@if (Model.RentHistories is null || !Model.RentHistories.Any())
+{
+    <p><em>No settlements recorded.</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Paid Date (local)</th>
+                <th>Id</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var h in Model.RentHistories)
+            {
+                <tr>
+                    <td>@h.PaidDate.ToLocalTime().ToString("g")</td>
+                    <td>@h.Id</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

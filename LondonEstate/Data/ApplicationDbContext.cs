@@ -18,6 +18,10 @@ namespace LondonEstate.Data
         public DbSet<ErrorLog> ErrorLogs { get; set; }
         public DbSet<Agreement> Agreement { get; set; }
         public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<Rent> Rent { get; set; }
+
+        // Added DbSet for RentHistory so EF can track and migrate the table
+        public DbSet<RentHistory> RentHistory { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -112,6 +116,14 @@ namespace LondonEstate.Data
                    .HasColumnType("decimal(18,2)");
                 // Index on FK for faster queries
                 entity.HasIndex(i => i.GuestName);
+            });
+
+            // Configure RentHistory: index on RentId and PaidDate ordering is common
+            modelBuilder.Entity<RentHistory>(entity =>
+            {
+                entity.HasKey(rh => rh.Id);
+                entity.HasIndex(rh => rh.RentId);
+                entity.Property(rh => rh.PaidDate).IsRequired();
             });
         }
     }

@@ -1,0 +1,62 @@
+﻿
+@page
+@model LondonEstate.Pages.Admin.Rents.IndexModel
+
+@{
+    ViewData["Title"] = "Rents";
+}
+
+<h1>Rents</h1>
+
+<Grid class="d-flex align-items-center gap-5">
+    <Grid><a asp-page="Create" class="btn btn-primary ">Create New</a></Grid>
+    <Grid>
+        <div class="display-5">
+            Total: @Model.TotalRentAmount
+        </div>
+    </Grid>
+</Grid>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Address</th>
+            <th>Rent Amount</th>
+            <th>Due Day</th>
+            @* <th>Description</th> *@
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.RentItems)
+        {
+            <tr>
+                <td>@item.Rent.Address</td>
+                <td>@String.Format("{0:C}", item.Rent.RentAmount)</td>
+                <td>@item.Rent.DueDate</td>
+                @* <td>@item.Rent.Description</td> *@
+                <td>
+                    @if (!string.IsNullOrEmpty(item.WarningText))
+                    {
+                        <span class="badge @item.WarningClass">@item.WarningText</span>
+                    }
+                    else if (item.LastSettlement is not null)
+                    {
+                        <small class="text-muted">Last: @item.LastSettlement.PaidDate.ToLocalTime().ToString("g")</small>
+                    }
+                    else
+                    {
+                        <small class="text-muted">No payments</small>
+                    }
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Rent.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Rent.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Rent.Id">Delete</a> |
+                    <a asp-page="./Settle" asp-route-id="@item.Rent.Id">Settle</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

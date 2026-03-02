@@ -1,0 +1,49 @@
+﻿@page
+@model LondonEstate.Pages.Admin.Rents.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Rent</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Rent.Address" class="control-label"></label>
+                <input asp-for="Rent.Address" class="form-control" />
+                <span asp-validation-for="Rent.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rent.RentAmount" class="control-label"></label>
+                <input asp-for="Rent.RentAmount" class="form-control" />
+                <span asp-validation-for="Rent.RentAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rent.DueDate" class="control-label"></label>
+                <input asp-for="Rent.DueDate" class="form-control" />
+                <span asp-validation-for="Rent.DueDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rent.Description" class="control-label"></label>
+                <input asp-for="Rent.Description" class="form-control" />
+                <span asp-validation-for="Rent.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary mt-3" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index" class="btn btn-secondary mt-2">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
