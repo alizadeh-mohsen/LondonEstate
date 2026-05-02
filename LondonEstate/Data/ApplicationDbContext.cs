@@ -19,6 +19,8 @@ namespace LondonEstate.Data
         public DbSet<Agreement> Agreement { get; set; }
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<Rent> Rent { get; set; }
+        public DbSet<Flat> Flat { get; set; } = default!;
+
 
         // Added DbSet for RentHistory so EF can track and migrate the table
         public DbSet<RentHistory> RentHistory { get; set; } = default!;

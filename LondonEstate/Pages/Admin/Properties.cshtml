@@ -1,0 +1,72 @@
+﻿@page
+@model LondonEstate.Pages.Admin.PropertiesModel
+@{
+}
+
+@{
+    ViewData["Title"] = "Properties";
+    var cutoff = DateTime.Today.AddHours(11);
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Flat[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Flat[0].Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Flat[0].CheckIn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Flat[0].CheckOut)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Flat[0].Empty)
+            </th>
+
+           
+            <th>
+
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Flat)
+        {
+            // safe evaluation for nullable CheckOut
+            var isAfterCutoff = item.CheckOut is DateTime co && co > cutoff;
+
+            <tr>
+                <td>
+                    <a href="@(Model.Flat?.ElementAtOrDefault(0)?.Url ?? "#")">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CheckIn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CheckOut)
+                </td>
+                <td class="@(isAfterCutoff ? "bg-danger" : "bg-success")" style="@(isAfterCutoff ? "background-color:red;" : "background-color:green")">
+                    @Html.DisplayFor(modelItem => item.Empty)
+                </td>
+
+             
+
+                <td>
+
+                    <a asp-page="./FlatDetail" asp-route-id="@item.Id">Details</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
