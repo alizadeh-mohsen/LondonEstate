@@ -6,10 +6,8 @@
     <title>LE Admin Panel</title>
     <link rel="stylesheet" href="~/css/theme/yeti.bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/LondonEstate.styles.css" asp-append-version="true" />
-
 </head>
 <body>
     <header>
@@ -26,7 +24,40 @@
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item dropdown ">
                                 <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Rent Management
+                                    Properties
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link @(Context.Request.Path == "/Admin/Flats" ? "active" : "")" asp-area="" asp-page="/Admin/Properties">Status</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(Context.Request.Path == "/Admin/Flats" ? "active" : "")" asp-area="" asp-page="/Admin/Flats/Index">Manage</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown ">
+                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Invoices
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link @(Context.Request.Path == "/Admin/Invoice" ? "active" : "")" asp-area="" asp-page="/Admin/Invoice/Index">Generate Invoice</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(Context.Request.Path == "/Admin/Agreement" ? "active" : "")" asp-area="" asp-page="/Admin/Agreement/Index">Guest Agreement</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(Context.Request.Path == "/Admin/InvoiceReports" ? "active" : "")" asp-area="" asp-page="/Admin/InvoiceReports/Index">Invoice Reports</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(Context.Request.Path == "/Admin/AgreementReports" ? "active" : "")" asp-area="" asp-page="/Admin/AgreementReports/Index">Agreement Reports</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown ">
+                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Rents
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="nav-item">
@@ -35,40 +66,7 @@
                                     <li class="nav-item">
                                         <a class="nav-link @(Context.Request.Path == "/Admin/Rents" ? "active" : "")" asp-area="" asp-page="/Admin/Rents/Index">Rents</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/AgreementReports" ? "active" : "")" asp-area="" asp-page="/Admin/AgreementReports/Index">Agreement Reports</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/InvoiceReports" ? "active" : "")" asp-area="" asp-page="/Admin/InvoiceReports/Index">Invoice Reports</a>
-                                    </li>
 
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown ">
-                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Invoice
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Agreement" ? "active" : "")" asp-area="" asp-page="/Admin/Agreement/Index">Guest Agreement</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Invoice" ? "active" : "")" asp-area="" asp-page="/Admin/Invoice/Index">Invoice</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown ">
-                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Property
-                                </a>
-                                <ul class="dropdown-menu">
-                                  
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Flats" ? "active" : "")" asp-area="" asp-page="/Admin/Flats/Index">Manage</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Flats" ? "active" : "")" asp-area="" asp-page="/Admin/Properties">Report</a>
-                                    </li>
 
                                 </ul>
                             </li>

@@ -35,18 +35,13 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Flat.SSID" class="control-label"></label>
-                <input asp-for="Flat.SSID" class="form-control" />
-                <span asp-validation-for="Flat.SSID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Flat.Password" class="control-label"></label>
-                <input asp-for="Flat.Password" class="form-control" />
-                <span asp-validation-for="Flat.Password" class="text-danger"></span>
+                <label asp-for="Flat.Wifi" class="control-label"></label>
+                <textarea asp-for="Flat.Wifi" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Flat.Wifi" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Flat.CheckinInstruction" class="control-label"></label>
-                <input asp-for="Flat.CheckinInstruction" class="form-control" />
+                <textarea asp-for="Flat.CheckinInstruction" class="form-control" rows="5"></textarea>
                 <span asp-validation-for="Flat.CheckinInstruction" class="text-danger"></span>
             </div>
             <div class="form-group">

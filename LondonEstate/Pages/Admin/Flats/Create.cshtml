@@ -5,10 +5,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
 
-<h4>Flat</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
@@ -17,27 +14,6 @@
                 <label asp-for="Flat.Name" class="control-label"></label>
                 <input asp-for="Flat.Name" class="form-control" />
                 <span asp-validation-for="Flat.Name" class="text-danger"></span>
-            </div>
-           
-            <div class="form-group">
-                <label asp-for="Flat.SSID" class="control-label"></label>
-                <input asp-for="Flat.SSID" class="form-control" />
-                <span asp-validation-for="Flat.SSID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Flat.Password" class="control-label"></label>
-                <input asp-for="Flat.Password" class="form-control" />
-                <span asp-validation-for="Flat.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Flat.CheckinInstruction" class="control-label"></label>
-                <textarea asp-for="Flat.CheckinInstruction" class="form-control"></textarea>
-                <span asp-validation-for="Flat.CheckinInstruction" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Flat.VisualGuideUrl" class="control-label"></label>
-                <input asp-for="Flat.VisualGuideUrl" class="form-control" />
-                <span asp-validation-for="Flat.VisualGuideUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Flat.Address" class="control-label"></label>
@@ -49,6 +25,23 @@
                 <input asp-for="Flat.Url" class="form-control" />
                 <span asp-validation-for="Flat.Url" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Flat.Wifi" class="control-label"></label>
+                <textarea asp-for="Flat.Wifi" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Flat.Wifi" class="text-danger"></span>
+            </div>
+          
+            <div class="form-group">
+                <label asp-for="Flat.CheckinInstruction" class="control-label"></label>
+                <textarea asp-for="Flat.CheckinInstruction" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Flat.CheckinInstruction" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Flat.VisualGuideUrl" class="control-label"></label>
+                <input asp-for="Flat.VisualGuideUrl" class="form-control" />
+                <span asp-validation-for="Flat.VisualGuideUrl" class="text-danger"></span>
+            </div>
+           
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -147,7 +147,9 @@ namespace LondonEstate.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BookingNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CheckIn")
@@ -157,30 +159,21 @@ namespace LondonEstate.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CheckinInstruction")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Empty")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SSID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Url")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VisualGuideUrl")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Wifi")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

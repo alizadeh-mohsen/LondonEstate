@@ -42,7 +42,7 @@
 
             <tr>
                 <td>
-                    <a href="@(Model.Flat?.ElementAtOrDefault(0)?.Url ?? "#")">
+                    <a target="_blank" href="@(Model.Flat?.ElementAtOrDefault(0)?.Url ?? "#")">
                         @Html.DisplayFor(modelItem => item.Name)
                     </a>
                 </td>

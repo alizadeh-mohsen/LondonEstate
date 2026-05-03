@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LondonEstate.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260502170158_Flats")]
-    partial class Flats
+    [Migration("20260503065310_flat")]
+    partial class flat
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -150,36 +150,33 @@ namespace LondonEstate.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CheckIn")
+                    b.Property<string>("BookingNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CheckIn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CheckOut")
+                    b.Property<DateTime?>("CheckOut")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CheckinInstruction")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Empty")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SSID")
-                        .IsRequired()
+                    b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VisualGuideUrl")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Wifi")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

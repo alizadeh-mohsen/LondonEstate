@@ -16,8 +16,8 @@
         </dt>
         <dd class="col-sm-10 d-flex align-items-center">
             <div class="me-3">
-                <div>Wi‑Fi Name:<span id="wifi-ssid">@Html.Encode(Model.Flat?.SSID)</span></div>
-                <div>Password:<span id="wifi-password">@Html.Encode(Model.Flat?.Password)</span></div>
+                <div>Wi‑Fi:<span id="wifi">@Html.Encode(Model.Flat?.Wifi)</span></div>
+                
             </div>
             <button type="button" class="btn btn-sm btn-primary" onclick="copyWifi()" aria-label="Copy Wi-Fi credentials">
                 Copy
@@ -67,15 +67,13 @@
         }
 
         function copyWifi() {
-            const ssidEl = document.getElementById('wifi-ssid');
-            const pwdEl = document.getElementById('wifi-password');
-            const ssid = ssidEl ? ssidEl.textContent.trim() : '';
-            const pwd = pwdEl ? pwdEl.textContent.trim() : '';
-            const text = `Wi‑Fi Name: ${ssid}\nPassword: ${pwd}`;
+            const wifiEl = document.getElementById('wifi');
+            const wifi = wifiEl ? wifiEl.textContent.trim() : '';
+            if (!wifi) return;
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+                navigator.clipboard.writeText(wifi).catch(() => fallbackCopy(wifi));
             } else {
-                fallbackCopy(text);
+                fallbackCopy(wifi);
             }
         }
     </script>

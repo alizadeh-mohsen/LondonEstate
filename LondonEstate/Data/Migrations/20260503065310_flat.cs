@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LondonEstate.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Flats : Migration
+    public partial class flat : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,15 +16,16 @@ namespace LondonEstate.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CheckIn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CheckOut = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CheckIn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CheckOut = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Empty = table.Column<bool>(type: "bit", nullable: false),
-                    SSID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CheckinInstruction = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    VisualGuideUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CheckinInstruction = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VisualGuideUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BookingNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Wifi = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
