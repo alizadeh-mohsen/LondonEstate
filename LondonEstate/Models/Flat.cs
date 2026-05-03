@@ -10,8 +10,9 @@
         public string? CheckinInstruction { get; set; }
         public string? VisualGuideUrl { get; set; }
         public string? Address { get; set; }
-        public string? Url { get; set; }
+        public string? FlatUrl { get; set; }
         public string? BookingNumber { get; set; }
+        public string? ReservationUrl { get; set; }
         public string? Wifi { get; set; }
     }
 }

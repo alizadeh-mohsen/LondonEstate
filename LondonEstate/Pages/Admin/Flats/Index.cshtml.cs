@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using LondonEstate.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using LondonEstate.Data;
-using LondonEstate.Models;
 
 namespace LondonEstate.Pages.Admin.Flats
 {
@@ -19,11 +13,11 @@ namespace LondonEstate.Pages.Admin.Flats
             _context = context;
         }
 
-        public IList<Flat> Flat { get;set; } = default!;
+        public IList<Flat> Flat { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
-            Flat = await _context.Flat.ToListAsync();
+            Flat = await _context.Flat.OrderBy(f => f.Name).ToListAsync();
         }
     }
 }

@@ -164,10 +164,13 @@ namespace LondonEstate.Data.Migrations
                     b.Property<bool>("Empty")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FlatUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Url")
+                    b.Property<string>("ReservationUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VisualGuideUrl")

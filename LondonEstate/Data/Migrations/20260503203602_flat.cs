@@ -23,8 +23,9 @@ namespace LondonEstate.Data.Migrations
                     CheckinInstruction = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VisualGuideUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FlatUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BookingNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReservationUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Wifi = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>

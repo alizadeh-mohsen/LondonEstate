@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LondonEstate.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260503065310_flat")]
+    [Migration("20260503203602_flat")]
     partial class flat
     {
         /// <inheritdoc />
@@ -167,10 +167,13 @@ namespace LondonEstate.Data.Migrations
                     b.Property<bool>("Empty")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FlatUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Url")
+                    b.Property<string>("ReservationUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VisualGuideUrl")

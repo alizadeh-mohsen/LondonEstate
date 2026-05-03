@@ -1,4 +1,5 @@
 ﻿@page
+@using LondonEstate.Utils.Extensions
 @model LondonEstate.Pages.Admin.PropertiesModel
 @{
 }
@@ -12,24 +13,18 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Flat[0].Name)
+                Property
             </th>
-            <th>
+            @*  <th>
                 @Html.DisplayNameFor(model => model.Flat[0].Address)
+            </th> *@
+            <th>
+                Dates
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Flat[0].CheckIn)
+                Booking No
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Flat[0].CheckOut)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Flat[0].Empty)
-            </th>
-
-           
-            <th>
-
             </th>
             <th></th>
         </tr>
@@ -42,29 +37,24 @@
 
             <tr>
                 <td>
-                    <a target="_blank" href="@(Model.Flat?.ElementAtOrDefault(0)?.Url ?? "#")">
+                    <a target="_blank" href="@(Model.Flat?.ElementAtOrDefault(0)?.FlatUrl ?? "#")">
                         @Html.DisplayFor(modelItem => item.Name)
                     </a>
                 </td>
-                <td>
+                @*  <td>
                     @Html.DisplayFor(modelItem => item.Address)
+                </td> *@
+                <td class="@(isAfterCutoff ? "bg-danger text-white" : "bg-success text-white")" >
+                    @item.CheckIn?.ToUkDateString() - @item.CheckOut?.ToUkDateString()
+                </td>
+                <td  >
+                    <a target="_blank" href="@(Model.Flat?.ElementAtOrDefault(0)?.ReservationUrl ?? "#")">
+                        @Html.DisplayFor(modelItem => item.BookingNumber)
+                    </a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CheckIn)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CheckOut)
-                </td>
-                <td class="@(isAfterCutoff ? "bg-danger" : "bg-success")" style="@(isAfterCutoff ? "background-color:red;" : "background-color:green")">
-                    @Html.DisplayFor(modelItem => item.Empty)
-                </td>
-
-             
-
-                <td>
-
-                    <a asp-page="./FlatDetail" asp-route-id="@item.Id">Details</a>
-
+                    <a asp-page="./FlatDetail" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Checkin" asp-route-id="@item.Id">Check-in</a>
                 </td>
             </tr>
         }

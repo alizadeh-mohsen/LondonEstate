@@ -34,24 +34,31 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Flat.Empty)
         </dd> *@
+        
         <dt class="col-sm-2">
-            WIFI   <button type="button" class="ms-2 btn btn-sm btn-primary" onclick="copyWifi()" >
+            @Html.DisplayNameFor(model => model.Flat.Wifi)
+        </dt>
+
+        <dd class="col-sm-10 d-flex align-items-start">
+            <div id="wifi" class="flex-grow-1">
+                @Html.DisplayFor(model => model.Flat.Wifi)
+            </div>
+            <button type="button" class="ms-2 btn btn-sm btn-primary" onclick="copyElementText('wifi','')">
                 Copy
             </button>
-        </dt>
-        <dd class="col-sm-10 d-flex align-items-center">
-            <div class="me-3">
-                <div>Wi‑Fi:<span id="wifi">@Html.Encode(Model.Flat?.Wifi)</span></div>
-            </div>
         </dd>
+
+
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Flat.CheckinInstruction)
         </dt>
+
         <dd class="col-sm-10 d-flex align-items-start">
             <div id="checkin-instruction" class="flex-grow-1">
                 @Html.DisplayFor(model => model.Flat.CheckinInstruction)
             </div>
-            <button type="button" class="btn btn-sm btn-primary ms-3" onclick="copyElementText('checkin-instruction','Check‑in instruction')" aria-label="Copy check-in instruction">
+            <button type="button" class="btn btn-sm btn-primary ms-3" onclick="copyElementText('checkin-instruction','Check‑in instruction')" >
                 Copy
             </button>
         </dd>
@@ -68,10 +75,10 @@
             @Html.DisplayFor(model => model.Flat.Address)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Flat.Url)
+            @Html.DisplayNameFor(model => model.Flat.FlatUrl)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Flat.Url)
+            @Html.DisplayFor(model => model.Flat.FlatUrl)
         </dd>
     </dl>
 </div>
