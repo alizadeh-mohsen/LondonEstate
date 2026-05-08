@@ -19,7 +19,7 @@
                 <input asp-for="Flat.Name" class="form-control" />
                 <span asp-validation-for="Flat.Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @* <div class="form-group">
                 <label asp-for="Flat.CheckIn" class="control-label"></label>
                 <input type="date" asp-for="Flat.CheckIn" class="form-control" />
                 <span asp-validation-for="Flat.CheckIn" class="text-danger"></span>
@@ -28,7 +28,7 @@
                 <label asp-for="Flat.CheckOut" class="control-label"></label>
                 <input type="date" asp-for="Flat.CheckOut" class="form-control" />
                 <span asp-validation-for="Flat.CheckOut" class="text-danger"></span>
-            </div>
+            </div> *@
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Flat.Empty" /> @Html.DisplayNameFor(model => model.Flat.Empty)
