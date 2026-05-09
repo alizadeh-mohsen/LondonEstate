@@ -1,9 +1,11 @@
 using LondonEstate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin
 {
+    [Authorize]
     public class PropertiesModel : PageModel
     {
         private readonly Data.ApplicationDbContext _context;
@@ -17,7 +19,11 @@ namespace LondonEstate.Pages.Admin
 
         public async Task OnGetAsync()
         {
-            Flat = await _context.Flat.ToListAsync();
+            var query = from f in _context.Flat
+                        orderby f.Name
+                        select f;
+
+            Flat = await query.ToListAsync();
         }
     }
 }

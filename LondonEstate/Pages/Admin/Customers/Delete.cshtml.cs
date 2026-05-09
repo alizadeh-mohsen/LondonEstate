@@ -9,9 +9,9 @@ namespace LondonEstate.Pages.Admin.Customers
     [Authorize]
     public class DeleteModel : PageModel
     {
-        private readonly LondonEstate.Data.ApplicationDbContext _context;
+        private readonly Data.ApplicationDbContext _context;
 
-        public DeleteModel(LondonEstate.Data.ApplicationDbContext context)
+        public DeleteModel(Data.ApplicationDbContext context)
         {
             _context = context;
         }

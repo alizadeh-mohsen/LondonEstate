@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LondonEstate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using LondonEstate.Data;
-using LondonEstate.Models;
 
 namespace LondonEstate.Pages.Admin.Flats
 {
+    [Authorize]
     public class DetailsModel : PageModel
     {
-        private readonly LondonEstate.Data.ApplicationDbContext _context;
+        private readonly Data.ApplicationDbContext _context;
 
-        public DetailsModel(LondonEstate.Data.ApplicationDbContext context)
+        public DetailsModel(Data.ApplicationDbContext context)
         {
             _context = context;
         }

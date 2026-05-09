@@ -1,10 +1,12 @@
 ﻿using LondonEstate.Models;
 using LondonEstate.Utils.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin.Rents
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly Data.ApplicationDbContext _context;

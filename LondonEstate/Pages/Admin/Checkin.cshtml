@@ -23,20 +23,21 @@
                 <input type="date" asp-for="Flat.CheckOut" class="form-control" />
                 <span asp-validation-for="Flat.CheckOut" class="text-danger"></span>
             </div>
+             <div class="form-group mt-2">
+                <label asp-for="Flat.ReservationUrl" class="control-label">Reservation Url</label>
+                <input asp-for="Flat.ReservationUrl" class="form-control" />
+                <span asp-validation-for="Flat.ReservationUrl" class="text-danger"></span>
+            </div>
             <div class="form-group mt-2">
                 <label asp-for="Flat.BookingNumber" class="control-label">Booking no</label>
                 <input asp-for="Flat.BookingNumber" class="form-control" />
                 <span asp-validation-for="Flat.BookingNumber" class="text-danger"></span>
             </div>
-            <div class="form-group mt-2">
-                <label asp-for="Flat.ReservationUrl" class="control-label">Reservation Url</label>
-                <input asp-for="Flat.ReservationUrl" class="form-control" />
-                <span asp-validation-for="Flat.ReservationUrl" class="text-danger"></span>
-            </div>
+           
            
             <div class="form-group mt-2">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a class="btn btn-secondary ms-2" asp-page="./Index">Back to List</a>
+                <input type="submit" value="Save" class="btn btn-primary" /> | 
+                <a asp-page="./Properties">Back to List</a>
             </div>
         </form>
     </div>

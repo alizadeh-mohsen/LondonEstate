@@ -9,9 +9,9 @@ namespace LondonEstate.Pages.Admin.Customers
     [Authorize]
     public class EditModel : PageModel
     {
-        private readonly LondonEstate.Data.ApplicationDbContext _context;
+        private readonly Data.ApplicationDbContext _context;
 
-        public EditModel(LondonEstate.Data.ApplicationDbContext context)
+        public EditModel(Data.ApplicationDbContext context)
         {
             _context = context;
         }

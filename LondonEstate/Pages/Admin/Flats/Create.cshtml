@@ -21,20 +21,21 @@
                 <span asp-validation-for="Flat.Address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Flat.FlatUrl" class="control-label"></label>
+                <label asp-for="Flat.FlatUrl" class="control-label">Booking.com URL</label>
                 <input asp-for="Flat.FlatUrl" class="form-control" />
                 <span asp-validation-for="Flat.FlatUrl" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Flat.Wifi" class="control-label"></label>
-                <textarea asp-for="Flat.Wifi" class="form-control" rows="5"></textarea>
-                <span asp-validation-for="Flat.Wifi" class="text-danger"></span>
-            </div>
+            
           
             <div class="form-group">
-                <label asp-for="Flat.CheckinInstruction" class="control-label"></label>
+                <label asp-for="Flat.CheckinInstruction" class="control-label">Check-in instruction</label>
                 <textarea asp-for="Flat.CheckinInstruction" class="form-control" rows="5"></textarea>
                 <span asp-validation-for="Flat.CheckinInstruction" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Flat.Wifi" class="control-label">Wi-Fi</label>
+                <textarea asp-for="Flat.Wifi" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Flat.Wifi" class="text-danger"></span>
             </div>
            @*  <div class="form-group">
                 <label asp-for="Flat.VisualGuideUrl" class="control-label"></label>

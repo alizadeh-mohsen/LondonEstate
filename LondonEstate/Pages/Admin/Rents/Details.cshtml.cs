@@ -1,15 +1,17 @@
 ﻿using LondonEstate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin.Rents
 {
+    [Authorize]
     public class DetailsModel : PageModel
     {
-        private readonly LondonEstate.Data.ApplicationDbContext _context;
+        private readonly Data.ApplicationDbContext _context;
 
-        public DetailsModel(LondonEstate.Data.ApplicationDbContext context)
+        public DetailsModel(Data.ApplicationDbContext context)
         {
             _context = context;
         }

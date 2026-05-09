@@ -9,9 +9,9 @@ namespace LondonEstate.Pages.Admin.Customers
     [Authorize]
     public class DetailsModel : PageModel
     {
-        private readonly LondonEstate.Data.ApplicationDbContext _context;
+        private readonly Data.ApplicationDbContext _context;
 
-        public DetailsModel(LondonEstate.Data.ApplicationDbContext context)
+        public DetailsModel(Data.ApplicationDbContext context)
         {
             _context = context;
         }

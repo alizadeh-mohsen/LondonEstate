@@ -1,15 +1,17 @@
 ﻿using LondonEstate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin.Rents
 {
+    [Authorize]
     public class DeleteModel : PageModel
     {
-        private readonly LondonEstate.Data.ApplicationDbContext _context;
+        private readonly Data.ApplicationDbContext _context;
 
-        public DeleteModel(LondonEstate.Data.ApplicationDbContext context)
+        public DeleteModel(Data.ApplicationDbContext context)
         {
             _context = context;
         }

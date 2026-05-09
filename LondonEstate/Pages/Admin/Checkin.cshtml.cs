@@ -1,15 +1,17 @@
 ﻿using LondonEstate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin
 {
+    [Authorize]
     public class CheckinModel : PageModel
     {
-        private readonly LondonEstate.Data.ApplicationDbContext _context;
+        private readonly Data.ApplicationDbContext _context;
 
-        public CheckinModel(LondonEstate.Data.ApplicationDbContext context)
+        public CheckinModel(Data.ApplicationDbContext context)
         {
             _context = context;
         }

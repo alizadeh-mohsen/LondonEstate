@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LondonEstate.Pages.Admin.InvoiceReports
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
-        private readonly LondonEstate.Data.ApplicationDbContext _context;
+        private readonly Data.ApplicationDbContext _context;
 
-        public CreateModel(LondonEstate.Data.ApplicationDbContext context)
+        public CreateModel(Data.ApplicationDbContext context)
         {
             _context = context;
         }

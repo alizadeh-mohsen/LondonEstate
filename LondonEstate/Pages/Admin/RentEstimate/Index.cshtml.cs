@@ -1,12 +1,14 @@
 using LondonEstate.Data;
 using LondonEstate.Models;
 using LondonEstate.Utils.Types;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin.RentEstimate
 {
+    [Authorize]
     public class EstimationRequestModel : PageModel
     {
         private readonly ApplicationDbContext _context;

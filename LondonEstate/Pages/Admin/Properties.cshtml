@@ -18,15 +18,12 @@
             @*  <th>
                 @Html.DisplayNameFor(model => model.Flat[0].Address)
             </th> *@
-            <th>
+            <th class="text-center">
                 Dates
             </th>
-            <th>
-                Booking No
+            <th class="text-center">
+                Booking.com
             </th>
-            <th>
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -37,7 +34,7 @@
 
             <tr>
                 <td>
-                    <a target="_blank" href="@(Model.Flat?.ElementAtOrDefault(0)?.FlatUrl ?? "#")">
+                    <a asp-page="./Checkin" asp-route-id="@item.Id">
                         @Html.DisplayFor(modelItem => item.Name)
                     </a>
                 </td>
@@ -52,10 +49,7 @@
                         @Html.DisplayFor(modelItem => item.BookingNumber)
                     </a>
                 </td>
-                <td>
-                    <a asp-page="./FlatDetail" asp-route-id="@item.Id">Details</a> |
-                    <a asp-page="./Checkin" asp-route-id="@item.Id">Check-in</a>
-                </td>
+               
             </tr>
         }
     </tbody>
