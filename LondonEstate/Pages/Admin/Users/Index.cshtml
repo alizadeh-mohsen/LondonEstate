@@ -1,0 +1,46 @@
+﻿@page
+@model LondonEstate.Pages.Admin.Users.IndexModel
+@{
+}
+
+
+<div class="mb-3 d-flex justify-content-between align-items-center">
+    <h1 class="h4">Application Users</h1>
+    <small class="text-muted">Total: @Model.Users.Count</small>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-sm table-hover">
+        <caption>Application users overview</caption>
+        <thead>
+            <tr>
+                <th scope="col">Email</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="text-center">Email confirmed</th>
+                <th scope="col" class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model.Users)
+            {
+                <tr>
+                    <td>@u.Email</td>
+                    <td>@u.UserName</td>
+                    <td class="text-center">
+                        @if (u.EmailConfirmed)
+                        {
+                            <span class="badge bg-success">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">No</span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        <a asp-page="./Delete" asp-route-id="@u.Id" class="btn btn-sm btn-outline-danger ms-1" aria-label="Delete @u.Email">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
