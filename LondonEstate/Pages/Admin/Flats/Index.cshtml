@@ -9,16 +9,18 @@
 <p>
     <a class="btn btn-primary" asp-page="Create">Create New</a>
 </p>
-<table class="table">
+<div class="table-responsive ">
+    <table class="table table-sm">
+
     <thead>
         <tr>
             <th>
                 Property
             </th>
 
-            <th>
+            @* <th>
                Address
-            </th>
+            </th> *@
             <th></th>
         </tr>
     </thead>
@@ -27,21 +29,25 @@
         {
             <tr>
                 <td>
-                    <a asp-page="./Details" asp-route-id="@item.Id">
+                   <a  href="@Html.DisplayFor(modelItem => item.FlatUrl)" target="_blank">
                         @Html.DisplayFor(modelItem => item.Name)
                     </a>
+                        <div>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </div>
                 </td>
 
-                <td>
+                @* <td>
                      @Html.DisplayFor(modelItem => item.Address)
-                </td>
+                </td> *@
 
                 <td>
-                    <a  href="@Html.DisplayFor(modelItem => item.FlatUrl)" target="_blank">Booking.com</a> |
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                         <a class="btn btn-sm btn-outline-primary m-1" asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                        <a class="btn btn-sm btn-outline-primary m-1" asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-sm btn-outline-primary m-1" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+</div>
