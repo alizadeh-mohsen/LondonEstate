@@ -5,76 +5,45 @@
     ViewData["Title"] = "Details";
 }
 
-<h1> @Html.DisplayFor(model => model.Flat.Name)</h1>
-<hr />
 
-<div>
-    <dl class="row">
-     
-        <dt class="col-sm-2">
-            WIFI   
-        </dt>
-        <dd class="col-sm-10 d-flex align-items-center">
-            <div class="me-3">
-                <div>Wi‑Fi:<span id="wifi">@Html.Encode(Model.Flat?.Wifi)</span></div>
-                
-            </div>
-            <button type="button" class="btn btn-sm btn-primary" onclick="copyWifi()" aria-label="Copy Wi-Fi credentials">
-                Copy
-            </button>
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Flat.CheckinInstruction)
-        </dt>
-        <dd class="col-sm-10 d-flex align-items-start">
-            <div id="checkin-instruction" class="flex-grow-1">
-              <textarea class="form-control" readonly>@Html.DisplayFor(model => model.Flat.CheckinInstruction)</textarea>
-            </div>
-            <button type="button" class="btn btn-sm btn-primary ms-3" onclick="copyElementText('checkin-instruction','Check‑in instruction')" aria-label="Copy check-in instruction">
-                Copy
-            </button>
-        </dd>
-        
-    </dl>
-</div>
-<div>
-    <a asp-page="./Properties">Back to List</a>
-</div>
 
-@section Scripts {
-    <script>
-        function fallbackCopy(value) {
-            const textarea = document.createElement('textarea');
-            textarea.value = value;
-            textarea.style.position = 'fixed';
-            textarea.style.left = '-9999px';
-            document.body.appendChild(textarea);
-            textarea.select();
-            try { document.execCommand('copy'); } catch { /* ignore */ }
-            document.body.removeChild(textarea);
-        }
+<div class="table-responsive ">
+    <table class="table table-sm">
 
-        function copyElementText(elementId, label) {
-            const el = document.getElementById(elementId);
-            const text = el ? el.textContent.trim() : '';
-            if (!text) return;
-            const payload = label ? `${label}:\n${text}` : text;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(payload).catch(() => fallbackCopy(payload));
-            } else {
-                fallbackCopy(payload);
+        <thead>
+            <tr>
+                <th>
+                    Property
+                </th>
+
+                @* <th>
+               Address
+            </th> *@
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Flat)
+            {
+                <tr>
+                    <td>
+                        <a href="@Html.DisplayFor(modelItem => item.FlatUrl)" target="_blank">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </a>
+                        <div>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </div>
+                    </td>
+
+                    @* <td>
+                     @Html.DisplayFor(modelItem => item.Address)
+                </td> *@
+
+                    <td>
+                        <a class="btn btn-primary" asp-page="./Flats/Details" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
             }
-        }
-
-        function copyWifi() {
-            const wifiEl = document.getElementById('wifi');
-            const wifi = wifiEl ? wifiEl.textContent.trim() : '';
-            if (!wifi) return;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(wifi).catch(() => fallbackCopy(wifi));
-            } else {
-                fallbackCopy(wifi);
-            }
-        }
-    </script>
-}
+        </tbody>
+    </table>
+</div>

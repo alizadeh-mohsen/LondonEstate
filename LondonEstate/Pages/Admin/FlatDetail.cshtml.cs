@@ -1,41 +1,44 @@
 ﻿using LondonEstate.Data;
 using LondonEstate.Models;
+using LondonEstate.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin
 {
+
     [Authorize]
     public class FlatDetailModel : PageModel
+
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogError _logError;
 
-        public FlatDetailModel(ApplicationDbContext context)
+        public FlatDetailModel(ApplicationDbContext context, ILogError logError)
         {
             _context = context;
+            _logError = logError;
+
         }
 
-        public Flat Flat { get; set; } = default!;
+        public IList<Flat> Flat { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public async Task OnGetAsync()
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                var query = from f in _context.Flat
+                            orderby f.Name
+                            select f;
+                Flat = await query.ToListAsync();
             }
-
-            var flat = await _context.Flat.FirstOrDefaultAsync(m => m.Id == id);
-            if (flat == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                await _logError.LogErrorToDb(ex, "Flats ");
+                Flat = new List<Flat>();
             }
-            else
-            {
-                Flat = flat;
-            }
-            return Page();
         }
     }
 }
+
