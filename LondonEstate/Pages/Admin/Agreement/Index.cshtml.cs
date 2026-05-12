@@ -71,7 +71,7 @@ public class IndexModel : PageModel
             var pdfBytes = GeneratePdf();
 
             var fileName = $"GA-{DateTime.Now:yyyyMMdd-HHmm}-{AgreementViewModel.GuestName}.pdf";
-            await UploadPdf(pdfBytes, fileName);
+            //await UploadPdf(pdfBytes, fileName);
 
             await SaveReportToDb(fileName);
 

@@ -76,7 +76,7 @@ public class IndexModel : PageModel
             var pdfBytes = GeneratePdf();
 
             var fileName = GenerateInvoiceNumber() + "-" + InvoiceViewModel.IssuedTo + ".pdf";
-            await UploadPdf(pdfBytes, fileName);
+            //await UploadPdf(pdfBytes, fileName);
 
             await SaveReportToDb(fileName);
 
