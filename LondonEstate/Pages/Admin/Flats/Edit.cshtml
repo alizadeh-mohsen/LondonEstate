@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Flat.Id" />
             <div class="form-group">
@@ -52,11 +52,29 @@
                 <span asp-validation-for="Flat.VisualGuideUrl" class="text-danger"></span>
             </div> *@
          
-            <div class="form-group form-check">
+          @*   <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Flat.Empty" /> @Html.DisplayNameFor(model => model.Flat.Empty)
                 </label>
+            </div> *@
+
+            <div class="form-group">
+                <label for="ImageUpload" class="control-label">Upload Image</label>
+                <input type="file" id="ImageUpload" name="imageUpload" class="form-control" accept=".jpg,.jpeg,.png,.gif" />
+                <small class="form-text text-muted">Allowed formats: JPG, JPEG, PNG, GIF (Max 7 MB)</small>
+                <span id="imageError" class="text-danger"></span>
             </div>
+
+            @if (!string.IsNullOrEmpty(Model.Flat.Image))
+            {
+                <div class="form-group">
+                    <label class="control-label">Current Image</label>
+                    <div class="mt-2">
+                        <img src="@Model.Flat.Image" alt="@Model.Flat.Name" style="max-width: 100%; max-height: 200px; border-radius: 5px;" />
+                    </div>
+                </div>
+            }
+
             <div class="form-group">
                 <input type="submit" value="Update" class="btn btn-primary my-3" />
             </div>
@@ -70,4 +88,26 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('ImageUpload').addEventListener('change', function() {
+            const file = this.files[0];
+            const errorSpan = document.getElementById('imageError');
+            errorSpan.textContent = '';
+
+            if (!file) return;
+
+            const maxSize = 7 * 1024 * 1024; // 7 MB
+            const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+            const fileName = file.name.toLowerCase();
+            const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+
+            if (file.size > maxSize) {
+                errorSpan.textContent = 'File size exceeds 7 MB limit.';
+                this.value = '';
+            } else if (!allowedExtensions.includes(fileExtension)) {
+                errorSpan.textContent = 'Only JPG, JPEG, PNG, and GIF files are allowed.';
+                this.value = '';
+            }
+        });
+    </script>
 }

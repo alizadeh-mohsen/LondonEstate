@@ -4,6 +4,7 @@ using LondonEstate.Settings;
 using LondonEstate.Utils.Types;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using QuestPDF.Infrastructure;
 using Serilog;
 
@@ -31,6 +32,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.Configure<UploadSettings>(builder.Configuration.GetSection("UploadSettings"));
+builder.Services.AddScoped(provider => provider.GetRequiredService<IOptions<UploadSettings>>().Value);
 
 builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
 builder.Services.AddScoped<IEstimateRequestService, EstimateRequestService>();

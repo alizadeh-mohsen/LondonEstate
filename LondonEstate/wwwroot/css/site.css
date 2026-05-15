@@ -32,11 +32,30 @@ body {
         padding: 12px 18px;
         border-radius: 6px;
     }
+    .card-title {
+        font-size: 1rem;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
+.flat-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12); /* Stronger raised effect */
+    padding-bottom: 6px;
+}
+
+    .flat-card img {
+        border-radius: 10px 10px 0 0;
+    }
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+/* Improve spacing on mobile */
 
 
 

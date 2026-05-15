@@ -2,48 +2,45 @@
 @model LondonEstate.Pages.Admin.FlatDetailModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Flats";
 }
 
+<div class="container py-4">
 
+    <h3 class="mb-4 fw-bold">
+        <a href="/Admin/FlatDetailSimple">List View</a>
+        </h3>
 
-<div class="table-responsive ">
-    <table class="table table-sm">
+    <div class="row g-4">
 
-        <thead>
-            <tr>
-                <th>
-                    Property
-                </th>
+        @foreach (var item in Model.Flat)
+        {
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
 
-                @* <th>
-               Address
-            </th> *@
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Flat)
-            {
-                <tr class="align-middle">
-                    <td>
-                        <a href="@Html.DisplayFor(modelItem => item.FlatUrl)" target="_blank">
-                            @Html.DisplayFor(modelItem => item.Name)
+                <div class="card flat-card border-0 h-100">
+
+                    <div class="ratio ratio-4x3">
+                        <a href="@item.FlatUrl" >
+                        <img src="@item.Image"
+                             class="card-img-top object-fit-cover"
+                             alt="@item.Name"></a>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title fw-semibold text-truncate">@item.Name</h5>
+
+                        <a class="btn btn-primary w-100 mt-2"
+                           asp-page="./Flats/Details"
+                           asp-route-id="@item.Id">
+                            View Details
                         </a>
-                       @*  <div>
-                            @Html.DisplayFor(modelItem => item.Address)
-                        </div> *@
-                    </td>
+                    </div>
 
-                    @* <td>
-                     @Html.DisplayFor(modelItem => item.Address)
-                </td> *@
+                </div>
 
-                    <td>
-                        <a class="btn btn-primary" asp-page="./Flats/Details" asp-route-id="@item.Id">Details</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+            </div>
+        }
+
+    </div>
+
 </div>

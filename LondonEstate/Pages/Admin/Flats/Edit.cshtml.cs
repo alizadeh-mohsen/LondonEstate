@@ -1,8 +1,10 @@
 ﻿using LondonEstate.Models;
+using LondonEstate.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace LondonEstate.Pages.Admin.Flats
 {
@@ -10,11 +12,19 @@ namespace LondonEstate.Pages.Admin.Flats
     public class EditModel : PageModel
     {
         private readonly Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UploadSettings _uploadSettings;
 
-        public EditModel(Data.ApplicationDbContext context)
+        public EditModel(
+      Data.ApplicationDbContext context,
+      IWebHostEnvironment webHostEnvironment,
+      IOptions<UploadSettings> uploadSettingsOptions)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
+            _uploadSettings = uploadSettingsOptions.Value;
         }
+
 
         [BindProperty]
         public Flat Flat { get; set; } = default!;
@@ -34,39 +44,49 @@ namespace LondonEstate.Pages.Admin.Flats
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(IFormFile? imageUpload)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Attach(Flat).State = EntityState.Modified;
+            // Load existing flat from DB
+            var flatFromDb = await _context.Flat.FirstOrDefaultAsync(f => f.Id == Flat.Id);
+            if (flatFromDb == null)
+                return NotFound();
 
-            try
+            // Update simple fields
+            flatFromDb.Name = Flat.Name;
+            flatFromDb.Address = Flat.Address;
+            flatFromDb.FlatUrl = Flat.FlatUrl;
+            flatFromDb.Wifi = Flat.Wifi;
+            flatFromDb.CheckinInstruction = Flat.CheckinInstruction;
+
+            // Handle image upload
+            if (imageUpload != null && imageUpload.Length > 0)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FlatExists(Flat.Id))
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
+
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                string fileExtension = Path.GetExtension(imageUpload.FileName);
+                string newFileName = $"{Guid.NewGuid()}{fileExtension}";
+                string filePath = Path.Combine(uploadsFolder, newFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    return NotFound();
+                    await imageUpload.CopyToAsync(fileStream);
                 }
-                else
-                {
-                    throw;
-                }
+
+                // Save relative path to DB
+                flatFromDb.Image = $"/Images/{newFileName}";
             }
+
+            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
-        }
-
-        private bool FlatExists(Guid id)
-        {
-            return _context.Flat.Any(e => e.Id == id);
         }
     }
 }

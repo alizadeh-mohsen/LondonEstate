@@ -1,0 +1,49 @@
+﻿@page
+@model LondonEstate.Pages.Admin.FlatDetailSimpleModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+
+<div class="table-responsive ">
+    <table class="table table-sm">
+
+        <thead>
+            <tr>
+                <th>
+                    Property
+                </th>
+
+                @* <th>
+               Address
+            </th> *@
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Flat)
+            {
+                <tr class="align-middle">
+                    <td>
+                        <a href="@Html.DisplayFor(modelItem => item.FlatUrl)" target="_blank">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </a>
+                       @*  <div>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </div> *@
+                    </td>
+
+                    @* <td>
+                     @Html.DisplayFor(modelItem => item.Address)
+                </td> *@
+
+                    <td>
+                        <a class="btn btn-primary" asp-page="./Flats/Details" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

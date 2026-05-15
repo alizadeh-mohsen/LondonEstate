@@ -14,5 +14,6 @@
         public string? BookingNumber { get; set; }
         public string? ReservationUrl { get; set; }
         public string? Wifi { get; set; }
+        public string? Image { get; set; }
     }
 }
