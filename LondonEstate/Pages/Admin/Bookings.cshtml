@@ -1,6 +1,6 @@
 ﻿@page
 @using LondonEstate.Utils.Extensions
-@model LondonEstate.Pages.Admin.PropertiesModel
+@model LondonEstate.Pages.Admin.BookingsModel
 @{
 }
 
@@ -20,10 +20,10 @@
                 @Html.DisplayNameFor(model => model.Flat[0].Address)
             </th> *@
             <th class="text-center">
-               Check In/Out
+               Arrival / Departure
             </th>
             <th class="text-center">
-                Booking.com
+                Booker name
             </th>
         </tr>
     </thead>
@@ -36,8 +36,11 @@
             <tr>
                 <td>
                     <a asp-page="./Checkin" asp-route-id="@item.Id">
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.OnlineName)
                     </a>
+                        <div>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </div>
                 </td>
                 @*  <td>
                     @Html.DisplayFor(modelItem => item.Address)
@@ -47,7 +50,7 @@
                 </td>
                 <td  >
                     <a target="_blank" href="@(Model.Flat?.ElementAtOrDefault(0)?.ReservationUrl ?? "#")">
-                        @Html.DisplayFor(modelItem => item.BookingNumber)
+                        @Html.DisplayFor(modelItem => item.GuestName)
                     </a>
                 </td>
                

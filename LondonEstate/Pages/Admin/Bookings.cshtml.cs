@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 namespace LondonEstate.Pages.Admin
 {
     [Authorize]
-    public class PropertiesModel : PageModel
+    public class BookingsModel : PageModel
     {
         private readonly Data.ApplicationDbContext _context;
 
-        public PropertiesModel(Data.ApplicationDbContext context)
+        public BookingsModel(Data.ApplicationDbContext context)
         {
             _context = context;
         }

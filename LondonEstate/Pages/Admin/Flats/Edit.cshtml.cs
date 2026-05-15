@@ -58,6 +58,7 @@ namespace LondonEstate.Pages.Admin.Flats
 
             // Update simple fields
             flatFromDb.Name = Flat.Name;
+            flatFromDb.OnlineName = Flat.OnlineName;
             flatFromDb.Address = Flat.Address;
             flatFromDb.FlatUrl = Flat.FlatUrl;
             flatFromDb.Wifi = Flat.Wifi;

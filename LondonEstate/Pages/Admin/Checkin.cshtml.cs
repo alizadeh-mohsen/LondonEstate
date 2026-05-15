@@ -48,7 +48,8 @@ namespace LondonEstate.Pages.Admin
             flat.CheckIn = Flat.CheckIn;
             flat.CheckOut = Flat.CheckOut;
             flat.ReservationUrl = Flat.ReservationUrl;
-            flat.BookingNumber = Flat.BookingNumber;
+            //flat.BookingNumber = Flat.BookingNumber;
+            flat.GuestName = Flat.GuestName;
 
             try
             {
@@ -66,7 +67,7 @@ namespace LondonEstate.Pages.Admin
                 }
             }
 
-            return RedirectToPage("./properties");
+            return RedirectToPage("./bookings");
         }
 
         private bool FlatExists(Guid id)

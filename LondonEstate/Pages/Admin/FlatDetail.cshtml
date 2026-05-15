@@ -27,8 +27,8 @@
                     </div>
 
                     <div class="card-body">
-                        <h5 class="card-title fw-semibold text-truncate">@item.Name</h5>
-
+                        <h5 class="card-title fw-semibold text-truncate">@item.OnlineName</h5>
+                        <p class="card-text">@item.Name</p>
                         <a class="btn btn-primary w-100 mt-2"
                            asp-page="./Flats/Details"
                            asp-route-id="@item.Id">
