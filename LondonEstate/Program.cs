@@ -5,6 +5,7 @@ using LondonEstate.Utils.Types;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using OfficeOpenXml;
 using QuestPDF.Infrastructure;
 using Serilog;
 
@@ -42,6 +43,8 @@ Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .WriteTo.File("logs/LEGroup.log", rollingInterval: RollingInterval.Day)
             .CreateLogger();
+
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 var app = builder.Build();
 
