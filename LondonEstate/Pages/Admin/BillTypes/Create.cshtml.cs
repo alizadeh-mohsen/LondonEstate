@@ -1,9 +1,11 @@
 ﻿using LondonEstate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LondonEstate.Pages.Admin.BillTypes
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly Data.ApplicationDbContext _context;

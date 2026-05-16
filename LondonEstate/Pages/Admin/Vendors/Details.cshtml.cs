@@ -1,10 +1,12 @@
 ﻿using LondonEstate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin.Vendors
 {
+    [Authorize]
     public class DetailsModel : PageModel
     {
         private readonly LondonEstate.Data.ApplicationDbContext _context;

@@ -6,6 +6,8 @@ namespace LondonEstate.Utils.Extensions
     {
         public static string ToUkDateString(this DateTime date)
         {
+            if (date == DateTime.MinValue)
+                return string.Empty;
             return date.ToString("dd'/'MM'/'yyyy");
         }
         public static string ToUkCurrencyString(this decimal amount)

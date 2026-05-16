@@ -2,66 +2,104 @@
 @model LondonEstate.Pages.Admin.Bills.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Bill";
 }
 
-<h1>Create</h1>
 
-<h4>Bill</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <h2 class="card-title mb-0">Create Bill</h2>
+                    </div>
 
-            <div class="form-group">
-                <label asp-for="Bill.FlatId" class="control-label">Flat</label>
-                <select asp-for="Bill.FlatId" class="form-select" asp-items="ViewBag.FlatId">
-                    <option value=""></option>
-                </select>
-                <span asp-validation-for="Bill.FlatId" class="text-danger"></span>
+                    <form method="post" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger visually-hidden" role="alert" id="validationSummary">
+                            <ul class="mb-0"></ul>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label asp-for="Bill.FlatId" class="form-label">Flat</label>
+                                <select asp-for="Bill.FlatId" class="form-select" asp-items="ViewBag.FlatId" aria-label="Select Flat">
+                                    <option value="">-- Select flat --</option>
+                                </select>
+                                <span asp-validation-for="Bill.FlatId" class="invalid-feedback d-block"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="Bill.VendorId" class="form-label">Vendor</label>
+                                <select asp-for="Bill.VendorId" class="form-select" asp-items="ViewBag.VendorId" aria-label="Select Vendor">
+                                    <option value="">-- Select vendor --</option>
+                                </select>
+                                <span asp-validation-for="Bill.VendorId" class="invalid-feedback d-block"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="Bill.BillTypeId" class="form-label">Bill Type</label>
+                                <select asp-for="Bill.BillTypeId" class="form-select" asp-items="ViewBag.BillTypeId" aria-label="Select Bill Type">
+                                    <option value="">-- Select type --</option>
+                                </select>
+                                <span asp-validation-for="Bill.BillTypeId" class="invalid-feedback d-block"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Bill.Amount" class="form-label">Amount</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">£</span>
+                                    <input asp-for="Bill.Amount" class="form-control" inputmode="decimal" step="0.01" placeholder="0.00" aria-label="Amount" />
+                                </div>
+                                <span asp-validation-for="Bill.Amount" class="invalid-feedback d-block"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Bill.PaidDate" class="form-label">Payment date</label>
+                                <input asp-for="Bill.PaidDate" type="date" class="form-control" aria-label="Payment date" />
+                                <span asp-validation-for="Bill.PaidDate" class="invalid-feedback d-block"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Bill.Notes" class="form-label">Notes</label>
+                                <textarea asp-for="Bill.Notes" class="form-control" rows="4" ></textarea>
+                                <span asp-validation-for="Bill.Notes" class="invalid-feedback d-block"></span>
+                            </div>
+
+                            <div class="col-12 d-flex gap-2 justify-content-end">
+                                <a asp-page="./Index" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Create Bill</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Bill.VendorId" class="control-label">Vendor</label>
-                <select asp-for="Bill.VendorId" class="form-select" asp-items="ViewBag.VendorId">
-                    <option value=""></option>
-                </select>
-                <span asp-validation-for="Bill.VendorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Bill.BillTypeId" class="control-label">Bill Type</label>
-                <select asp-for="Bill.BillTypeId" class="form-select" asp-items="ViewBag.BillTypeId">
-                    <option value=""></option>
-                </select>
-                <span asp-validation-for="Bill.BillTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Bill.Amount" class="control-label"></label>
-                <input asp-for="Bill.Amount" class="form-control" />
-                <span asp-validation-for="Bill.Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Bill.PaidDate" class="control-label">Payment Date</label>
-                <input type="date" asp-for="Bill.PaidDate" class="form-control" />
-                <span asp-validation-for="Bill.PaidDate" class="text-danger"></span>
-            </div>
-           
-            <div class="form-group">
-                <label asp-for="Bill.Notes" class="control-label">Notes</label>
-                <textarea asp-for="Bill.Notes" class="form-control"  rows="5"></textarea>
-                <span asp-validation-for="Bill.Notes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // Move server validation messages into the visible Bootstrap alert (keeps summary and inline messages consistent)
+        (function () {
+            const summary = document.getElementById('validationSummary');
+            if (!summary) return;
+            // If there are any validation error list items generated by the tag helper, make the summary visible.
+            const errors = document.querySelectorAll('.field-validation-error, .input-validation-error, .validation-summary-errors');
+            if (errors.length > 0) {
+                summary.classList.remove('visually-hidden');
+                // Populate the alert list with the messages from the validation summary generated by ASP.NET
+                const serverList = document.querySelectorAll('div.validation-summary-errors ul li, div.validation-summary-valid ul li');
+                const targetUl = summary.querySelector('ul');
+                serverList.forEach(li => {
+                    const copy = document.createElement('li');
+                    copy.innerHTML = li.innerHTML;
+                    targetUl.appendChild(copy);
+                });
+            }
+        })();
+    </script>
 }

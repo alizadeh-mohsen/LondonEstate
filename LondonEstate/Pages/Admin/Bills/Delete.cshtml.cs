@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LondonEstate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using LondonEstate.Data;
-using LondonEstate.Models;
 
 namespace LondonEstate.Pages.Admin.Bills
 {
+    [Authorize]
     public class DeleteModel : PageModel
     {
         private readonly LondonEstate.Data.ApplicationDbContext _context;
@@ -29,7 +26,9 @@ namespace LondonEstate.Pages.Admin.Bills
                 return NotFound();
             }
 
-            var bill = await _context.Bill.FirstOrDefaultAsync(m => m.Id == id);
+            var bill = await _context.Bill.Include(b => b.BillType)
+                .Include(b => b.Flat)
+                .Include(b => b.Vendor).FirstOrDefaultAsync(m => m.Id == id);
 
             if (bill == null)
             {

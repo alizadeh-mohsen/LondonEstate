@@ -1,66 +1,201 @@
 ﻿@page
+@using LondonEstate.Utils.Extensions
 @model LondonEstate.Pages.Admin.Bills.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Bills";
 }
 
-<h1>Index</h1>
+<div class="d-flex flex-column gap-3">
+    <div class="d-flex align-items-center justify-content-between">
+        <div>
+            <a asp-page="Create" class="btn btn-primary">Create Bill</a>
+        </div>
+    </div>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Bill[0].Notes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bill[0].Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bill[0].PaidDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bill[0].Flat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bill[0].Vendor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bill[0].BillType)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Bill) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Notes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaidDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Flat.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vendor.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BillType.Id)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @* Filters use GET so selected values persist in the query string and across pages.
+               Changing any filter resets pageIndex to 1 via the onchange handler below. *@
+            <form id="filterForm" method="get" class="row g-2 mb-3">
+                <input type="hidden" name="pageIndex" value="@Model.PageIndex" />
+
+                <div class="col-md-4">
+                    <label class="form-label small mb-1" for="FilterFlatId">Flat</label>
+                    <select asp-for="FilterFlatId" asp-items="Model.Flats" class="form-select" id="FilterFlatId" aria-label="Filter by flat">
+                        <option value="">All flats</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label small mb-1" for="FilterVendorId">Vendor</label>
+                    <select asp-for="FilterVendorId" asp-items="Model.Vendors" class="form-select" id="FilterVendorId" aria-label="Filter by vendor">
+                        <option value="">All vendors</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label small mb-1" for="FilterBillTypeId">Bill Type</label>
+                    <select asp-for="FilterBillTypeId" asp-items="Model.BillTypes" class="form-select" id="FilterBillTypeId" aria-label="Filter by bill type">
+                        <option value="">All types</option>
+                    </select>
+                </div>
+            </form>
+
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Flat</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Vendor</th>
+                                <th>Bill Type</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="billsTableBody">
+                            @foreach (var item in Model.Bill)
+                            {
+                                <tr>
+                                    <td class="ps-4">@Html.DisplayFor(modelItem => item.Flat.Name)</td>
+                                    <td>@item.PaidDate.ToUkDateString()</td>
+                                    <td>@item.Amount.ToUkCurrencyString()</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Vendor.Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.BillType.Name)</td>
+                                    <td>
+                                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                                        <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                        <small class="text-muted">Showing <strong>@Model.Bill.Count()</strong> on this page — <strong>@Model.TotalCount</strong> total</small>
+                    </div>
+
+                    @{
+                        var current = Model.PageIndex;
+                        var total = Model.TotalPages;
+                        var window = 2;
+                        var left = Math.Max(1, current - window);
+                        var right = Math.Min(total, current + window);
+
+                        if (current - left < window && right < total)
+                        {
+                            var need = window - (current - left);
+                            right = Math.Min(total, right + need);
+                        }
+                        if (right - current < window && left > 1)
+                        {
+                            var need = window - (right - current);
+                            left = Math.Max(1, left - need);
+                        }
+
+                        // Helper to render route values preserving filters
+                        Func<int, object> routeVals = i => new
+                        {
+                            pageIndex = i,
+                            filterFlatId = Model.FilterFlatId,
+                            filterVendorId = Model.FilterVendorId,
+                            filterBillTypeId = Model.FilterBillTypeId
+                        };
+                    }
+
+                    <nav aria-label="Bills pagination">
+                        <ul class="pagination mb-0">
+                            <li class="page-item @(current == 1 ? "disabled" : "")">
+                                <a class="page-link" asp-page="./Index" asp-route-pageIndex="@(current - 1)"
+                                   asp-route-filterFlatId="@(Model.FilterFlatId)" asp-route-filterVendorId="@(Model.FilterVendorId)" asp-route-filterBillTypeId="@(Model.FilterBillTypeId)">Previous</a>
+                            </li>
+
+                            <li class="page-item @(1 == current ? "active" : "")">
+                                <a class="page-link" asp-page="./Index" asp-route-pageIndex="1"
+                                   asp-route-filterFlatId="@(Model.FilterFlatId)" asp-route-filterVendorId="@(Model.FilterVendorId)" asp-route-filterBillTypeId="@(Model.FilterBillTypeId)">1</a>
+                            </li>
+
+                            @if (left > 2)
+                            {
+                                <li class="page-item disabled"><span class="page-link">…</span></li>
+                            }
+                            else if (left == 2)
+                            {
+                                <li class="page-item @(2 == current ? "active" : "")">
+                                    <a class="page-link" asp-page="./Index" asp-route-pageIndex="2"
+                                       asp-route-filterFlatId="@(Model.FilterFlatId)" asp-route-filterVendorId="@(Model.FilterVendorId)" asp-route-filterBillTypeId="@(Model.FilterBillTypeId)">2</a>
+                                </li>
+                            }
+
+                            @for (var i = left; i <= right; i++)
+                            {
+                                if (i == 1 || i == total) { continue; }
+                                <li class="page-item @(i == current ? "active" : "")">
+                                    <a class="page-link" asp-page="./Index" asp-route-pageIndex="@i"
+                                       asp-route-filterFlatId="@(Model.FilterFlatId)" asp-route-filterVendorId="@(Model.FilterVendorId)" asp-route-filterBillTypeId="@(Model.FilterBillTypeId)">@i</a>
+                                </li>
+                            }
+
+                            @if (right < total - 1)
+                            {
+                                <li class="page-item disabled"><span class="page-link">…</span></li>
+                            }
+                            else if (right == total - 1)
+                            {
+                                <li class="page-item @((total - 1) == current ? "active" : "")">
+                                    <a class="page-link" asp-page="./Index" asp-route-pageIndex="@(total - 1)"
+                                       asp-route-filterFlatId="@(Model.FilterFlatId)" asp-route-filterVendorId="@(Model.FilterVendorId)" asp-route-filterBillTypeId="@(Model.FilterBillTypeId)">@((total - 1))</a>
+                                </li>
+                            }
+
+                            @if (total > 1)
+                            {
+                                <li class="page-item @(total == current ? "active" : "")">
+                                    <a class="page-link" asp-page="./Index" asp-route-pageIndex="@total"
+                                       asp-route-filterFlatId="@(Model.FilterFlatId)" asp-route-filterVendorId="@(Model.FilterVendorId)" asp-route-filterBillTypeId="@(Model.FilterBillTypeId)">@total</a>
+                                </li>
+                            }
+
+                            <li class="page-item @(current >= total ? "disabled" : "")">
+                                <a class="page-link" asp-page="./Index" asp-route-pageIndex="@(current + 1)"
+                                   asp-route-filterFlatId="@(Model.FilterFlatId)" asp-route-filterVendorId="@(Model.FilterVendorId)" asp-route-filterBillTypeId="@(Model.FilterBillTypeId)">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const form = document.getElementById('filterForm');
+            if (!form) return;
+
+            // Reset pageIndex to 1 and submit the form when any filter changes.
+            ['FilterFlatId', 'FilterVendorId', 'FilterBillTypeId'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener('change', function () {
+                    // ensure hidden pageIndex input exists and set it to 1
+                    let pageInput = form.querySelector('input[name="pageIndex"]');
+                    if (!pageInput) {
+                        pageInput = document.createElement('input');
+                        pageInput.type = 'hidden';
+                        pageInput.name = 'pageIndex';
+                        form.appendChild(pageInput);
+                    }
+                    pageInput.value = '1';
+                    // Submit as GET so query string reflects filters and pageIndex
+                    form.submit();
+                });
+            });
+        })();
+    </script>
 }
-    </tbody>
-</table>

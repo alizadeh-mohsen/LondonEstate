@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LondonEstate.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LondonEstate.Data;
-using LondonEstate.Models;
 
 namespace LondonEstate.Pages.Admin.Bills
 {
+    [Authorize]
     public class EditModel : PageModel
     {
         private readonly LondonEstate.Data.ApplicationDbContext _context;
@@ -30,15 +27,15 @@ namespace LondonEstate.Pages.Admin.Bills
                 return NotFound();
             }
 
-            var bill =  await _context.Bill.FirstOrDefaultAsync(m => m.Id == id);
+            var bill = await _context.Bill.FirstOrDefaultAsync(m => m.Id == id);
             if (bill == null)
             {
                 return NotFound();
             }
             Bill = bill;
-           ViewData["BillTypeId"] = new SelectList(_context.BillType, "Id", "Id");
-           ViewData["FlatId"] = new SelectList(_context.Flat, "Id", "Id");
-           ViewData["VendorId"] = new SelectList(_context.Vendor, "Id", "Id");
+            ViewData["BillTypeId"] = new SelectList(_context.BillType, "Id", "Name");
+            ViewData["FlatId"] = new SelectList(_context.Flat, "Id", "Name");
+            ViewData["VendorId"] = new SelectList(_context.Vendor, "Id", "Name");
             return Page();
         }
 
