@@ -29,10 +29,19 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Flats" ? "active" : "")" asp-area="" asp-page="/Admin/Properties">Status</a>
+                                        <a class="nav-link @(Context.Request.Path == "/Admin/Bookings" ? "active" : "")" asp-area="" asp-page="/Admin/Bookings">Bookings</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link @(Context.Request.Path == "/Admin/Flats" ? "active" : "")" asp-area="" asp-page="/Admin/Flats/Index">Manage</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(Context.Request.Path == "/Admin/Vendors" ? "active" : "")" asp-area="" asp-page="/Admin/Vendors/Index">Vendors</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(Context.Request.Path == "/Admin/BillTypes" ? "active" : "")" asp-area="" asp-page="/Admin/BillTypes/Index">BillTypes</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(Context.Request.Path == "/Admin/Bills" ? "active" : "")" asp-area="" asp-page="/Admin/Bills/Index">Bills</a>
                                     </li>
                                 </ul>
                             </li>

@@ -20,6 +20,9 @@ namespace LondonEstate.Data
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<Rent> Rent { get; set; }
         public DbSet<Flat> Flat { get; set; } = default!;
+        public DbSet<Bill> Bill { get; set; } = default!;
+        public DbSet<Vendor> Vendor { get; set; } = default!;
+        public DbSet<BillType> BillType { get; set; } = default!;
 
 
         // Added DbSet for RentHistory so EF can track and migrate the table
