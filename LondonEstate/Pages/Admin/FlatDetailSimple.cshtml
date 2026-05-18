@@ -27,9 +27,9 @@
             {
                 <tr class="align-middle">
                     <td>
-                        <a href="@Html.DisplayFor(modelItem => item.FlatUrl)" target="_blank">
+                        @* <a href="@Html.DisplayFor(modelItem => item.FlatUrl)" target="_blank"> *@
                             @Html.DisplayFor(modelItem => item.Name)
-                        </a>
+                        @* </a> *@
                        @*  <div>
                             @Html.DisplayFor(modelItem => item.Address)
                         </div> *@
@@ -40,7 +40,7 @@
                 </td> *@
 
                     <td>
-                        <a class="btn btn-primary" asp-page="./Flats/Details" asp-route-id="@item.Id">Details</a>
+                        <a class="btn btn-primary" asp-page="./Flats/Details" asp-route-id="@item.Id">Check-in & WIFI</a>
                     </td>
                 </tr>
             }

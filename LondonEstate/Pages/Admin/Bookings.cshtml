@@ -74,10 +74,9 @@
 
             <tr>
                 <td>
-                    <a asp-page="./Checkin" asp-route-id="@item.Id">
+                    @* <a asp-page="./Checkin" asp-route-id="@item.Id"> *@
                         @Html.DisplayFor(modelItem => item.Name)
-                    </a>
-                       @*  <div>
+                    @* </a>  <div>
                             @Html.DisplayFor(modelItem => item.Name)
                         </div> *@
                 </td>
@@ -88,9 +87,12 @@
                     @item.CheckIn?.ToUkDateString() - @item.CheckOut?.ToUkDateString()
                 </td>
                 <td  >
-                    <a target="_blank" href="@(Model.Flat?.ElementAtOrDefault(0)?.ReservationUrl ?? "#")">
-                        @Html.DisplayFor(modelItem => item.GuestName)
-                    </a>
+                    @* <a target="_blank" href="@(Model.Flat?.ElementAtOrDefault(0)?.ReservationUrl ?? "#")"> *@
+                        <span class ="ps-1">
+                            @Html.DisplayFor(modelItem => item.GuestName) 
+                            </span>   
+
+                    @* </a> *@
                 </td>
                
             </tr>
