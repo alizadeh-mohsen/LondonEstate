@@ -74,16 +74,16 @@
 
             <tr>
                 <td>
-                    @* <a asp-page="./Checkin" asp-route-id="@item.Id"> *@
+                     <a asp-page="./Checkin" asp-route-id="@item.Id"> 
                         @Html.DisplayFor(modelItem => item.Name)
-                    @* </a>  <div>
+                        </a> @*  <div>
                             @Html.DisplayFor(modelItem => item.Name)
                         </div> *@
                 </td>
                 @*  <td>
                     @Html.DisplayFor(modelItem => item.Address)
                 </td> *@
-                <td class="@(isAfterCutoff ? "bg-danger text-white" : "bg-success text-white")" >
+                    <td class="@(isAfterCutoff ? "bg-danger text-white" : "")">
                     @item.CheckIn?.ToUkDateString() - @item.CheckOut?.ToUkDateString()
                 </td>
                 <td  >
