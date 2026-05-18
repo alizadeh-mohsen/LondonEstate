@@ -58,12 +58,12 @@
             @*  <th>
                 @Html.DisplayNameFor(model => model.Flat[0].Address)
             </th> *@
-            <th class="text-center">
-               Arrival / Departure
+            <th>
+               Arrival / Departure /Guest
             </th>
-            <th class="text-center">
+          @*   <th class="text-center">
                 Booker name
-            </th>
+            </th> *@
         </tr>
     </thead>
     <tbody>
@@ -73,8 +73,8 @@
             var isAfterCutoff = item.CheckOut is DateTime co && co > cutoff;
 
             <tr>
-                <td>
-                     <a asp-page="./Checkin" asp-route-id="@item.Id"> 
+                    <td class="@(isAfterCutoff ? "bg-secondary" : "")">
+                        <a class="text-decoration-none text-black" asp-page="./Checkin" asp-route-id="@item.Id">
                         @Html.DisplayFor(modelItem => item.Name)
                         </a> @*  <div>
                             @Html.DisplayFor(modelItem => item.Name)
@@ -83,14 +83,14 @@
                 @*  <td>
                     @Html.DisplayFor(modelItem => item.Address)
                 </td> *@
-                    <td class="@(isAfterCutoff ? "bg-danger text-white" : "")">
+                    <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
                     @item.CheckIn?.ToUkDateString() - @item.CheckOut?.ToUkDateString()
-                </td>
+                        @*    </td>
                 <td  >
-                    @* <a target="_blank" href="@(Model.Flat?.ElementAtOrDefault(0)?.ReservationUrl ?? "#")"> *@
-                        <span class ="ps-1">
+                     <a target="_blank" href="@(Model.Flat?.ElementAtOrDefault(0)?.ReservationUrl ?? "#")"> *@
+                        <div class ="ps-1">
                             @Html.DisplayFor(modelItem => item.GuestName) 
-                            </span>   
+                            </div>   
 
                     @* </a> *@
                 </td>
