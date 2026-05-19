@@ -1,0 +1,144 @@
+﻿@page
+@model LondonEstate.Pages.Admin.instructionsModel
+@{
+}
+
+
+<div class="container-fluid py-4">
+    <div class="mb-4">
+        <h1 class="h2 mb-0">
+            <i class="bi bi-wifi me-2"></i>Check-in Instriuctions
+        </h1>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                    <i class="bi bi-    h"></i>
+                </span>
+                <input type="text" 
+                       class="form-control border-start-0" 
+                       id="searchInput" 
+                       placeholder="Search by property name..."
+                       autocomplete="off" />
+            </div>
+            <small class="text-muted d-block mt-2">
+                Showing <span id="resultCount">@Model.Flats.Count</span> of <span id="totalCount">@Model.Flats.Count</span> properties
+            </small>
+        </div>
+    </div>
+
+    @if (Model.Flats.Any())
+    {
+        <div class="row g-3" id="flatsContainer">
+            @foreach (var flat in Model.Flats)
+            {
+                <div class="col-md-6 col-lg-4 flat-card" data-flat-name="@flat.Name?.ToLower()">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-houses me-2"></i>@flat.Name
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @if (!string.IsNullOrEmpty(flat.CheckinInstruction))
+                            {
+                                <div class="checkin-content">
+                                    <p class="text-muted small mb-2">Check-in Instructions:</p>
+                                    <div class="bg-light p-3 rounded mb-3" style="word-break: break-all;">
+                                        @Html.Raw(flat.CheckinInstruction.Replace("\n", "<br/>"))
+                                    </div>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-primary w-100" 
+                                            onclick="copyToClipboard(this, '@Html.Raw(flat.CheckinInstruction)')">
+                                        <i class="bi bi-clipboard me-2"></i>Copy to Clipboard
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning mb-0">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    No Check-in instrcutions available
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div id="noResults" class="alert alert-info mt-4" style="display: none;">
+            <i class="bi bi-search me-2"></i>
+            No properties match your search criteria.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle me-2"></i>
+            No properties found.
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const flatCards = document.querySelectorAll('.flat-card');
+        const noResults = document.getElementById('noResults');
+        const resultCount = document.getElementById('resultCount');
+        const totalCount = document.getElementById('totalCount');
+        const flatsContainer = document.getElementById('flatsContainer');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            flatCards.forEach(card => {
+                const flatName = card.dataset.flatName;
+                
+                if (flatName.includes(searchTerm)) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            resultCount.textContent = visibleCount;
+
+            // Show/hide no results message
+            if (visibleCount === 0 && searchTerm !== '') {
+                noResults.style.display = '';
+                flatsContainer.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                flatsContainer.style.display = '';
+            }
+        });
+
+        function copyToClipboard(button, text) {
+            // Decode HTML entities if needed
+            const decoded = new DOMParser().parseFromString(text, 'text/html').body.textContent || text;
+
+            navigator.clipboard.writeText(decoded).then(() => {
+                const originalHtml = button.innerHTML;
+                const originalClass = button.className;
+
+                // Change button appearance to indicate success
+                button.innerHTML = '<i class="bi bi-check-circle me-2"></i>Copied!';
+                button.className = 'btn btn-sm btn-success w-100';
+
+                // Revert after 2 seconds
+                setTimeout(() => {
+                    button.innerHTML = originalHtml;
+                    button.className = originalClass;
+                }, 2000);
+            }).catch(() => {
+                alert('Failed to copy to clipboard. Please try again.');
+            });
+        }
+    </script>
+}

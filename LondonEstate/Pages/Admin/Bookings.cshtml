@@ -75,10 +75,10 @@
             <tr>
                     <td class="@(isAfterCutoff ? "bg-secondary" : "")">
                         <a class="text-decoration-none text-black" asp-page="./Checkin" asp-route-id="@item.Id">
-                        @Html.DisplayFor(modelItem => item.Name)
-                        </a> @*  <div>
+                        @Html.DisplayFor(modelItem => item.OnlineName)
+                        </a>   <div>
                             @Html.DisplayFor(modelItem => item.Name)
-                        </div> *@
+                        </div>
                 </td>
                 @*  <td>
                     @Html.DisplayFor(modelItem => item.Address)

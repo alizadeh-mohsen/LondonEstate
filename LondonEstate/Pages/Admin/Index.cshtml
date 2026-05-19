@@ -5,13 +5,9 @@
 }
 
 <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
-
 <div class="dashboard-container">
-
     <div class="dashboard-grid">
-
         <a href="/Admin/Bookings" class="dashboard-card bg-success">
-
             <div class="card-content">
                 <h2 class="text-light">Bookings</h2>
             </div>
@@ -21,21 +17,31 @@
                 <h2 class="text-light">Properties</h2>
             </div>
         </a>
-        
-    
-
-        <a href="/Admin/Invoice" class="dashboard-card bg-warning">
+       
+       
+       
+        <a href="/Admin/Instructions" class="dashboard-card bg-warning">
 
             <div class="card-content">
-                <h2 class="text-light">Invoice</h2>
+                <h2 class="text-light">Check-in Instructions</h2>
             </div>
-        </a>
-       <a href="/Admin/Bills/Index" class="dashboard-card bg-danger">
+        </a> <a href="/Admin/Wifi" class="dashboard-card bg-info">
+
+            <div class="card-content">
+                <h2 class="text-light">WiFi Info</h2>
+            </div>
+        </a> <a href="/Admin/Bills/Index" class="dashboard-card bg-danger">
 
             <div class="card-content">
                 <h2 class="text-light">Bills</h2>
             </div>
         </a>
-      
+        <a href="/Admin/Invoice" class="dashboard-card bg-secondary">
+            
+
+            <div class="card-content">
+                <h2 class="text-dark">Invoice</h2>
+            </div>
+        </a>
     </div>
 </div>
