@@ -115,17 +115,5 @@
                 fallbackCopy(payload);
             }
         }
-
-        function copyWifi() {
-            const wifiEl = document.getElementById('wifi');
-            
-            const wifi = wifiEl ? wifiEl.textContent : '';
-            if (!wifi) return;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(wifi).catch(() => fallbackCopy(wifi));
-            } else {
-                fallbackCopy(wifi);
-            }
-        }
     </script>
 }

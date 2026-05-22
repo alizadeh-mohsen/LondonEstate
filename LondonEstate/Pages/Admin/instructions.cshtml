@@ -7,7 +7,8 @@
 <div class="container-fluid py-4">
     <div class="mb-4">
         <h1 class="h2 mb-0">
-            <i class="bi bi-wifi me-2"></i>Check-in Instriuctions
+            <i class="bi bi-info-
+246800-fill text-primary me-2"></i>Check-in Instriuctions
         </h1>
     </div>
 
@@ -49,11 +50,14 @@
                                     <div class="bg-light p-3 rounded mb-3" style="word-break: break-all;">
                                         @Html.Raw(flat.CheckinInstruction.Replace("\n", "<br/>"))
                                     </div>
-                                    <button type="button" 
-                                            class="btn btn-sm btn-outline-primary w-100" 
-                                            onclick="copyToClipboard(this, '@Html.Raw(flat.CheckinInstruction)')">
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-primary w-100"
+                                            onclick="copyToClipboard(this)"
+                                            data-wifi="@System.Net.WebUtility.HtmlEncode(flat.CheckinInstruction)">
                                         <i class="bi bi-clipboard me-2"></i>Copy to Clipboard
                                     </button>
+
+
                                 </div>
                             }
                             else
@@ -119,19 +123,15 @@
             }
         });
 
-        function copyToClipboard(button, text) {
-            // Decode HTML entities if needed
-            const decoded = new DOMParser().parseFromString(text, 'text/html').body.textContent || text;
-
-            navigator.clipboard.writeText(decoded).then(() => {
+                function copyToClipboard(button) {
+            const text = button.dataset.wifi;
+            navigator.clipboard.writeText(text).then(() => {
                 const originalHtml = button.innerHTML;
                 const originalClass = button.className;
 
-                // Change button appearance to indicate success
                 button.innerHTML = '<i class="bi bi-check-circle me-2"></i>Copied!';
                 button.className = 'btn btn-sm btn-success w-100';
 
-                // Revert after 2 seconds
                 setTimeout(() => {
                     button.innerHTML = originalHtml;
                     button.className = originalClass;

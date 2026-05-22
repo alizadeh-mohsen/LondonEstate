@@ -1,5 +1,6 @@
 ﻿@page
 @model LondonEstate.Pages.Admin.WifiModel
+@using System.Text.Json
 @{
     ViewData["Title"] = "WiFi Information";
 }
@@ -15,11 +16,11 @@
         <div class="col-md-6">
             <div class="input-group">
                 <span class="input-group-text bg-white border-end-0">
-                    <i class="bi bi-    h"></i>
+                    <i class="bi bi-search"></i>
                 </span>
-                <input type="text" 
-                       class="form-control border-start-0" 
-                       id="searchInput" 
+                <input type="text"
+                       class="form-control border-start-0"
+                       id="searchInput"
                        placeholder="Search by property name..."
                        autocomplete="off" />
             </div>
@@ -49,11 +50,13 @@
                                     <div class="bg-light p-3 rounded mb-3" style="word-break: break-all;">
                                         @Html.Raw(flat.Wifi.Replace("\n", "<br/>"))
                                     </div>
-                                    <button type="button" 
-                                            class="btn btn-sm btn-outline-primary w-100" 
-                                            onclick="copyToClipboard(this, '@Html.Raw(flat.Wifi)')">
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-primary w-100"
+                                            onclick="copyToClipboard(this)"
+                                            data-wifi="@System.Net.WebUtility.HtmlEncode(flat.Wifi)">
                                         <i class="bi bi-clipboard me-2"></i>Copy to Clipboard
                                     </button>
+
                                 </div>
                             }
                             else
@@ -98,7 +101,7 @@
 
             flatCards.forEach(card => {
                 const flatName = card.dataset.flatName;
-                
+
                 if (flatName.includes(searchTerm)) {
                     card.style.display = '';
                     visibleCount++;
@@ -119,19 +122,15 @@
             }
         });
 
-        function copyToClipboard(button, text) {
-            // Decode HTML entities if needed
-            const decoded = new DOMParser().parseFromString(text, 'text/html').body.textContent || text;
-
-            navigator.clipboard.writeText(decoded).then(() => {
+              function copyToClipboard(button) {
+            const text = button.dataset.wifi;
+            navigator.clipboard.writeText(text).then(() => {
                 const originalHtml = button.innerHTML;
                 const originalClass = button.className;
 
-                // Change button appearance to indicate success
                 button.innerHTML = '<i class="bi bi-check-circle me-2"></i>Copied!';
                 button.className = 'btn btn-sm btn-success w-100';
 
-                // Revert after 2 seconds
                 setTimeout(() => {
                     button.innerHTML = originalHtml;
                     button.className = originalClass;
@@ -140,5 +139,6 @@
                 alert('Failed to copy to clipboard. Please try again.');
             });
         }
+
     </script>
 }
