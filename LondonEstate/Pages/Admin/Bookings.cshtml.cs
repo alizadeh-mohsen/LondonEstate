@@ -11,12 +11,10 @@ namespace LondonEstate.Pages.Admin
     public class BookingsModel : PageModel
     {
         private readonly Data.ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public BookingsModel(Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
-            _webHostEnvironment = webHostEnvironment;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
@@ -31,8 +29,16 @@ namespace LondonEstate.Pages.Admin
         public async Task OnGetAsync()
         {
             var query = from f in _context.Flat
-                        orderby f.Name
-                        select f;
+                        orderby f.CheckOut, f.Name
+                        select new Flat
+                        {
+                            Id = f.Id,
+                            Name = f.Name,
+                            OnlineName = f.OnlineName,
+                            CheckIn = f.CheckIn,
+                            CheckOut = f.CheckOut,
+                            GuestName = f.GuestName
+                        };
 
             Flat = await query.ToListAsync();
         }

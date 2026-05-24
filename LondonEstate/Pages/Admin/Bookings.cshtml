@@ -1,23 +1,20 @@
 ﻿@page
 @using LondonEstate.Utils.Extensions
 @model LondonEstate.Pages.Admin.BookingsModel
-@{
-}
 
 @{
-    ViewData["Title"] = "Properties";
+    ViewData["Title"] = "Bookings";
     var cutoff = DateTime.Today.AddHours(11);
 }
 
 <div class="mb-4">
-    
 
     @if (!string.IsNullOrEmpty(Model.SuccessMessage))
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="bi bi-check-circle me-2"></i>
             @Model.SuccessMessage
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
 
@@ -26,7 +23,7 @@
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="bi bi-exclamation-circle me-2"></i>
             @Model.ErrorMessage
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
 
@@ -48,55 +45,91 @@
     </div>
 </div>
 
-<div class="table-responsive">
-    <table class="table table-sm">
-    <thead>
-        <tr>
-            <th>
-                Property
-            </th>
-            @*  <th>
-                @Html.DisplayNameFor(model => model.Flat[0].Address)
-            </th> *@
-            <th>
-               Arrival / Departure /Guest
-            </th>
-          @*   <th class="text-center">
-                Booker name
-            </th> *@
-        </tr>
-    </thead>
-    <tbody>
+<!-- TABLE -->
+<div class="table-responsive" style="max-height: 75vh; overflow-y: auto;">
+    <table class="table table-sm align-middle table-hover" id="bookingTable">
+        <thead class="table-light sticky-top">
+            <tr>
+                <th data-sort="string">Property</th>
+                <th data-sort="date">Dates</th>
+                <th data-sort="string">Guest</th>
+            </tr>
+        </thead>
+
+        <tbody>
         @foreach (var item in Model.Flat)
         {
-            // safe evaluation for nullable CheckOut
-            var isAfterCutoff = item.CheckOut is DateTime co && co > cutoff;
+            var today = DateTime.Today;
+            var checkIn = item.CheckIn?.Date;
+            var checkOut = item.CheckOut?.Date;
 
-            <tr>
-                    <td class="@(isAfterCutoff ? "bg-secondary" : "")">
-                        <a class="text-decoration-none text-black" asp-page="./Checkin" asp-route-id="@item.Id">
-                        @Html.DisplayFor(modelItem => item.OnlineName)
-                        </a>   <div>
-                            @Html.DisplayFor(modelItem => item.Name)
+                var isAfterCutoff = item.CheckOut is DateTime co && co > cutoff;
+                var status= checkOut == today.AddDays(1) ? "tomorrow" : "";
+                var badge = !string.IsNullOrEmpty(status) ? $"<span class='badge bg-danger text-white'>{status}</span>" : "";
+             
+                <tr >
+
+                <!-- PROPERTY -->
+                    <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
+                    <a asp-page="./Checkin" asp-route-id="@item.Id"
+                       class="fw-semibold text-decoration-none text-dark">
+                        @item.Name
+                    </a>
+                    <div class="text-muted small">@item.OnlineName</div>
+                </td>
+
+                <!-- DATES -->
+                    <td class ="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
+                    <div class="fw-semibold">
+                        @item.CheckIn?.ToUkDateString() - @item.CheckOut?.ToUkDateString()
+                    </div>
+
+                  
+                </td>
+
+                <!-- GUEST -->
+                    <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
+                    <div class="small">@item.GuestName</div>
+                        <div class="mt-1">
+                            @Html.Raw(badge)
                         </div>
                 </td>
-                @*  <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td> *@
-                    <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
-                    @item.CheckIn?.ToUkDateString() - @item.CheckOut?.ToUkDateString()
-                        @*    </td>
-                <td  >
-                     <a target="_blank" href="@(Model.Flat?.ElementAtOrDefault(0)?.ReservationUrl ?? "#")"> *@
-                        <div class ="ps-1">
-                            @Html.DisplayFor(modelItem => item.GuestName) 
-                            </div>   
-
-                    @* </a> *@
-                </td>
-               
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
 </div>
+
+
+<!-- SORTING SCRIPT -->
+<script>
+document.querySelectorAll("#bookingTable th[data-sort]").forEach(th => {
+    th.style.cursor = "pointer";
+    th.addEventListener("click", () => {
+        const table = th.closest("table");
+        const tbody = table.querySelector("tbody");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+        const index = Array.from(th.parentNode.children).indexOf(th);
+        const type = th.dataset.sort;
+        const asc = !th.classList.contains("sorted-asc");
+
+        rows.sort((a, b) => {
+            let A = a.children[index].innerText.trim();
+            let B = b.children[index].innerText.trim();
+
+            if (type === "date") {
+                A = Date.parse(A.replace(/–/g, "-")) || 0;
+                B = Date.parse(B.replace(/–/g, "-")) || 0;
+            }
+
+            return asc ? A.localeCompare(B) : B.localeCompare(A);
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+
+        table.querySelectorAll("th").forEach(x => x.classList.remove("sorted-asc", "sorted-desc"));
+        th.classList.add(asc ? "sorted-asc" : "sorted-desc");
+    });
+});
+</script>

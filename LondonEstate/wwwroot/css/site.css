@@ -35,6 +35,22 @@ body {
     .card-title {
         font-size: 1rem;
     }
+    #bookingTable td:nth-child(4),
+    #bookingTable th:nth-child(4) {
+        display: none; /* hide actions column */
+    }
+
+    #bookingTable td {
+        padding: .4rem .5rem;
+    }
+
+    #bookingTable .fw-semibold {
+        font-size: .9rem;
+    }
+
+    #bookingTable .small {
+        font-size: .75rem;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
