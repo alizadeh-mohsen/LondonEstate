@@ -7,7 +7,8 @@ namespace LondonEstate.Models
         public Guid Id { get; set; } = Guid.NewGuid();
         [Required, StringLength(25)]
         public string InvoiceNumber { get; set; }
-        [Required, StringLength(50)]
+
+        [Required]
         public string IssuedTo { get; set; }
         [Required]
         public string Property { get; set; }
