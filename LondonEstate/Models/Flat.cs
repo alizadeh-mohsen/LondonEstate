@@ -8,7 +8,7 @@
         public string? GuestName { get; set; }
         public DateTime? CheckIn { get; set; }
         public DateTime? CheckOut { get; set; }
-        public bool Empty { get; set; } = true;
+        public bool Open { get; set; } = true;
         public string? CheckinInstruction { get; set; }
         public string? VisualGuideUrl { get; set; }
         public string? Address { get; set; }

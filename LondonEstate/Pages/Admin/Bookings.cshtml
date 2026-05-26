@@ -57,79 +57,89 @@
         </thead>
 
         <tbody>
-        @foreach (var item in Model.Flat)
-        {
-            var today = DateTime.Today;
-            var checkIn = item.CheckIn?.Date;
-            var checkOut = item.CheckOut?.Date;
+            @foreach (var item in Model.Flat)
+            {
+                var today = DateTime.Today;
+                var checkIn = item.CheckIn?.Date;
+                var checkOut = item.CheckOut?.Date;
 
                 var isAfterCutoff = item.CheckOut is DateTime co && co > cutoff;
-                var status= checkOut == today.AddDays(1) ? "tomorrow" : "";
+                var status = checkOut == today.AddDays(1) ? "tomorrow" : "";
                 var badge = !string.IsNullOrEmpty(status) ? $"<span class='badge bg-danger text-white'>{status}</span>" : "";
-             
-                <tr >
 
-                <!-- PROPERTY -->
+                <tr>
+
+                    <!-- PROPERTY -->
                     <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
-                    <a asp-page="./Checkin" asp-route-id="@item.Id"
-                       class="fw-semibold text-decoration-none text-dark">
-                        @item.Name
-                    </a>
-                    <div class="text-muted small">@item.OnlineName</div>
-                </td>
+                        <a asp-page="./Checkin" asp-route-id="@item.Id"
+                           class="fw-semibold text-decoration-none text-dark">
+                            @item.Name
+                        </a>
+                        <div class="text-muted small">@item.OnlineName</div>
+                    </td>
 
-                <!-- DATES -->
-                    <td class ="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
-                    <div class="fw-semibold">
-                        @item.CheckIn?.ToUkDateString() - @item.CheckOut?.ToUkDateString()
-                    </div>
-
-                  
-                </td>
-
-                <!-- GUEST -->
+                    <!-- DATES -->
                     <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
-                    <div class="small">@item.GuestName</div>
+                        <div class="fw-semibold">
+                            @item.CheckIn?.ToUkDateString() - @item.CheckOut?.ToUkDateString()
+                        </div>
+
+
+                    </td>
+
+                    <!-- GUEST -->
+                    <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
+                        <div class="small">@item.GuestName</div>
                         <div class="mt-1">
                             @Html.Raw(badge)
                         </div>
-                </td>
-            </tr>
-        }
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
+</div>
+<div class="mt-2">
+    <ul>
+        @foreach (var item in Model.EmptyFlats)
+        {
+            <li>
+                @item.Name
+            </li>
+        }
+    </ul>
 </div>
 
 
 <!-- SORTING SCRIPT -->
 <script>
-document.querySelectorAll("#bookingTable th[data-sort]").forEach(th => {
-    th.style.cursor = "pointer";
-    th.addEventListener("click", () => {
-        const table = th.closest("table");
-        const tbody = table.querySelector("tbody");
-        const rows = Array.from(tbody.querySelectorAll("tr"));
-        const index = Array.from(th.parentNode.children).indexOf(th);
-        const type = th.dataset.sort;
-        const asc = !th.classList.contains("sorted-asc");
+    document.querySelectorAll("#bookingTable th[data-sort]").forEach(th => {
+        th.style.cursor = "pointer";
+        th.addEventListener("click", () => {
+            const table = th.closest("table");
+            const tbody = table.querySelector("tbody");
+            const rows = Array.from(tbody.querySelectorAll("tr"));
+            const index = Array.from(th.parentNode.children).indexOf(th);
+            const type = th.dataset.sort;
+            const asc = !th.classList.contains("sorted-asc");
 
-        rows.sort((a, b) => {
-            let A = a.children[index].innerText.trim();
-            let B = b.children[index].innerText.trim();
+            rows.sort((a, b) => {
+                let A = a.children[index].innerText.trim();
+                let B = b.children[index].innerText.trim();
 
-            if (type === "date") {
-                A = Date.parse(A.replace(/–/g, "-")) || 0;
-                B = Date.parse(B.replace(/–/g, "-")) || 0;
-            }
+                if (type === "date") {
+                    A = Date.parse(A.replace(/–/g, "-")) || 0;
+                    B = Date.parse(B.replace(/–/g, "-")) || 0;
+                }
 
-            return asc ? A.localeCompare(B) : B.localeCompare(A);
+                return asc ? A.localeCompare(B) : B.localeCompare(A);
+            });
+
+            tbody.innerHTML = "";
+            rows.forEach(r => tbody.appendChild(r));
+
+            table.querySelectorAll("th").forEach(x => x.classList.remove("sorted-asc", "sorted-desc"));
+            th.classList.add(asc ? "sorted-asc" : "sorted-desc");
         });
-
-        tbody.innerHTML = "";
-        rows.forEach(r => tbody.appendChild(r));
-
-        table.querySelectorAll("th").forEach(x => x.classList.remove("sorted-asc", "sorted-desc"));
-        th.classList.add(asc ? "sorted-asc" : "sorted-desc");
     });
-});
 </script>

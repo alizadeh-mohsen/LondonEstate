@@ -13,7 +13,6 @@ namespace LondonEstate.Pages.Admin.Flats
     {
         private readonly Data.ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly UploadSettings _uploadSettings;
 
         public EditModel(
       Data.ApplicationDbContext context,
@@ -22,7 +21,6 @@ namespace LondonEstate.Pages.Admin.Flats
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
-            _uploadSettings = uploadSettingsOptions.Value;
         }
 
 
@@ -63,6 +61,7 @@ namespace LondonEstate.Pages.Admin.Flats
             flatFromDb.FlatUrl = Flat.FlatUrl;
             flatFromDb.Wifi = Flat.Wifi;
             flatFromDb.CheckinInstruction = Flat.CheckinInstruction;
+            flatFromDb.Open = Flat.Open;
 
             // Handle image upload
             if (imageUpload != null && imageUpload.Length > 0)

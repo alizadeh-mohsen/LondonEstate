@@ -19,6 +19,7 @@ namespace LondonEstate.Pages.Admin
         }
 
         public IList<Flat> Flat { get; set; } = default!;
+        public IList<Flat> EmptyFlats { get; set; } = default!;
 
         [TempData]
         public string? SuccessMessage { get; set; }
@@ -29,6 +30,7 @@ namespace LondonEstate.Pages.Admin
         public async Task OnGetAsync()
         {
             var query = from f in _context.Flat
+                        where f.Open == true
                         orderby f.CheckOut, f.Name
                         select new Flat
                         {
@@ -41,6 +43,8 @@ namespace LondonEstate.Pages.Admin
                         };
 
             Flat = await query.ToListAsync();
+            var cutoff = DateTime.Today.AddHours(11);
+            EmptyFlats = Flat.Where(f => f.CheckOut < cutoff).OrderBy(f => f.Name).ToList();
         }
 
         public async Task<IActionResult> OnPostUploadAsync(IFormFile? excelFile)
@@ -143,7 +147,7 @@ namespace LondonEstate.Pages.Admin
                     flat.GuestName = booking.BookerName;
                     flat.CheckIn = booking.Arrival;
                     flat.CheckOut = booking.Departure;
-                    flat.Empty = false;
+                    flat.Open = false;
 
                     _context.Flat.Update(flat);
                     updatedCount++;
