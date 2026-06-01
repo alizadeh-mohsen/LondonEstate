@@ -31,7 +31,7 @@ namespace LondonEstate.Pages.Admin
         {
             var query = from f in _context.Flat
                         where f.Open == true
-                        orderby f.CheckOut, f.Name
+                        orderby f.Name
                         select new Flat
                         {
                             Id = f.Id,

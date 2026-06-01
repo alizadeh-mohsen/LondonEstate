@@ -46,11 +46,24 @@
 </div>
 
 <!-- TABLE -->
+<div class="mx-2">
+    <ul>
+        @foreach (var item in Model.EmptyFlats)
+        {
+            <li>
+                @item.Name
+            </li>
+        }
+    </ul>
+</div>
+
+
+<!-- TABLE -->
 <div class="table-responsive" style="max-height: 75vh; overflow-y: auto;">
     <table class="table table-sm align-middle" id="bookingTable">
         <thead class="table-light sticky-top">
             <tr>
-                <th data-sort="string">Property</th>
+                <th data-sort="string">Property (@Model.Flat.Count)</th>
                 <th data-sort="date">Dates</th>
                 <th data-sort="string">Guest</th>
             </tr>
@@ -98,16 +111,6 @@
             }
         </tbody>
     </table>
-</div>
-<div class="mt-2">
-    <ul>
-        @foreach (var item in Model.EmptyFlats)
-        {
-            <li>
-                @item.Name
-            </li>
-        }
-    </ul>
 </div>
 
 

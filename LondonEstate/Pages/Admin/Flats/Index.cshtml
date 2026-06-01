@@ -15,7 +15,7 @@
     <thead>
         <tr>
             <th>
-                Property
+                    Property (@Model.Flat.Count)
             </th>
 
             @* <th>
@@ -32,7 +32,7 @@
                    <a  href="@Html.DisplayFor(modelItem => item.FlatUrl)" target="_blank">
                         @Html.DisplayFor(modelItem => item.OnlineName)
                     </a>
-                        <div>
+                        <div class="@(item.Open ? "" : "text-danger")">
                             @Html.DisplayFor(modelItem => item.Name)
                         </div>
                 </td>
@@ -42,7 +42,7 @@
                 </td> *@
 
                 <td>
-                         <a class="btn btn-sm btn-primary m-1" asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                         <a class="btn btn-sm btn-primary m-1 " asp-page="./Details" asp-route-id="@item.Id">Details</a>
                         <a class="btn btn-sm btn-primary m-1" asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
                         <a class="btn btn-sm btn-primary m-1" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
