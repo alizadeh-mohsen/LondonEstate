@@ -50,7 +50,7 @@ namespace LondonEstate.Pages.Admin
             flat.ReservationUrl = Flat.ReservationUrl;
             //flat.BookingNumber = Flat.BookingNumber;
             flat.GuestName = Flat.GuestName;
-
+            flat.Open = true;
             try
             {
                 await _context.SaveChangesAsync();
