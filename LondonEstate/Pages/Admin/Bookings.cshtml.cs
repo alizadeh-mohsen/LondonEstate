@@ -147,7 +147,7 @@ namespace LondonEstate.Pages.Admin
                     flat.GuestName = booking.BookerName;
                     flat.CheckIn = booking.Arrival;
                     flat.CheckOut = booking.Departure;
-                    flat.Open = false;
+                    flat.Open = true;
 
                     _context.Flat.Update(flat);
                     updatedCount++;
