@@ -88,7 +88,7 @@ async Task ApplyMigrationsAsync(WebApplication app)
 
     try
     {
-        //await DatabaseSeeder.SeedData(userManager, roleManager, configuration);
+        await DatabaseSeeder.SeedData(userManager, roleManager, configuration);
 
         var context = services.GetRequiredService<ApplicationDbContext>();
 
