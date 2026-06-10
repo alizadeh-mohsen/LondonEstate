@@ -94,7 +94,7 @@
                     <!-- DATES -->
                     <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
                         <div class="fw-semibold">
-                            @item.CheckIn?.ToUkDateString() - @item.CheckOut?.ToUkDateString()
+                            <div>  @item.CheckIn?.ToUkDateString()</div><div>@item.CheckOut?.ToUkDateString()</div>
                         </div>
 
 
