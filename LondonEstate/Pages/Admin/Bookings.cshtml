@@ -30,33 +30,37 @@
     <!-- SEARCH AND IMPORT CARD -->
     <div class="card mb-4">
         <div class="card-body">
+            <!-- Import -->
+            <div class="mb-3">
+                <form method="post" asp-page-handler="Upload" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xlsx,.xls" required />
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-cloud-upload me-2"></i>Import Bookings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Search -->
             <div class="row g-3 mb-3">
-                <div class="col-md-8">
-                    <input type="text" class="form-control" id="searchInput" placeholder="Search by property name or guest name..." />
+                <div class="col-8">
+                    <input type="text" class="form-control" id="searchInput"
+                           placeholder="Search by property name or guest name..." />
                 </div>
-                <div class="col-md-4">
+                <div class="col-4">
                     <button class="btn btn-secondary w-100" id="clearSearch" type="button">
-                        <i class="bi bi-x-circle me-2"></i>Clear Search
+                        <i class="bi bi-x-circle me-2"></i>Clear
                     </button>
                 </div>
             </div>
-            <div class="mb-3">
-            <form method="post" asp-page-handler="Upload" enctype="multipart/form-data">
-                <div class="row g-3">
-                    <div class="col-md-8">
-                        <div class="input-group">
-                            <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xlsx,.xls" required />
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-cloud-upload me-2"></i>Import Bookings
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                </form>
-            </div>
+
             <!-- Empty Flats List -->
             <div class="border rounded p-3 bg-secondary">
-                @* <h6 class="fw-bold mb-2 text-secondary">Empty Flats</h6> *@
+                @* <h6 class="fw-bold mb-2 text-secondary text-center">Flats</h6> *@
                 <ol class="mb-0 ps-3">
                     @foreach (var item in Model.EmptyFlats)
                     {
@@ -73,7 +77,6 @@
     </div>
 </div>
 
-<!-- TABLE -->
 <!-- TABLE -->
 <div class="table-responsive" style="max-height: 75vh; overflow-y: auto;">
     <table class="table table-hover table-sm align-middle" id="bookingTable">
@@ -139,6 +142,27 @@
             }
         </tbody>
     </table>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+
+        <!-- Recover Button -->
+        <form method="post" asp-page-handler="Recover" class="mb-3">
+            <div class="alert alert-warning" role="alert">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Recover from backup:</strong> Restore all bookings from the last backup.
+                    </div>
+                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to recover from backup? This will overwrite current bookings.');">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>Recover
+                    </button>
+                </div>
+            </div>
+        </form>
+      
+    </div>
 </div>
 
 

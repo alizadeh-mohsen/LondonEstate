@@ -133,9 +133,50 @@ namespace LondonEstate.Pages.Admin
             return RedirectToPage();
         }
 
+        public async Task<IActionResult> OnPostRecoverAsync()
+        {
+            try
+            {
+                var backupFlats = await _context.FlatBackup.ToListAsync();
+
+                if (backupFlats.Count == 0)
+                {
+                    ErrorMessage = "No backup data found.";
+                    return RedirectToPage();
+                }
+
+                // Restore all flats from backup
+                foreach (var backup in backupFlats)
+                {
+                    var flat = await _context.Flat.FirstOrDefaultAsync(f => f.Id == backup.Id);
+
+                    if (flat != null)
+                    {
+                        flat.GuestName = backup.GuestName;
+                        flat.CheckIn = backup.CheckIn;
+                        flat.CheckOut = backup.CheckOut;
+
+                        _context.Flat.Update(flat);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                SuccessMessage = $"Successfully recovered {backupFlats.Count} booking(s) from backup.";
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"An error occurred while recovering from backup: {ex.Message}";
+            }
+
+            return RedirectToPage();
+        }
+
         private async Task<int> UpdateFlatsFromImportAsync(List<BookingImportDto> bookingData)
         {
             int updatedCount = 0;
+
+            //backup existing flats before updating
+            await BackupFlats();
 
             foreach (var booking in bookingData)
             {
@@ -160,6 +201,35 @@ namespace LondonEstate.Pages.Admin
             }
 
             return updatedCount;
+        }
+
+        private async Task BackupFlats()
+        {
+            try
+            {
+                var existingFlats = await _context.Flat.ToListAsync();
+                await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE FlatBackup");
+
+                foreach (var flat in existingFlats)
+                {
+                    var flatBackup = new FlatBackup
+                    {
+                        Id = flat.Id,
+                        Name = flat.Name,
+                        OnlineName = flat.OnlineName,
+                        GuestName = flat.GuestName,
+                        CheckIn = flat.CheckIn,
+                        CheckOut = flat.CheckOut
+                    };
+                    _context.FlatBackup.Add(flatBackup);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"An error occurred while backing up flats: {ex.Message}";
+            }
         }
 
         private class BookingImportDto
