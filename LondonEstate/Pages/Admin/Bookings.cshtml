@@ -27,8 +27,20 @@
         </div>
     }
 
+    <!-- SEARCH AND IMPORT CARD -->
     <div class="card mb-4">
         <div class="card-body">
+            <div class="row g-3 mb-3">
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search by property name or guest name..." />
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-secondary w-100" id="clearSearch" type="button">
+                        <i class="bi bi-x-circle me-2"></i>Clear Search
+                    </button>
+                </div>
+            </div>
+            <div class="mb-3">
             <form method="post" asp-page-handler="Upload" enctype="multipart/form-data">
                 <div class="row g-3">
                     <div class="col-md-8">
@@ -40,32 +52,45 @@
                         </div>
                     </div>
                 </div>
-            </form>
+                </form>
+            </div>
+            <!-- Empty Flats List -->
+            <div class="border rounded p-3 bg-secondary">
+                @* <h6 class="fw-bold mb-2 text-secondary">Empty Flats</h6> *@
+                <ol class="mb-0 ps-3">
+                    @foreach (var item in Model.EmptyFlats)
+                    {
+                        <li class="mb-1">
+                            <a asp-page="./Checkin" asp-route-id="@item.Id"
+                               class="fw-semibold text-decoration-none text-dark">
+                                @item.Name
+                            </a>
+                        </li>
+                    }
+                </ol>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- TABLE -->
-<div class="mx-2">
-    <ul>
-        @foreach (var item in Model.EmptyFlats)
-        {
-            <li>
-                @item.Name
-            </li>
-        }
-    </ul>
-</div>
-
-
 <!-- TABLE -->
 <div class="table-responsive" style="max-height: 75vh; overflow-y: auto;">
-    <table class="table table-sm align-middle" id="bookingTable">
-        <thead class="table-light sticky-top">
+    <table class="table table-hover table-sm align-middle" id="bookingTable">
+        <thead class="table-primary sticky-top">
             <tr>
-                <th data-sort="string">Property (@Model.Flat.Count)</th>
-                <th data-sort="date">Dates</th>
-                <th data-sort="string">Guest</th>
+                <th data-sort="string" style="cursor: pointer;">
+                    Property (@Model.Flat.Count)
+                    <i class="bi bi-arrow-down-up ms-1" style="font-size: 0.85rem; opacity: 0.5;"></i>
+                </th>
+                <th data-sort="date" style="cursor: pointer;">
+                    Dates
+                    <i class="bi bi-arrow-down-up ms-1" style="font-size: 0.85rem; opacity: 0.5;"></i>
+                </th>
+                <th data-sort="string" style="cursor: pointer;">
+                    Guest
+                    <i class="bi bi-arrow-down-up ms-1" style="font-size: 0.85rem; opacity: 0.5;"></i>
+                </th>
             </tr>
         </thead>
 
@@ -80,7 +105,10 @@
                 var status = checkOut == today.AddDays(1) ? "tomorrow" : "";
                 var badge = !string.IsNullOrEmpty(status) ? $"<span class='badge bg-danger text-white'>{status}</span>" : "";
 
-                <tr>
+                <tr class="booking-row"
+                    data-property="@item.Name?.ToLower()"
+                    data-online="@item.OnlineName?.ToLower()"
+                    data-guest="@item.GuestName?.ToLower()">
 
                     <!-- PROPERTY -->
                     <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
@@ -116,12 +144,43 @@
 
 <!-- SORTING SCRIPT -->
 <script>
+    // SEARCH FUNCTIONALITY
+    const searchInput = document.getElementById("searchInput");
+    const clearSearchBtn = document.getElementById("clearSearch");
+    const bookingRows = document.querySelectorAll("#bookingTable tbody tr.booking-row");
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+
+        bookingRows.forEach(row => {
+            const propertyName = row.getAttribute("data-property") || "";
+            const onlineName = row.getAttribute("data-online") || "";
+            const guestName = row.getAttribute("data-guest") || "";
+
+            const matches =
+            propertyName.includes(searchTerm) ||
+            onlineName.includes(searchTerm) ||
+            guestName.includes(searchTerm) ||
+            searchTerm === "";
+
+            row.style.display = matches ? "" : "none";
+        });
+    }
+
+    searchInput.addEventListener("input", filterTable);
+
+    clearSearchBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        filterTable();
+    });
+
+    // SORTING FUNCTIONALITY
     document.querySelectorAll("#bookingTable th[data-sort]").forEach(th => {
         th.style.cursor = "pointer";
         th.addEventListener("click", () => {
             const table = th.closest("table");
             const tbody = table.querySelector("tbody");
-            const rows = Array.from(tbody.querySelectorAll("tr"));
+            const rows = Array.from(tbody.querySelectorAll("tr.booking-row:not([style*='display: none'])"));
             const index = Array.from(th.parentNode.children).indexOf(th);
             const type = th.dataset.sort;
             const asc = !th.classList.contains("sorted-asc");
@@ -140,6 +199,13 @@
 
             tbody.innerHTML = "";
             rows.forEach(r => tbody.appendChild(r));
+
+            // Add back hidden rows at the end
+            bookingRows.forEach(row => {
+                if (row.style.display === "none") {
+                    tbody.appendChild(row);
+                }
+            });
 
             table.querySelectorAll("th").forEach(x => x.classList.remove("sorted-asc", "sorted-desc"));
             th.classList.add(asc ? "sorted-asc" : "sorted-desc");

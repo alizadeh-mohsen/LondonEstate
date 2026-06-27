@@ -5,12 +5,24 @@
     ViewData["Title"] = "Index";
 }
 
+<div class="mb-4">
+    <div class="row g-3 mb-3">
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search by property name or online name..." />
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-secondary w-100" id="clearSearch" type="button">
+                <i class="bi bi-x-circle me-2"></i>Clear Search
+            </button>
+        </div>
+    </div>
+</div>
 
 <p>
     <a class="btn btn-primary" asp-page="Create">Create New</a>
 </p>
-<div class="table-responsive ">
-    <table class="table table-sm">
+<div class="table-responsive">
+    <table class="table table-sm" id="flatsTable">
 
     <thead>
         <tr>
@@ -27,7 +39,7 @@
     <tbody>
         @foreach (var item in Model.Flat)
         {
-            <tr>
+            <tr class="flat-row" data-name="@item.Name?.ToLower()" data-online-name="@item.OnlineName?.ToLower()">
                 <td>
                    <a  href="@Html.DisplayFor(modelItem => item.FlatUrl)" target="_blank">
                         @Html.DisplayFor(modelItem => item.OnlineName)
@@ -51,3 +63,30 @@
     </tbody>
 </table>
 </div>
+
+<script>
+    // SEARCH FUNCTIONALITY
+    const searchInput = document.getElementById("searchInput");
+    const clearSearchBtn = document.getElementById("clearSearch");
+    const flatRows = document.querySelectorAll("#flatsTable tbody tr.flat-row");
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+
+        flatRows.forEach(row => {
+            const name = row.getAttribute("data-name") || "";
+            const onlineName = row.getAttribute("data-online-name") || "";
+
+            const matches = name.includes(searchTerm) || onlineName.includes(searchTerm) || searchTerm === "";
+
+            row.style.display = matches ? "" : "none";
+        });
+    }
+
+    searchInput.addEventListener("input", filterTable);
+
+    clearSearchBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        filterTable();
+    });
+</script>
