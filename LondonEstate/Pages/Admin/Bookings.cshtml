@@ -59,20 +59,41 @@
             </div>
 
             <!-- Empty Flats List -->
-            <div class="border rounded p-3 bg-secondary">
-                @* <h6 class="fw-bold mb-2 text-secondary text-center">Flats</h6> *@
-                <ol class="mb-0 ps-3">
-                    @foreach (var item in Model.EmptyFlats)
-                    {
-                        <li class="mb-1">
-                            <a asp-page="./Checkin" asp-route-id="@item.Id"
-                               class="fw-semibold text-decoration-none text-dark">
-                                @item.Name
-                            </a>
-                        </li>
-                    }
-                </ol>
+            <div class="row g-3">
+
+                <!-- Today Flats -->
+                <div class="col-12 col-md-6">
+                    <div class="border rounded p-3 bg-secondary">
+                        <ul class="mb-0 ps-3">
+                            @foreach (var item in Model.EmptyFlats)
+                            {
+                                <li class="mb-1">
+                                    <a asp-page="./Checkin" asp-route-id="@item.Id"
+                                       class="fw-semibold text-decoration-none text-dark">
+                                        @item.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tomorrow Flats -->
+                <div class="col-12 col-md-6">
+                    <div class="border rounded p-3 bg-secondary">
+                        <ul class="mb-0 ps-3 list-unstyled">
+                            @foreach (var item in Model.EmptyTomorrowFlats)
+                            {
+                                <li class="mb-1 fw-semibold">
+                                    @item.OnlineName
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
             </div>
+
         </div>
     </div>
 </div>
@@ -147,23 +168,33 @@
 <div class="card mb-4">
     <div class="card-body">
 
-        <!-- Recover Button -->
-        <form method="post" asp-page-handler="Recover" class="mb-3">
-            <div class="alert alert-warning" role="alert">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        <strong>Recover from backup:</strong> Restore all bookings from the last backup.
-                    </div>
-                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to recover from backup? This will overwrite current bookings.');">
-                        <i class="bi bi-arrow-counterclockwise me-2"></i>Recover
-                    </button>
-                </div>
-            </div>
-        </form>
-      
+
+        <div class="d-flex gap-2">
+
+            <!-- Backup -->
+            <form method="post" asp-page-handler="Backup">
+                <button type="submit"
+                        class="btn btn-success btn"
+                        onclick="return confirm('Are you sure you want to create a backup of all current bookings?');">
+                    <i class="bi bi-cloud-upload me-1"></i>Backup
+                </button>
+            </form>
+
+            <!-- Recover -->
+            <form method="post" asp-page-handler="Recover">
+                <button type="submit"
+                        class="btn btn-danger btn"
+                        onclick="return confirm('Are you sure you want to recover from backup? This will overwrite current bookings.');">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>Recover
+                </button>
+            </form>
+
+        </div>
+
+
     </div>
 </div>
+
 
 
 <!-- SORTING SCRIPT -->
