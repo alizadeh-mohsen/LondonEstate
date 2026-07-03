@@ -171,6 +171,13 @@
 
         <div class="d-flex gap-2">
 
+            <!-- Generate PDF Report -->
+            <form method="post" asp-page-handler="GenerateReport">
+                <button type="submit" class="btn btn-info btn">
+                    <i class="bi bi-file-pdf me-1"></i>Generate PDF Report
+                </button>
+            </form>
+
             <!-- Backup -->
             <form method="post" asp-page-handler="Backup">
                 <button type="submit"
@@ -194,7 +201,6 @@
 
     </div>
 </div>
-
 
 
 <!-- SORTING SCRIPT -->

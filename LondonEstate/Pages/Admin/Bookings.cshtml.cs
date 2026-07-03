@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
 
 namespace LondonEstate.Pages.Admin
 {
@@ -11,10 +13,12 @@ namespace LondonEstate.Pages.Admin
     public class BookingsModel : PageModel
     {
         private readonly Data.ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public BookingsModel(Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
@@ -203,8 +207,6 @@ namespace LondonEstate.Pages.Admin
         }
 
         public async Task<IActionResult> OnPostRecoverAsync()
-
-
         {
             try
             {
@@ -240,6 +242,136 @@ namespace LondonEstate.Pages.Admin
             }
 
             return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostGenerateReportAsync()
+        {
+            try
+            {
+                var flats = await _context.Flat
+                    .Where(f => f.Open == true)
+                    .OrderBy(f => f.Name)
+                    .ToListAsync();
+
+                if (flats.Count == 0)
+                {
+                    ErrorMessage = "No bookings available to generate a report.";
+                    return RedirectToPage();
+                }
+
+                var pdfBytes = GenerateCheckoutReport(flats);
+                var fileName = $"Checkout_Report_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.pdf";
+
+                return File(pdfBytes, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"An error occurred while generating the report: {ex.Message}";
+                return RedirectToPage();
+            }
+        }
+
+        private byte[] GenerateCheckoutReport(IList<Flat> flats)
+        {
+            var document = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(20);
+
+                    page.Header().Text("Check-out Report")
+                        .FontSize(24)
+                        .Bold()
+                        .FontColor(Colors.Blue.Darken4);
+
+                    page.Content().Column(column =>
+                    {
+                        column.Spacing(10);
+
+                        // Report Header
+                        column.Item().Text($"Generated: {DateTime.Now:dd/MM/yyyy HH:mm:ss}")
+                            .FontSize(10)
+                            .FontColor(Colors.Grey.Darken2);
+
+                        column.Item().Container().Background(Colors.Blue.Lighten4).Padding(5).Text($"Total Properties: {flats.Count}")
+                            .FontSize(12)
+                            .Bold();
+
+                        // Table
+                        column.Item().Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn(2f);
+                                columns.RelativeColumn(1.5f);
+                                columns.RelativeColumn(1.5f);
+                                columns.RelativeColumn(1f);
+                            });
+
+                            // Header Row
+                            table.Header(header =>
+                            {
+                                header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Property Name")
+                                    .Bold()
+                                    .FontColor(Colors.White)
+                                    .FontSize(11);
+
+                                header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Check-in Date")
+                                    .Bold()
+                                    .FontColor(Colors.White)
+                                    .FontSize(11);
+
+                                header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Check-out Date")
+                                    .Bold()
+                                    .FontColor(Colors.White)
+                                    .FontSize(11);
+
+                                header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Days Left")
+                                    .Bold()
+                                    .FontColor(Colors.White)
+                                    .FontSize(11);
+                            });
+
+                            // Data Rows
+                            foreach (var flat in flats)
+                            {
+                                var daysLeft = flat.CheckOut.HasValue
+                                    ? (flat.CheckOut.Value.Date - DateTime.Today).Days
+                                    : -1;
+
+                                var backgroundColor = /*daysLeft < 1 ? Colors.Red.Lighten3 :*/
+                                                     daysLeft == 1 ? Colors.Red.Lighten4 :
+                                                     Colors.White;
+
+                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.Name ?? "N/A")
+                                    .FontSize(10);
+
+                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckIn?.ToString("dd/MM/yyyy") ?? "N/A")
+                                    .FontSize(10)
+                                .FontColor(daysLeft < 1 ? Colors.White : Colors.Black);
+
+                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckOut?.ToString("dd/MM/yyyy") ?? "N/A")
+                                    .FontSize(10)
+                                .FontColor(daysLeft < 1 ? Colors.White : Colors.Black);
+
+                                table.Cell().Background(backgroundColor).Padding(5).Text(daysLeft >= 0 ? daysLeft.ToString() : "Empty")
+                                    .Bold()
+                                    .FontSize(10)
+                                .FontColor(daysLeft < 1 ? Colors.White : Colors.Black);
+                            }
+                        });
+                    });
+
+                    page.Footer().AlignCenter().Text(text =>
+                    {
+                        text.Span("Page ");
+                        text.CurrentPageNumber();
+                    });
+                });
+            });
+
+            return document.GeneratePdf();
         }
 
         private async Task BackupFlats()
