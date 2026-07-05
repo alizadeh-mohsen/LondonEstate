@@ -302,12 +302,12 @@ namespace LondonEstate.Pages.Admin
                         var today = DateTime.Today;
 
                         var emptyFlats = flats
-                            .Where(f => !f.CheckOut.HasValue || (f.CheckOut.Value.Date - today).Days < 0)
+                            .Where(f => !f.CheckOut.HasValue || (f.CheckOut.Value.Date - today).Days <= 0)
                             .OrderBy(f => f.Name)
                             .ToList();
 
                         var occupiedFlats = flats
-                            .Where(f => f.CheckOut.HasValue && (f.CheckOut.Value.Date - today).Days >= 0)
+                            .Where(f => f.CheckOut.HasValue && (f.CheckOut.Value.Date - today).Days > 0)
                             .Select(f => new
                             {
                                 Flat = f,
@@ -356,7 +356,8 @@ namespace LondonEstate.Pages.Admin
                             foreach (var flat in emptyFlats)
                             {
                                 var backgroundColor = Colors.Grey.Lighten3;
-
+                                var daysLeft = (today - flat.CheckOut.Value.Date).Days;
+                                var daysLeftStr = daysLeft == 0 ? "Empty (today)" : $"Empty ({daysLeft} days)";
                                 table.Cell().Background(backgroundColor).Padding(5).Text(flat.Name ?? "N/A")
                                     .FontSize(10);
 
@@ -368,7 +369,7 @@ namespace LondonEstate.Pages.Admin
                                     .FontSize(10)
                                     .FontColor(Colors.Black);
 
-                                table.Cell().Background(backgroundColor).Padding(5).Text("Empty Flat")
+                                table.Cell().Background(backgroundColor).Padding(5).Text(daysLeftStr)
                                     .Bold()
                                     .FontSize(10)
                                     .FontColor(Colors.Black);
