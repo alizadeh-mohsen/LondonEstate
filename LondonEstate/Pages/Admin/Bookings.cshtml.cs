@@ -54,7 +54,7 @@ namespace LondonEstate.Pages.Admin
             EmptyFlats = Flat.Where(f => f.CheckOut < cutoff).OrderBy(f => f.Name).ToList();
 
 
-            EmptyTomorrowFlats = Flat.Where(f => f.CheckOut >= cutoff && f.CheckOut < cutoff.AddDays(1)).OrderBy(f => f.Name).ToList();
+            EmptyTomorrowFlats = Flat.Where(f => f.CheckOut >= cutoff && f.CheckOut < cutoff.AddDays(1)).OrderBy(f => f.OnlineName).ToList();
         }
 
         public async Task<IActionResult> OnPostUploadAsync(IFormFile? excelFile)
@@ -298,6 +298,25 @@ namespace LondonEstate.Pages.Admin
                             .FontSize(12)
                             .Bold();
 
+                        // Prepare lists: empties first, then occupied sorted by days left ascending
+                        var today = DateTime.Today;
+
+                        var emptyFlats = flats
+                            .Where(f => !f.CheckOut.HasValue || (f.CheckOut.Value.Date - today).Days < 0)
+                            .OrderBy(f => f.Name)
+                            .ToList();
+
+                        var occupiedFlats = flats
+                            .Where(f => f.CheckOut.HasValue && (f.CheckOut.Value.Date - today).Days >= 0)
+                            .Select(f => new
+                            {
+                                Flat = f,
+                                DaysLeft = (f.CheckOut.Value.Date - today).Days
+                            })
+                            .OrderBy(x => x.DaysLeft)
+                            .ThenBy(x => x.Flat.Name)
+                            .ToList();
+
                         // Table
                         column.Item().Table(table =>
                         {
@@ -333,32 +352,52 @@ namespace LondonEstate.Pages.Admin
                                     .FontSize(11);
                             });
 
-                            // Data Rows
-                            foreach (var flat in flats)
+                            // Empty flats first (caption "Empty Flat")
+                            foreach (var flat in emptyFlats)
                             {
-                                var daysLeft = flat.CheckOut.HasValue
-                                    ? (flat.CheckOut.Value.Date - DateTime.Today).Days
-                                    : -1;
-
-                                var backgroundColor = /*daysLeft < 1 ? Colors.Red.Lighten3 :*/
-                                                     daysLeft == 1 ? Colors.Red.Lighten4 :
-                                                     Colors.White;
+                                var backgroundColor = Colors.Grey.Lighten3;
 
                                 table.Cell().Background(backgroundColor).Padding(5).Text(flat.Name ?? "N/A")
                                     .FontSize(10);
 
                                 table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckIn?.ToString("dd/MM/yyyy") ?? "N/A")
                                     .FontSize(10)
-                                .FontColor(daysLeft < 1 ? Colors.White : Colors.Black);
+                                    .FontColor(Colors.Black);
 
                                 table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckOut?.ToString("dd/MM/yyyy") ?? "N/A")
                                     .FontSize(10)
-                                .FontColor(daysLeft < 1 ? Colors.White : Colors.Black);
+                                    .FontColor(Colors.Black);
 
-                                table.Cell().Background(backgroundColor).Padding(5).Text(daysLeft >= 0 ? daysLeft.ToString() : "Empty")
+                                table.Cell().Background(backgroundColor).Padding(5).Text("Empty Flat")
                                     .Bold()
                                     .FontSize(10)
-                                .FontColor(daysLeft < 1 ? Colors.White : Colors.Black);
+                                    .FontColor(Colors.Black);
+                            }
+
+                            // Then occupied flats sorted by days left ascending
+                            foreach (var entry in occupiedFlats)
+                            {
+                                var flat = entry.Flat;
+                                var daysLeft = entry.DaysLeft;
+
+                                var backgroundColor = daysLeft == 1 ? Colors.Red.Lighten4 : Colors.White;
+                                var fontColor = daysLeft < 1 ? Colors.White : Colors.Black;
+
+                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.Name ?? "N/A")
+                                    .FontSize(10);
+
+                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckIn?.ToString("dd/MM/yyyy") ?? "N/A")
+                                    .FontSize(10)
+                                    .FontColor(fontColor);
+
+                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckOut?.ToString("dd/MM/yyyy") ?? "N/A")
+                                    .FontSize(10)
+                                    .FontColor(fontColor);
+
+                                table.Cell().Background(backgroundColor).Padding(5).Text(daysLeft.ToString())
+                                    .Bold()
+                                    .FontSize(10)
+                                    .FontColor(fontColor);
                             }
                         });
                     });
