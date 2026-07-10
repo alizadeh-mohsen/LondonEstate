@@ -54,7 +54,7 @@ namespace LondonEstate.Pages.Admin
             EmptyFlats = Flat.Where(f => f.CheckOut < cutoff).OrderBy(f => f.Name).ToList();
 
 
-            EmptyTomorrowFlats = Flat.Where(f => f.CheckOut >= cutoff && f.CheckOut < cutoff.AddDays(1)).OrderBy(f => f.OnlineName).ToList();
+            EmptyTomorrowFlats = Flat.Where(f => f.CheckOut.HasValue && f.CheckOut.Value.Date == cutoff.Date.AddDays(1)).OrderBy(f => f.OnlineName).ToList();
         }
 
         public async Task<IActionResult> OnPostUploadAsync(IFormFile? excelFile)

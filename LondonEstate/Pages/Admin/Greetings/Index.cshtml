@@ -1,0 +1,141 @@
+﻿@page
+@model LondonEstate.Pages.Admin.Greetings.IndexModel
+@{
+    ViewData["Title"] = "Greetings";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Guest Greetings</h1>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @Model.SuccessMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @Model.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Import Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Import Greetings</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" asp-page-handler="Upload" enctype="multipart/form-data">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="file" class="form-control" id="excelFile" name="excelFile" 
+                                   accept=".xlsx,.xls" required />
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-cloud-upload me-2"></i>Import Greetings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <small class="text-muted d-block mt-2">
+                    Required columns: Property Name (A), Location (B), Booker Name (C), Arrival (D), 
+                    Departure (E), Reservation No (G), Phone (H)
+                </small>
+            </form>
+        </div>
+    </div>
+
+    <!-- Greetings Grid -->
+    @if (Model.Greetings.Any())
+    {
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Imported Greetings (@Model.Greetings.Count)</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Property</th>
+                                <th>Location</th>
+                                <th>Guest Name</th>
+                                <th>Arrival</th>
+                                <th>Departure</th>
+                                <th>Reservation No</th>
+                                <th>Phone</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var greeting in Model.Greetings)
+                            {
+                                <tr>
+                                    <td>@greeting.PropertyName</td>
+                                    <td>@greeting.Location</td>
+                                    <td>@greeting.BookerName</td>
+                                    <td>@greeting.Arrival.ToString("dd MMM yyyy")</td>Booki
+                                    <td>@greeting.Departure.ToString("dd MMM yyyy")</td>
+                                    <td>@greeting.ReservationNo</td>
+                                    <td>@greeting.Phone</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-success" 
+                                                data-message="@greeting.WhatsAppMessage">
+                                            <i class="bi bi-whatsapp me-1"></i>Send
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.btn-success').forEach(button => {
+            button.addEventListener('click', function() {
+                const message = this.getAttribute('data-message');
+                const phone = this.closest('tr').querySelector('td:nth-child(7)')?.textContent?.trim();
+                
+                if (!phone) {
+                    alert('Phone number not found.');
+                    return;
+                }
+
+                // Clean phone number - remove all non-digits
+                // let cleanPhone = phone.replace(/\D/g, '');
+                
+                // // Add country code if not present (44 for UK)
+                // if (!cleanPhone.startsWith('44')) {
+                //     cleanPhone = '44' + cleanPhone;
+                // }
+
+                // Encode message for URL
+                const encodedMessage = encodeURIComponent(message);
+                
+                // Show feedback
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="bi bi-check me-1"></i>Copied!';
+                
+                // Open WhatsApp with phone and message
+                const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
+                
+                // Reset button text after 2 seconds
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                }, 2000);
+            });
+        });
+    </script>
+}

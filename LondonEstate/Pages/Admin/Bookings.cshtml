@@ -64,6 +64,8 @@
                 <!-- Today Flats -->
                 <div class="col-12 col-md-6">
                     <div class="border rounded p-3 bg-secondary">
+                        <div>Count: @Model.EmptyFlats.Count</div>
+                        <hr class="my-1" />
                         <ul class="mb-0 ps-3">
                             @foreach (var item in Model.EmptyFlats)
                             {
@@ -81,6 +83,9 @@
                 <!-- Tomorrow Flats -->
                 <div class="col-12 col-md-6">
                     <div class="border rounded p-3 bg-secondary">
+                        <div>Count: @Model.EmptyTomorrowFlats.Count</div>
+                        <hr class="my-1" />
+
                         <ul class="mb-0 ps-3 list-unstyled">
                             @foreach (var item in Model.EmptyTomorrowFlats)
                             {
