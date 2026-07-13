@@ -133,7 +133,7 @@ namespace LondonEstate.Pages.Admin.Greetings
                 "*Luggage drop off after 11 AM*" + Environment.NewLine +
                 Environment.NewLine +
                 "Check-in instruction will be sent to you tomorrow." + Environment.NewLine +
-                "To helps us prepare everything for your check-in, could you please share your estimated arrival time?";
+                "Could you please share your estimated arrival time?";
 
             return message;
         }
