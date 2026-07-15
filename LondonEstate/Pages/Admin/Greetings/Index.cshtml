@@ -35,7 +35,7 @@
                 <div class="row g-3">
                     <div class="col-md-8">
                         <div class="input-group">
-                            <input type="file" class="form-control" id="excelFile" name="excelFile" 
+                            <input type="file" class="form-control" id="excelFile" name="excelFile"
                                    accept=".xlsx,.xls" required />
                             <button class="btn btn-primary" type="submit">
                                 <i class="bi bi-cloud-upload me-2"></i>Import Greetings
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <small class="text-muted d-block mt-2">
-                    Required columns: Property Name (A), Location (B), Booker Name (C), Arrival (D), 
+                    Required columns: Property Name (A), Location (B), Booker Name (C), Arrival (D),
                     Departure (E), Reservation No (G), Phone (H)
                 </small>
             </form>
@@ -54,7 +54,7 @@
     <!-- Greetings Grid -->
     @if (Model.Greetings.Any())
     {
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-header">
                 <h5 class="mb-0">Imported Greetings (@Model.Greetings.Count)</h5>
             </div>
@@ -80,12 +80,12 @@
                                     <td>@greeting.PropertyName</td>
                                     <td>@greeting.Location</td>
                                     <td>@greeting.BookerName</td>
-                                    <td>@greeting.Arrival.ToString("dd MMM yyyy")</td>Booki
+                                    <td>@greeting.Arrival.ToString("dd MMM yyyy")</td>
                                     <td>@greeting.Departure.ToString("dd MMM yyyy")</td>
                                     <td>@greeting.ReservationNo</td>
                                     <td>@greeting.Phone</td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-success" 
+                                        <button type="button" class="btn btn-sm btn-success"
                                                 data-message="@greeting.WhatsAppMessage">
                                             <i class="bi bi-whatsapp me-1"></i>Send
                                         </button>
@@ -98,45 +98,173 @@
             </div>
         </div>
     }
+
+    <!-- Custom Message Generator -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Generate Custom Message</h5>
+        </div>
+        <div class="card-body">
+            <form id="messageGeneratorForm" onsubmit="return false;">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="checkInDate" class="form-label">Check-in Date</label>
+                        <input type="date" class="form-control" id="checkInDate" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="checkOutDate" class="form-label">Check-out Date</label>
+                        <input type="date" class="form-control" id="checkOutDate" required value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="guestName" class="form-label">Guest Name</label>
+                        <input type="text" class="form-control" id="guestName" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneNumber" required />
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="bookingNumber" class="form-label">Booking Number</label>
+                        <input type="text" class="form-control" id="bookingNumber" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="propertyName" class="form-label">Property Name</label>
+                        <input type="text" class="form-control" id="propertyName" required />
+                    </div>
+                </div>
+
+               
+
+                <button type="button" class="btn btn-primary mb-3" onclick="generateMessage()">
+                    <i class="bi bi-file-text me-2"></i>Generate Message
+                </button>
+
+                <div class="mb-3">
+                    <label for="generatedMessage" class="form-label">Generated Message</label>
+                    <textarea class="form-control" id="generatedMessage" rows="10" readonly></textarea>
+                </div>
+
+                <button type="button" class="btn btn-success" onclick="copyToClipboard()">
+                    <i class="bi bi-clipboard me-2"></i>Copy to Clipboard
+                </button>
+                <button type="button" class="btn btn-info" onclick="openWhatsApp()">
+                    <i class="bi bi-whatsapp me-2"></i>Send on WhatsApp
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     <script>
-        document.querySelectorAll('.btn-success').forEach(button => {
-            button.addEventListener('click', function () {
-
-                const message = this.getAttribute('data-message');
-                const phone = this.closest('tr').querySelector('td:nth-child(7)')?.textContent?.trim();
-
-                if (!phone) {
-                    alert('Phone number not found.');
-                    return;
+                // Format date to "dd MMM yyyy" format
+                function formatDate(dateString) {
+                    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+                    return new Date(dateString + 'T00:00:00').toLocaleDateString('en-GB', options);
                 }
 
-                // Clean phone number - remove all non-digits
-                let cleanPhone = phone.replace(/\D/g, '');
+                function generateMessage() {
+                    const checkInDate = document.getElementById('checkInDate').value;
+                    const checkOutDate = document.getElementById('checkOutDate').value;
+                    const bookingNumber = document.getElementById('bookingNumber').value;
+                    const propertyName = document.getElementById('propertyName').value;
+                    const guestName = document.getElementById('guestName').value;
 
-                // Add UK country code if missing
-                // if (!cleanPhone.startsWith('44')) {
-                //     cleanPhone = '44' + cleanPhone;
-                // }
+                    if (!checkInDate || !checkOutDate || !bookingNumber || !propertyName || !guestName) {
+                        alert('Please fill in all fields.');
+                        return;
+                    }
 
-                // Encode message for WhatsApp URL
-                const encodedMessage = encodeURIComponent(message);
+                    const formattedCheckIn = formatDate(checkInDate);
+                    const formattedCheckOut = formatDate(checkOutDate);
+                    const firstName = guestName.split(' ')[0];
 
-                // Button feedback
-                const originalText = this.innerHTML;
-                this.innerHTML = '<i class="bi bi-check me-1"></i>Copied!';
+                    const message = `Booking.com Reservation No: ${bookingNumber} - (${formattedCheckIn} - ${formattedCheckOut}) - ${propertyName}
+        Greater London, United Kingdom
 
-                // Open WhatsApp chat
-                const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-                window.open(whatsappUrl, '_blank');
+        Hi ${firstName}, I am Nima, your host for booking in London.
 
-                // Reset button text
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                }, 2000);
-            });
-        });
+        *Check-in at 3 PM*
+        *Luggage drop off after 11 AM*
+
+        I'll send you the check-in instruction tomorrow. Could you please share your estimated arrival time?`;
+
+                    document.getElementById('generatedMessage').value = message;
+                }
+
+                function copyToClipboard() {
+                    const message = document.getElementById('generatedMessage').value;
+                    if (!message) {
+                        alert('Please generate a message first.');
+                        return;
+                    }
+
+                    navigator.clipboard.writeText(message).then(() => {
+                        const button = document.querySelector('button[onclick="copyToClipboard()"]');
+                        const originalText = button.innerHTML;
+                        button.innerHTML = '<i class="bi bi-check me-2"></i>Copied!';
+                        setTimeout(() => {
+                            button.innerHTML = originalText;
+                        }, 2000);
+                    }).catch(() => {
+                        alert('Failed to copy message. Please try again.');
+                    });
+                }
+
+                function openWhatsApp() {
+                    const message = document.getElementById('generatedMessage').value;
+                    const phoneNumber = document.getElementById('phoneNumber').value;
+
+                    if (!message) {
+                        alert('Please generate a message first.');
+                        return;
+                    }
+
+                    if (!phoneNumber) {
+                        alert('Please enter a phone number.');
+                        return;
+                    }
+
+                    // Clean phone number - remove spaces, dashes, and plus sign
+                    let cleanPhone = phoneNumber.replace(/[\s\-\+]/g, '');
+
+                    // Add country code if not present (44 for UK)
+                    if (!cleanPhone.startsWith('44')) {
+                        cleanPhone = '44' + cleanPhone;
+                    }
+
+                    const encodedMessage = encodeURIComponent(message);
+                    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+                    window.open(whatsappUrl, '_blank');
+                }
+
+                // Grid row button handlers
+                document.querySelectorAll('.btn-success').forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        if (this.classList.contains('btn-sm')) {
+                            const message = this.getAttribute('data-message');
+                            const phone = this.closest('tr').querySelector('td:nth-child(7)')?.textContent?.trim();
+
+                            if (!phone) {
+                                alert('Phone number not found.');
+                                return;
+                            }
+
+                            let cleanPhone = phone.replace(/\D/g, '');
+
+                            if (!cleanPhone.startsWith('44')) {
+                                cleanPhone = '44' + cleanPhone;
+                            }
+
+                            const encodedMessage = encodeURIComponent(message);
+                            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+                            window.open(whatsappUrl, '_blank');
+                        }
+                    });
+                });
     </script>
 }
