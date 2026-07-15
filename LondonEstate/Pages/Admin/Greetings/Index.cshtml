@@ -106,38 +106,56 @@
         </div>
         <div class="card-body">
             <form id="messageGeneratorForm" onsubmit="return false;">
+                <!-- Parse from Template Section -->
+                <div class="alert alert-info mb-4">
+                    <strong>Option 1:</strong> Paste your Booking.com template below to auto-extract details
+                </div>
+                <div class="mb-3">
+                    <label for="bookingTemplate" class="form-label">Paste Booking Template</label>
+                    <textarea class="form-control" id="bookingTemplate" rows="8" placeholder="Paste your booking details here..."></textarea>
+                    <button type="button" class="btn btn-secondary mt-2" onclick="parseTemplate()">
+                        <i class="bi bi-magic me-2"></i>Extract Details
+                    </button>
+                </div>
+
+                <hr />
+
+                <div class="alert alert-info mb-4">
+                    <strong>Option 2:</strong> Or manually fill in the details below
+                </div>
+
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label for="checkInDate" class="form-label">Check-in Date</label>
-                        <input type="date" class="form-control" id="checkInDate" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <input type="date" class="form-control" id="checkInDate" required />
                     </div>
                     <div class="col-md-6">
                         <label for="checkOutDate" class="form-label">Check-out Date</label>
-                        <input type="date" class="form-control" id="checkOutDate" required value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" />
-                    </div>
-                </div>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label for="guestName" class="form-label">Guest Name</label>
-                        <input type="text" class="form-control" id="guestName" required />
-                    </div>
-                    <div class="col-md-6">
-                        <label for="phoneNumber" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="phoneNumber" required />
-                    </div>
-                </div>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label for="bookingNumber" class="form-label">Booking Number</label>
-                        <input type="text" class="form-control" id="bookingNumber" required />
-                    </div>
-                    <div class="col-md-6">
-                        <label for="propertyName" class="form-label">Property Name</label>
-                        <input type="text" class="form-control" id="propertyName" required />
+                        <input type="date" class="form-control" id="checkOutDate" required />
                     </div>
                 </div>
 
-               
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="bookingNumber" class="form-label">Booking Number</label>
+                        <input type="text" class="form-control" id="bookingNumber" placeholder="e.g., 5257927076" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="propertyName" class="form-label">Property Name</label>
+                        <input type="text" class="form-control" id="propertyName" placeholder="e.g., Apartment 101" required />
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="guestName" class="form-label">Guest Name</label>
+                        <input type="text" class="form-control" id="guestName" placeholder="e.g., John Doe" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneNumber" placeholder="e.g., +44 7700 900000" required />
+                    </div>
+                </div>
 
                 <button type="button" class="btn btn-primary mb-3" onclick="generateMessage()">
                     <i class="bi bi-file-text me-2"></i>Generate Message
@@ -161,78 +179,154 @@
 
 @section Scripts {
     <script>
-                // Format date to "dd MMM yyyy" format
-                function formatDate(dateString) {
-                    const options = { day: '2-digit', month: 'short', year: 'numeric' };
-                    return new Date(dateString + 'T00:00:00').toLocaleDateString('en-GB', options);
-                }
+        // Format date to "dd MMM yyyy" format
+        function formatDate(dateString) {
+            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            return new Date(dateString + 'T00:00:00').toLocaleDateString('en-GB', options);
+        }
 
-                function generateMessage() {
-                    const checkInDate = document.getElementById('checkInDate').value;
-                    const checkOutDate = document.getElementById('checkOutDate').value;
-                    const bookingNumber = document.getElementById('bookingNumber').value;
-                    const propertyName = document.getElementById('propertyName').value;
-                    const guestName = document.getElementById('guestName').value;
+        // Parse template and extract booking details
+        function parseTemplate() {
+            const template = document.getElementById('bookingTemplate').value;
 
-                    if (!checkInDate || !checkOutDate || !bookingNumber || !propertyName || !guestName) {
-                        alert('Please fill in all fields.');
+            if (!template) {
+                alert('Please paste the booking template first.');
+                return;
+            }
+
+            // Extract Check-in date (format: "Day DD Mon YYYY")
+            const checkInMatch = template.match(/Check-in\s*\n\s*([A-Za-z]{3})\s+(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})/);
+            
+            // Extract Check-out date
+            const checkOutMatch = template.match(/Check-out\s*\n\s*([A-Za-z]{3})\s+(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})/);
+            
+            // Extract Guest name (before "Genius" or email)
+            const guestMatch = template.match(/Guest name:\s*\n\s*([^\n]+?)\s*(?:Genius|cz|\n)/);
+            
+            // Extract Phone number
+            const phoneMatch = template.match(/\+\d[\d\s\-()]{7,}/);
+            
+            // Extract Booking number
+            const bookingMatch = template.match(/Booking number:\s*\n\s*(\d+)/);
+            
+            // Extract Property Name (not in this template, so leave empty for manual entry)
+
+            if (!checkInMatch || !checkOutMatch || !guestMatch || !phoneMatch || !bookingMatch) {
+                alert('Could not extract all required information. Please check the template format.');
+                return;
+            }
+
+            // Convert date strings to YYYY-MM-DD format
+            const months = { 'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
+                           'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12' };
+            
+            const checkInDate = `${checkInMatch[4]}-${months[checkInMatch[3]]}-${String(checkInMatch[2]).padStart(2, '0')}`;
+            const checkOutDate = `${checkOutMatch[4]}-${months[checkOutMatch[3]]}-${String(checkOutMatch[2]).padStart(2, '0')}`;
+            const guestName = guestMatch[1].trim();
+            const phoneNumber = phoneMatch[0].trim();
+            const bookingNumber = bookingMatch[1];
+
+            // Populate form fields
+            document.getElementById('checkInDate').value = checkInDate;
+            document.getElementById('checkOutDate').value = checkOutDate;
+            document.getElementById('guestName').value = guestName;
+            document.getElementById('phoneNumber').value = phoneNumber;
+            document.getElementById('bookingNumber').value = bookingNumber;
+
+            // Scroll to property name field for manual entry
+            document.getElementById('propertyName').focus();
+            alert(`Extracted: Guest - ${guestName}, Phone - ${phoneNumber}, Booking - ${bookingNumber}\n\nPlease enter the Property Name manually.`);
+        }
+
+        function generateMessage() {
+            const checkInDate = document.getElementById('checkInDate').value;
+            const checkOutDate = document.getElementById('checkOutDate').value;
+            const bookingNumber = document.getElementById('bookingNumber').value;
+            const propertyName = document.getElementById('propertyName').value;
+            const guestName = document.getElementById('guestName').value;
+
+            if (!checkInDate || !checkOutDate || !bookingNumber || !propertyName || !guestName) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const formattedCheckIn = formatDate(checkInDate);
+            const formattedCheckOut = formatDate(checkOutDate);
+            const firstName = guestName.split(' ')[0];
+
+            const message = `Booking.com Reservation No: ${bookingNumber} - (${formattedCheckIn} - ${formattedCheckOut}) - ${propertyName}
+Greater London, United Kingdom
+
+Hi ${firstName}, I am Nima, your host for booking in London.
+
+*Check-in at 3 PM*
+*Luggage drop off after 11 AM*
+
+I'll send you the check-in instruction tomorrow. Could you please share your estimated arrival time?`;
+
+            document.getElementById('generatedMessage').value = message;
+        }
+
+        function copyToClipboard() {
+            const message = document.getElementById('generatedMessage').value;
+            if (!message) {
+                alert('Please generate a message first.');
+                return;
+            }
+
+            navigator.clipboard.writeText(message).then(() => {
+                const button = document.querySelector('button[onclick="copyToClipboard()"]');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="bi bi-check me-2"></i>Copied!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            }).catch(() => {
+                alert('Failed to copy message. Please try again.');
+            });
+        }
+
+        function openWhatsApp() {
+            const message = document.getElementById('generatedMessage').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+
+            if (!message) {
+                alert('Please generate a message first.');
+                return;
+            }
+
+            if (!phoneNumber) {
+                alert('Please enter a phone number.');
+                return;
+            }
+
+            // Clean phone number - remove spaces, dashes, and plus sign
+            let cleanPhone = phoneNumber.replace(/[\s\-\+]/g, '');
+
+            // Add country code if not present (44 for UK)
+            if (!cleanPhone.startsWith('44')) {
+                cleanPhone = '44' + cleanPhone;
+            }
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Grid row button handlers
+        document.querySelectorAll('.btn-success').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (this.classList.contains('btn-sm')) {
+                    const message = this.getAttribute('data-message');
+                    const phone = this.closest('tr').querySelector('td:nth-child(7)')?.textContent?.trim();
+                    
+                    if (!phone) {
+                        alert('Phone number not found.');
                         return;
                     }
 
-                    const formattedCheckIn = formatDate(checkInDate);
-                    const formattedCheckOut = formatDate(checkOutDate);
-                    const firstName = guestName.split(' ')[0];
-
-                    const message = `Booking.com Reservation No: ${bookingNumber} - (${formattedCheckIn} - ${formattedCheckOut}) - ${propertyName}
-        Greater London, United Kingdom
-
-        Hi ${firstName}, I am Nima, your host for booking in London.
-
-        *Check-in at 3 PM*
-        *Luggage drop off after 11 AM*
-
-        I'll send you the check-in instruction tomorrow. Could you please share your estimated arrival time?`;
-
-                    document.getElementById('generatedMessage').value = message;
-                }
-
-                function copyToClipboard() {
-                    const message = document.getElementById('generatedMessage').value;
-                    if (!message) {
-                        alert('Please generate a message first.');
-                        return;
-                    }
-
-                    navigator.clipboard.writeText(message).then(() => {
-                        const button = document.querySelector('button[onclick="copyToClipboard()"]');
-                        const originalText = button.innerHTML;
-                        button.innerHTML = '<i class="bi bi-check me-2"></i>Copied!';
-                        setTimeout(() => {
-                            button.innerHTML = originalText;
-                        }, 2000);
-                    }).catch(() => {
-                        alert('Failed to copy message. Please try again.');
-                    });
-                }
-
-                function openWhatsApp() {
-                    const message = document.getElementById('generatedMessage').value;
-                    const phoneNumber = document.getElementById('phoneNumber').value;
-
-                    if (!message) {
-                        alert('Please generate a message first.');
-                        return;
-                    }
-
-                    if (!phoneNumber) {
-                        alert('Please enter a phone number.');
-                        return;
-                    }
-
-                    // Clean phone number - remove spaces, dashes, and plus sign
-                    let cleanPhone = phoneNumber.replace(/[\s\-\+]/g, '');
-
-                    // Add country code if not present (44 for UK)
+                    let cleanPhone = phone.replace(/\D/g, '');
+                    
                     if (!cleanPhone.startsWith('44')) {
                         cleanPhone = '44' + cleanPhone;
                     }
@@ -241,30 +335,7 @@
                     const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
                     window.open(whatsappUrl, '_blank');
                 }
-
-                // Grid row button handlers
-                document.querySelectorAll('.btn-success').forEach(button => {
-                    button.addEventListener('click', function(e) {
-                        if (this.classList.contains('btn-sm')) {
-                            const message = this.getAttribute('data-message');
-                            const phone = this.closest('tr').querySelector('td:nth-child(7)')?.textContent?.trim();
-
-                            if (!phone) {
-                                alert('Phone number not found.');
-                                return;
-                            }
-
-                            let cleanPhone = phone.replace(/\D/g, '');
-
-                            if (!cleanPhone.startsWith('44')) {
-                                cleanPhone = '44' + cleanPhone;
-                            }
-
-                            const encodedMessage = encodeURIComponent(message);
-                            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-                            window.open(whatsappUrl, '_blank');
-                        }
-                    });
-                });
+            });
+        });
     </script>
 }
