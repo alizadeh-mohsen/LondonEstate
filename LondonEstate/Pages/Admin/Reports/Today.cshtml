@@ -1,0 +1,152 @@
+﻿@page
+@model LondonEstate.Pages.Admin.Reports.TodayModel
+@{
+    ViewData["Title"] = "Today's Report";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">
+            <i class="bi bi-calendar-day me-2"></i>Today's Report
+        </h1>
+        <span class="badge bg-primary fs-6">@Model.CurrentDate.ToString("dddd, dd MMMM yyyy")</span>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card border-success">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title text-muted">Check-ins Today</h6>
+                            <h2 class="mb-0 text-success">@Model.TodayCheckIns.Count</h2>
+                        </div>
+                        <div class="text-success" style="font-size: 2.5rem;">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title text-muted">Check-outs Today</h6>
+                            <h2 class="mb-0 text-danger">@Model.TodayCheckOuts.Count</h2>
+                        </div>
+                        <div class="text-danger" style="font-size: 2.5rem;">
+                            <i class="bi bi-box-arrow-out-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Check-ins Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Check-ins Today (@Model.TodayCheckIns.Count)
+            </h5>
+        </div>
+        @if (Model.TodayCheckIns.Any())
+        {
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Property Name</th>
+                                <th>Guest Name</th>
+                                <th>Check-in Date</th>
+                                <th>Check-out Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var flat in Model.TodayCheckIns)
+                            {
+                                <tr class="table-success">
+                                    <td><strong>@flat.Name</strong></td>
+                                    <td>@(flat.GuestName ?? "N/A")</td>
+                                    <td>
+                                        <span class="badge bg-success">
+                                            @flat.CheckIn?.ToString("dd MMM yyyy")
+                                        </span>
+                                    </td>
+                                    <td>@flat.CheckOut?.ToString("dd MMM yyyy")</td>
+                                    <td>
+                                        <span class="badge bg-success">Active</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card-body text-center text-muted py-5">
+                <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                <p class="mt-3 mb-0">No check-ins scheduled for today</p>
+            </div>
+        }
+    </div>
+
+    <!-- Check-outs Section -->
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-box-arrow-out-right me-2"></i>Check-outs Today (@Model.TodayCheckOuts.Count)
+            </h5>
+        </div>
+        @if (Model.TodayCheckOuts.Any())
+        {
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Property Name</th>
+                                <th>Guest Name</th>
+                                <th>Check-in Date</th>
+                                <th>Check-out Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var flat in Model.TodayCheckOuts)
+                            {
+                                <tr class="table-danger">
+                                    <td><strong>@flat.Name</strong></td>
+                                    <td>@(flat.GuestName ?? "N/A")</td>
+                                    <td>@flat.CheckIn?.ToString("dd MMM yyyy")</td>
+                                    <td>
+                                        <span class="badge bg-danger">
+                                            @flat.CheckOut?.ToString("dd MMM yyyy")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning text-dark">Departing</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card-body text-center text-muted py-5">
+                <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                <p class="mt-3 mb-0">No check-outs scheduled for today</p>
+            </div>
+        }
+    </div>
+</div>
