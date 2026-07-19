@@ -106,6 +106,8 @@ namespace LondonEstate.Pages.Admin
                             var bookerName = worksheet.Cells[row, 3]?.Value?.ToString()?.Trim();
                             var arrivalStr = worksheet.Cells[row, 5]?.Value?.ToString()?.Trim();
                             var departureStr = worksheet.Cells[row, 6]?.Value?.ToString()?.Trim();
+                            var bookingNumber = worksheet.Cells[row, 12]?.Value?.ToString()?.Trim();
+                            var phone = worksheet.Cells[row, 13]?.Value?.ToString()?.Trim();
 
                             if (string.IsNullOrEmpty(propertyName))
                                 continue;
@@ -118,7 +120,9 @@ namespace LondonEstate.Pages.Admin
                                     PropertyName = propertyName,
                                     BookerName = bookerName,
                                     Arrival = arrival,
-                                    Departure = departure
+                                    Departure = departure,
+                                    BookingNumber = bookingNumber,
+                                    PhoneNumber = phone
                                 });
                             }
                         }
@@ -162,6 +166,8 @@ namespace LondonEstate.Pages.Admin
                     flat.CheckIn = booking.Arrival;
                     flat.CheckOut = booking.Departure;
                     flat.Open = true;
+                    flat.BookingNumber = booking.BookingNumber;
+                    flat.GuestPhone = booking.PhoneNumber;
 
                     _context.Flat.Update(flat);
                     updatedCount++;
@@ -192,7 +198,9 @@ namespace LondonEstate.Pages.Admin
                         OnlineName = flat.OnlineName,
                         GuestName = flat.GuestName,
                         CheckIn = flat.CheckIn,
-                        CheckOut = flat.CheckOut
+                        CheckOut = flat.CheckOut,
+                        BookingNumber = flat.BookingNumber,
+                        GuestPhone = flat.GuestPhone
                     };
                     _context.FlatBackup.Add(flatBackup);
                 }
@@ -226,8 +234,12 @@ namespace LondonEstate.Pages.Admin
                     if (flat != null)
                     {
                         flat.GuestName = backup.GuestName;
+                        flat.GuestPhone = backup.GuestPhone;
+                        flat.BookingNumber = backup.BookingNumber;
                         flat.CheckIn = backup.CheckIn;
                         flat.CheckOut = backup.CheckOut;
+                        flat.Name = backup.Name;
+                        flat.OnlineName = backup.OnlineName;
 
                         _context.Flat.Update(flat);
                     }
@@ -425,6 +437,9 @@ namespace LondonEstate.Pages.Admin
             public string? BookerName { get; set; }
             public DateTime Arrival { get; set; }
             public DateTime Departure { get; set; }
+            public string BookingNumber { get; set; }
+            public string PhoneNumber { get; set; }
+
         }
     }
 }

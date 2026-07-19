@@ -63,12 +63,8 @@
                     <table class="table table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Property</th>
-                                <th>Location</th>
-                                <th>Guest Name</th>
-                                <th>Arrival</th>
-                                <th>Departure</th>
-                                <th>Reservation No</th>
+                               
+                                <th>Message</th>
                                 <th>Phone</th>
                                 <th>Action</th>
                             </tr>
@@ -77,16 +73,12 @@
                             @foreach (var greeting in Model.Greetings)
                             {
                                 <tr>
-                                    <td>@greeting.PropertyName</td>
-                                    <td>@greeting.Location</td>
-                                    <td>@greeting.BookerName</td>
-                                    <td>@greeting.Arrival.ToString("dd MMM yyyy")</td>
-                                    <td>@greeting.Departure.ToString("dd MMM yyyy")</td>
-                                    <td>@greeting.ReservationNo</td>
+                                    <td>@greeting.WhatsAppMessage</td>
                                     <td>@greeting.Phone</td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-success"
-                                                data-message="@greeting.WhatsAppMessage">
+                                        <button type="button" class="btn btn-sm btn-success send-whatsapp"
+                                                data-message="@greeting.WhatsAppMessage"
+                                                data-phone="@greeting.Phone">
                                             <i class="bi bi-whatsapp me-1"></i>Send
                                         </button>
                                     </td>
@@ -138,22 +130,22 @@
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label for="bookingNumber" class="form-label">Booking Number</label>
-                        <input type="text" class="form-control" id="bookingNumber" placeholder="e.g., 5257927076" required />
+                        <input type="text" class="form-control" id="bookingNumber" required />
                     </div>
                     <div class="col-md-6">
                         <label for="propertyName" class="form-label">Property Name</label>
-                        <input type="text" class="form-control" id="propertyName" placeholder="e.g., Apartment 101" required />
+                        <input type="text" class="form-control" id="propertyName"  required />
                     </div>
                 </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label for="guestName" class="form-label">Guest Name</label>
-                        <input type="text" class="form-control" id="guestName" placeholder="e.g., John Doe" required />
+                        <input type="text" class="form-control" id="guestName"  required />
                     </div>
                     <div class="col-md-6">
                         <label for="phoneNumber" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="phoneNumber" placeholder="e.g., +44 7700 900000" required />
+                        <input type="tel" class="form-control" id="phoneNumber"  required />
                     </div>
                 </div>
 
@@ -235,7 +227,7 @@
 
             // Scroll to property name field for manual entry
             document.getElementById('propertyName').focus();
-            alert(`Extracted: Guest - ${guestName}, Phone - ${phoneNumber}, Booking - ${bookingNumber}\n\nPlease enter the Property Name manually.`);
+            // alert(`Extracted: Guest - ${guestName}, Phone - ${phoneNumber}, Booking - ${bookingNumber}\n\nPlease enter the Property Name manually.`);
         }
 
         function generateMessage() {
@@ -287,6 +279,7 @@ I'll send you the check-in instruction tomorrow. Could you please share your est
         }
 
         function openWhatsApp() {
+            alert('hi');
             const message = document.getElementById('generatedMessage').value;
             const phoneNumber = document.getElementById('phoneNumber').value;
 
@@ -303,38 +296,27 @@ I'll send you the check-in instruction tomorrow. Could you please share your est
             // Clean phone number - remove spaces, dashes, and plus sign
             let cleanPhone = phoneNumber.replace(/[\s\-\+]/g, '');
 
-            // Add country code if not present (44 for UK)
-            if (!cleanPhone.startsWith('44')) {
-                cleanPhone = '44' + cleanPhone;
-            }
 
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
         }
 
-        // Grid row button handlers
-        document.querySelectorAll('.btn-success').forEach(button => {
-            button.addEventListener('click', function(e) {
-                if (this.classList.contains('btn-sm')) {
-                    const message = this.getAttribute('data-message');
-                    const phone = this.closest('tr').querySelector('td:nth-child(7)')?.textContent?.trim();
-                    
-                    if (!phone) {
-                        alert('Phone number not found.');
-                        return;
-                    }
+        // Grid row button handlers (scoped)
+        document.querySelectorAll('.send-whatsapp').forEach(button => {
+            button.addEventListener('click', function () {
+                const message = this.getAttribute('data-message') || '';
+                const phone = (this.getAttribute('data-phone') || '').trim();
 
-                    let cleanPhone = phone.replace(/\D/g, '');
-                    
-                    if (!cleanPhone.startsWith('44')) {
-                        cleanPhone = '44' + cleanPhone;
-                    }
-
-                    const encodedMessage = encodeURIComponent(message);
-                    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-                    window.open(whatsappUrl, '_blank');
+                if (!phone) {
+                    alert('Phone number not found.');
+                    return;
                 }
+
+                const cleanPhone = phone.replace(/\D/g, '');
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
             });
         });
     </script>

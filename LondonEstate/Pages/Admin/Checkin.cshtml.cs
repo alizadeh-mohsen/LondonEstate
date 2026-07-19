@@ -48,7 +48,8 @@ namespace LondonEstate.Pages.Admin
             flat.CheckIn = Flat.CheckIn;
             flat.CheckOut = Flat.CheckOut;
             flat.ReservationUrl = Flat.ReservationUrl;
-            //flat.BookingNumber = Flat.BookingNumber;
+            flat.BookingNumber = Flat.BookingNumber;
+            flat.GuestPhone = Flat.GuestPhone;
             flat.GuestName = Flat.GuestName;
             flat.Open = true;
             try

@@ -60,27 +60,29 @@
                     <table class="table table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Property Name</th>
-                                <th>Guest Name</th>
-                                <th>Check-in Date</th>
-                                <th>Check-out Date</th>
-                                <th>Status</th>
+                                <th>Property</th>
+                                <th>Guest </th>
+                                <th>In</th>
+                                <th>Out</th>
+                                <th>Booking</th>
+                                <th>Phone</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var flat in Model.TodayCheckIns)
                             {
-                                <tr class="table-success">
+                                <tr>
                                     <td><strong>@flat.Name</strong></td>
                                     <td>@(flat.GuestName ?? "N/A")</td>
                                     <td>
-                                        <span class="badge bg-success">
                                             @flat.CheckIn?.ToString("dd MMM yyyy")
-                                        </span>
                                     </td>
                                     <td>@flat.CheckOut?.ToString("dd MMM yyyy")</td>
                                     <td>
-                                        <span class="badge bg-success">Active</span>
+                                       @flat.BookingNumber
+                                    </td>
+                                    <td>
+                                        @flat.GuestPhone    
                                     </td>
                                 </tr>
                             }
@@ -112,27 +114,32 @@
                     <table class="table table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Property Name</th>
-                                <th>Guest Name</th>
-                                <th>Check-in Date</th>
-                                <th>Check-out Date</th>
-                                <th>Status</th>
+                                <th>Property</th>
+                                <th>Guest </th>
+                                <th>In</th>
+                                <th>Out</th>
+                                <th>Booking</th>
+                                <th>Phone</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var flat in Model.TodayCheckOuts)
                             {
-                                <tr class="table-danger">
+                                <tr >
                                     <td><strong>@flat.Name</strong></td>
                                     <td>@(flat.GuestName ?? "N/A")</td>
                                     <td>@flat.CheckIn?.ToString("dd MMM yyyy")</td>
                                     <td>
-                                        <span class="badge bg-danger">
                                             @flat.CheckOut?.ToString("dd MMM yyyy")
-                                        </span>
+                                    </td>
+                                 @*    <td>
+                                        <span class="badge bg-warning text-dark">Departing</span>
+                                    </td> *@
+                                    <td>
+                                        @flat.BookingNumber
                                     </td>
                                     <td>
-                                        <span class="badge bg-warning text-dark">Departing</span>
+                                        @flat.GuestPhone    
                                     </td>
                                 </tr>
                             }
