@@ -93,7 +93,7 @@ namespace LondonEstate.Pages.Admin.Reports
                             return Page();
                         }
 
-                        Greetings = greetings.OrderBy(g => g.PropertyName).ToList();
+                        Greetings = greetings.OrderBy(g => g.Location).ToList();
                         SuccessMessage = $"Successfully loaded {greetings.Count} greeting(s).";
                     }
                 }
