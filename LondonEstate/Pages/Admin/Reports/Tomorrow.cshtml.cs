@@ -73,7 +73,7 @@ namespace LondonEstate.Pages.Admin.Reports
                                 {
                                     PropertyName = propertyName,
                                     Location = location,
-                                    ArrivalTime = !string.IsNullOrEmpty(arrivalStr) ? DateTime.Parse(arrivalStr).ToString("HH:mm") : "N/A",
+                                    ArrivalTime = !string.IsNullOrEmpty(arrivalStr) ? DateTime.Parse(arrivalStr).ToString("HH:mm") : "",
                                     ReservationNo = reservationNo,
                                     Phone = phone
                                 };
