@@ -63,11 +63,9 @@ namespace LondonEstate.Pages.Admin.Reports
                             {
                                 var propertyName = worksheet.Cells[row, 1]?.Value?.ToString()?.Trim();
                                 var location = worksheet.Cells[row, 2]?.Value?.ToString()?.Trim();
-                                var reservationNo = worksheet.Cells[row, 12]?.Value?.ToString()?.Trim();
-                                var phone = worksheet.Cells[row, 13]?.Value?.ToString()?.Trim();
-                                var arrivalStr = worksheet.Cells[row, 14]?.Value?.ToString()?.Trim();
-
-
+                                var reservationNo = worksheet.Cells[row, 6]?.Value?.ToString()?.Trim();
+                                var phone = worksheet.Cells[row, 7]?.Value?.ToString()?.Trim();
+                                var arrivalStr = worksheet.Cells[row, 8]?.Value?.ToString()?.Trim();
 
                                 var greeting = new GreetingData
                                 {

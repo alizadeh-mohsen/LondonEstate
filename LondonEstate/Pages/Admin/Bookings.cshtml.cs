@@ -103,11 +103,12 @@ namespace LondonEstate.Pages.Admin
                         for (int row = 2; row <= rowCount; row++)
                         {
                             var propertyName = worksheet.Cells[row, 1]?.Value?.ToString()?.Trim();
+                            var location = worksheet.Cells[row, 2]?.Value?.ToString()?.Trim();
                             var bookerName = worksheet.Cells[row, 3]?.Value?.ToString()?.Trim();
-                            var arrivalStr = worksheet.Cells[row, 5]?.Value?.ToString()?.Trim();
-                            var departureStr = worksheet.Cells[row, 6]?.Value?.ToString()?.Trim();
-                            var bookingNumber = worksheet.Cells[row, 12]?.Value?.ToString()?.Trim();
-                            var phone = worksheet.Cells[row, 13]?.Value?.ToString()?.Trim();
+                            var arrivalStr = worksheet.Cells[row, 4]?.Value?.ToString()?.Trim();
+                            var departureStr = worksheet.Cells[row, 5]?.Value?.ToString()?.Trim();
+                            var bookingNumber = worksheet.Cells[row, 6]?.Value?.ToString()?.Trim();
+                            var phone = worksheet.Cells[row, 7]?.Value?.ToString()?.Trim();
 
                             if (string.IsNullOrEmpty(propertyName))
                                 continue;
