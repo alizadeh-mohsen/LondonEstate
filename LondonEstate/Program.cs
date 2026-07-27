@@ -25,9 +25,21 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromHours(8);
+})
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Add session configuration for 8-hour timeout
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(8);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services.AddRazorPages();
 
@@ -69,6 +81,9 @@ else
 }
 app.UseDefaultFiles();
 app.UseStaticFiles();
+
+// Add session middleware before routing
+app.UseSession();
 
 app.UseRouting();
 
