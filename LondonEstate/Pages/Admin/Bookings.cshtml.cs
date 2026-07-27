@@ -1,4 +1,4 @@
-using LondonEstate.Models;
+﻿using LondonEstate.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,12 +13,10 @@ namespace LondonEstate.Pages.Admin
     public class BookingsModel : PageModel
     {
         private readonly Data.ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public BookingsModel(Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
-            _webHostEnvironment = webHostEnvironment;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
@@ -44,7 +42,8 @@ namespace LondonEstate.Pages.Admin
                             OnlineName = f.OnlineName,
                             CheckIn = f.CheckIn,
                             CheckOut = f.CheckOut,
-                            GuestName = f.GuestName
+                            GuestName = f.GuestName,
+                            TotalPayment = f.TotalPayment
                         };
 
             Flat = await query.ToListAsync();
@@ -107,8 +106,9 @@ namespace LondonEstate.Pages.Admin
                             var bookerName = worksheet.Cells[row, 3]?.Value?.ToString()?.Trim();
                             var arrivalStr = worksheet.Cells[row, 4]?.Value?.ToString()?.Trim();
                             var departureStr = worksheet.Cells[row, 5]?.Value?.ToString()?.Trim();
-                            var bookingNumber = worksheet.Cells[row, 6]?.Value?.ToString()?.Trim();
-                            var phone = worksheet.Cells[row, 7]?.Value?.ToString()?.Trim();
+                            var totalPaymentStr = worksheet.Cells[row, 6]?.Value?.ToString()?.Trim();
+                            var bookingNumber = worksheet.Cells[row, 7]?.Value?.ToString()?.Trim();
+                            var phone = worksheet.Cells[row, 8]?.Value?.ToString()?.Trim();
 
                             if (string.IsNullOrEmpty(propertyName))
                                 continue;
@@ -123,7 +123,10 @@ namespace LondonEstate.Pages.Admin
                                     Arrival = arrival,
                                     Departure = departure,
                                     BookingNumber = bookingNumber,
-                                    PhoneNumber = phone
+                                    PhoneNumber = phone,
+                                    TotalPayment = decimal.TryParse(totalPaymentStr, out var totalPayment) ? totalPayment : 0
+
+
                                 });
                             }
                         }
@@ -154,7 +157,6 @@ namespace LondonEstate.Pages.Admin
             int updatedCount = 0;
 
             //backup existing flats before updating
-            await BackupFlats();
 
             foreach (var booking in bookingData)
             {
@@ -169,6 +171,7 @@ namespace LondonEstate.Pages.Admin
                     flat.Open = true;
                     flat.BookingNumber = booking.BookingNumber;
                     flat.GuestPhone = booking.PhoneNumber;
+                    flat.TotalPayment = booking.TotalPayment;
 
                     _context.Flat.Update(flat);
                     updatedCount++;
@@ -201,7 +204,8 @@ namespace LondonEstate.Pages.Admin
                         CheckIn = flat.CheckIn,
                         CheckOut = flat.CheckOut,
                         BookingNumber = flat.BookingNumber,
-                        GuestPhone = flat.GuestPhone
+                        GuestPhone = flat.GuestPhone,
+                        TotalPayment = flat.TotalPayment == null ? 0 : flat.TotalPayment.Value,
                     };
                     _context.FlatBackup.Add(flatBackup);
                 }
@@ -241,6 +245,7 @@ namespace LondonEstate.Pages.Admin
                         flat.CheckOut = backup.CheckOut;
                         flat.Name = backup.Name;
                         flat.OnlineName = backup.OnlineName;
+                        flat.TotalPayment = backup.TotalPayment;
 
                         _context.Flat.Update(flat);
                     }
@@ -427,11 +432,6 @@ namespace LondonEstate.Pages.Admin
             return document.GeneratePdf();
         }
 
-        private async Task BackupFlats()
-        {
-
-        }
-
         private class BookingImportDto
         {
             public string PropertyName { get; set; } = string.Empty;
@@ -440,6 +440,7 @@ namespace LondonEstate.Pages.Admin
             public DateTime Departure { get; set; }
             public string BookingNumber { get; set; }
             public string PhoneNumber { get; set; }
+            public decimal TotalPayment { get; set; }
 
         }
     }
