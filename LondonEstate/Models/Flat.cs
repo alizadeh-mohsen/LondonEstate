@@ -19,7 +19,7 @@
         public string? Wifi { get; set; }
         public string? Image { get; set; }
         public ICollection<Bill>? Bills { get; set; }
-        public decimal? TotalPayment { get; set; }
+        //public decimal? TotalPayment { get; set; }
 
     }
 }

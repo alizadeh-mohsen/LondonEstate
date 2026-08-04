@@ -10,7 +10,7 @@
         public DateTime? CheckIn { get; set; }
         public DateTime? CheckOut { get; set; }
         public string? BookingNumber { get; set; }
-        public decimal TotalPayment { get; set; }
+        //public decimal TotalPayment { get; set; }
 
     }
 }

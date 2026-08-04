@@ -43,7 +43,7 @@ namespace LondonEstate.Pages.Admin
                             CheckIn = f.CheckIn,
                             CheckOut = f.CheckOut,
                             GuestName = f.GuestName,
-                            TotalPayment = f.TotalPayment
+                            //TotalPayment = f.TotalPayment
                         };
 
             Flat = await query.ToListAsync();
@@ -124,7 +124,7 @@ namespace LondonEstate.Pages.Admin
                                     Departure = departure,
                                     BookingNumber = bookingNumber,
                                     PhoneNumber = phone,
-                                    TotalPayment = decimal.TryParse(totalPaymentStr, out var totalPayment) ? totalPayment : 0
+                                    //TotalPayment = decimal.TryParse(totalPaymentStr, out var totalPayment) ? totalPayment : 0
 
 
                                 });
@@ -171,7 +171,7 @@ namespace LondonEstate.Pages.Admin
                     flat.Open = true;
                     flat.BookingNumber = booking.BookingNumber;
                     flat.GuestPhone = booking.PhoneNumber;
-                    flat.TotalPayment = booking.TotalPayment;
+                    //flat.TotalPayment = booking.TotalPayment;
 
                     _context.Flat.Update(flat);
                     updatedCount++;
@@ -205,7 +205,7 @@ namespace LondonEstate.Pages.Admin
                         CheckOut = flat.CheckOut,
                         BookingNumber = flat.BookingNumber,
                         GuestPhone = flat.GuestPhone,
-                        TotalPayment = flat.TotalPayment == null ? 0 : flat.TotalPayment.Value,
+                        //TotalPayment = flat.TotalPayment == null ? 0 : flat.TotalPayment.Value,
                     };
                     _context.FlatBackup.Add(flatBackup);
                 }
@@ -245,7 +245,7 @@ namespace LondonEstate.Pages.Admin
                         flat.CheckOut = backup.CheckOut;
                         flat.Name = backup.Name;
                         flat.OnlineName = backup.OnlineName;
-                        flat.TotalPayment = backup.TotalPayment;
+                        //flat.TotalPayment = backup.TotalPayment;
 
                         _context.Flat.Update(flat);
                     }
@@ -440,7 +440,7 @@ namespace LondonEstate.Pages.Admin
             public DateTime Departure { get; set; }
             public string BookingNumber { get; set; }
             public string PhoneNumber { get; set; }
-            public decimal TotalPayment { get; set; }
+            //public decimal TotalPayment { get; set; }
 
         }
     }

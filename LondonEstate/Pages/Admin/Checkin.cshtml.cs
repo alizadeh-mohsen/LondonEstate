@@ -52,7 +52,7 @@ namespace LondonEstate.Pages.Admin
             flat.GuestPhone = Flat.GuestPhone;
             flat.GuestName = Flat.GuestName;
             flat.Open = true;
-            flat.TotalPayment = Flat.TotalPayment;
+            //flat.TotalPayment = Flat.TotalPayment;
             try
             {
                 await _context.SaveChangesAsync();
