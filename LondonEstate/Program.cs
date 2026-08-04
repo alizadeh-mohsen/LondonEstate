@@ -1,10 +1,7 @@
-using LondonEstate.Data;
-using LondonEstate.Services;
-using LondonEstate.Settings;
-using LondonEstate.Utils.Types;
+using LondonEstate.Core.Data;
+using LondonEstate.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 using QuestPDF.Infrastructure;
 using Serilog;
@@ -43,13 +40,10 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddRazorPages();
 
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.Configure<UploadSettings>(builder.Configuration.GetSection("UploadSettings"));
-builder.Services.AddScoped(provider => provider.GetRequiredService<IOptions<UploadSettings>>().Value);
 
-builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
-builder.Services.AddScoped<IEstimateRequestService, EstimateRequestService>();
-builder.Services.AddScoped<ILogError, LogError>();
+// Register Flat service for dependency injection
+builder.Services.AddScoped<IFlatService, FlatService>();
+
 
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()

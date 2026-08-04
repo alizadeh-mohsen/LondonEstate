@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36717.8
+# Visual Studio Version 18
+VisualStudioVersion = 18.8.12023.21 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LondonEstate", "LondonEstate\LondonEstate.csproj", "{AF5D4646-D888-4877-B822-5CA5822C220D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LondonEstate.Api", "LondonEstate.Api\LondonEstate.Api.csproj", "{51A1621E-CAB5-4A08-8ED2-0512645D8852}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LondonEstate.Core", "LondonEstate.Core\LondonEstate.Core.csproj", "{120088CE-9ED6-425A-9875-759F0B6638BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{AF5D4646-D888-4877-B822-5CA5822C220D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF5D4646-D888-4877-B822-5CA5822C220D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF5D4646-D888-4877-B822-5CA5822C220D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51A1621E-CAB5-4A08-8ED2-0512645D8852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51A1621E-CAB5-4A08-8ED2-0512645D8852}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51A1621E-CAB5-4A08-8ED2-0512645D8852}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51A1621E-CAB5-4A08-8ED2-0512645D8852}.Release|Any CPU.Build.0 = Release|Any CPU
+		{120088CE-9ED6-425A-9875-759F0B6638BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{120088CE-9ED6-425A-9875-759F0B6638BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{120088CE-9ED6-425A-9875-759F0B6638BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{120088CE-9ED6-425A-9875-759F0B6638BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

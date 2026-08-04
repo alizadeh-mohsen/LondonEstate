@@ -1,39 +1,24 @@
-﻿using LondonEstate.Models;
-using LondonEstate.Services;
+﻿using LondonEstate.Core.Dtos;
+using LondonEstate.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin.Flats
 {
     [Authorize]
-    public class IndexModel : PageModel
+    public class IndexModel(IFlatService flatService) : PageModel
     {
-        private readonly Data.ApplicationDbContext _context;
-        private readonly ILogError _logError;
-
-        public IndexModel(Data.ApplicationDbContext context, ILogError logError)
-        {
-            _context = context;
-            _logError = logError;
-
-        }
-
-        public IList<Flat> Flat { get; set; } = default!;
+        public IList<FlatDto> Flat { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
             try
             {
-                var query = from f in _context.Flat
-                            orderby f.Name
-                            select f;
-                Flat = await query.ToListAsync();
+                Flat = await flatService.GetAllFlatsAsync();
             }
             catch (Exception ex)
             {
-                await _logError.LogErrorToDb(ex, "Flats ");
-                Flat = new List<Flat>();
+                Flat = new List<FlatDto>();
             }
         }
     }

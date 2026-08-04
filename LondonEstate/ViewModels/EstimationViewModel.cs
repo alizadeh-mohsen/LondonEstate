@@ -1,4 +1,4 @@
-﻿using LondonEstate.Utils.Enums;
+﻿using LondonEstate.Core.Utils.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace LondonEstate.ViewModels
@@ -8,7 +8,7 @@ namespace LondonEstate.ViewModels
         [StringLength(100)]
         public string? Name { get; set; }
 
-        [Required(ErrorMessage ="Required"), EmailAddress, StringLength(255)]
+        [Required(ErrorMessage = "Required"), EmailAddress, StringLength(255)]
         public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Required"), StringLength(6, MinimumLength = 1)]

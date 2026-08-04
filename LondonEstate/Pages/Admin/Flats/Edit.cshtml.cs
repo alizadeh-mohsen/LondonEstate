@@ -1,39 +1,37 @@
-﻿using LondonEstate.Models;
-using LondonEstate.Settings;
+﻿using LondonEstate.Core.Dtos;
+using LondonEstate.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace LondonEstate.Pages.Admin.Flats
 {
     [Authorize]
-    public class EditModel : PageModel
+    public class EditModel(IFlatService flatService) : PageModel
     {
-        private readonly Data.ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EditModel(
-      Data.ApplicationDbContext context,
-      IWebHostEnvironment webHostEnvironment,
-      IOptions<UploadSettings> uploadSettingsOptions)
-        {
-            _context = context;
-            _webHostEnvironment = webHostEnvironment;
-        }
+        //private readonly IWebHostEnvironment _webHostEnvironment;
+
+        //  public EditModel(
+        //Data.ApplicationDbContext context,
+        //IWebHostEnvironment webHostEnvironment,
+        //IOptions<UploadSettings> uploadSettingsOptions)
+        //  {
+        //      _context = context;
+        //      _webHostEnvironment = webHostEnvironment;
+        //  }
 
 
         [BindProperty]
-        public Flat Flat { get; set; } = default!;
+        public FlatDto Flat { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public async Task<IActionResult> OnGetAsync(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var flat = await _context.Flat.FirstOrDefaultAsync(m => m.Id == id);
+            var flat = await flatService.GetFlatAsync(id);
             if (flat == null)
             {
                 return NotFound();
@@ -50,7 +48,7 @@ namespace LondonEstate.Pages.Admin.Flats
             }
 
             // Load existing flat from DB
-            var flatFromDb = await _context.Flat.FirstOrDefaultAsync(f => f.Id == Flat.Id);
+            var flatFromDb = await flatService.GetFlatAsync(Flat.Id);
             if (flatFromDb == null)
                 return NotFound();
 
@@ -64,27 +62,27 @@ namespace LondonEstate.Pages.Admin.Flats
             flatFromDb.Open = Flat.Open;
 
             // Handle image upload
-            if (imageUpload != null && imageUpload.Length > 0)
-            {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
+            //if (imageUpload != null && imageUpload.Length > 0)
+            //{
+            //    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
 
-                if (!Directory.Exists(uploadsFolder))
-                    Directory.CreateDirectory(uploadsFolder);
+            //    if (!Directory.Exists(uploadsFolder))
+            //        Directory.CreateDirectory(uploadsFolder);
 
-                string fileExtension = Path.GetExtension(imageUpload.FileName);
-                string newFileName = $"{Guid.NewGuid()}{fileExtension}";
-                string filePath = Path.Combine(uploadsFolder, newFileName);
+            //    string fileExtension = Path.GetExtension(imageUpload.FileName);
+            //    string newFileName = $"{Guid.NewGuid()}{fileExtension}";
+            //    string filePath = Path.Combine(uploadsFolder, newFileName);
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await imageUpload.CopyToAsync(fileStream);
-                }
+            //    using (var fileStream = new FileStream(filePath, FileMode.Create))
+            //    {
+            //        await imageUpload.CopyToAsync(fileStream);
+            //    }
 
-                // Save relative path to DB
-                flatFromDb.Image = $"/Images/{newFileName}";
-            }
+            //    // Save relative path to DB
+            //    flatFromDb.Image = $"/Images/{newFileName}";
+            //}
+            await flatService.UpdateFlat(Flat.Id, flatFromDb);
 
-            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

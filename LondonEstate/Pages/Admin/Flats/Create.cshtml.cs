@@ -1,4 +1,5 @@
-﻿using LondonEstate.Models;
+﻿using LondonEstate.Core.Dtos;
+using LondonEstate.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,14 +7,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace LondonEstate.Pages.Admin.Flats
 {
     [Authorize]
-    public class CreateModel : PageModel
+    public class CreateModel(IFlatService flatService) : PageModel
     {
-        private readonly Data.ApplicationDbContext _context;
-
-        public CreateModel(Data.ApplicationDbContext context)
-        {
-            _context = context;
-        }
 
         public IActionResult OnGet()
         {
@@ -21,7 +16,7 @@ namespace LondonEstate.Pages.Admin.Flats
         }
 
         [BindProperty]
-        public Flat Flat { get; set; } = default!;
+        public FlatDto Flat { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
@@ -31,9 +26,7 @@ namespace LondonEstate.Pages.Admin.Flats
                 return Page();
             }
 
-            _context.Flat.Add(Flat);
-            await _context.SaveChangesAsync();
-
+            await flatService.CreateFlat(Flat);
             return RedirectToPage("./Index");
         }
     }

@@ -1,4 +1,5 @@
-﻿using LondonEstate.Models;
+﻿using LondonEstate.Core.Dtos;
+using LondonEstate.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,25 +8,20 @@ using Microsoft.EntityFrameworkCore;
 namespace LondonEstate.Pages.Admin
 {
     [Authorize]
-    public class CheckinModel : PageModel
+    public class CheckinModel(IFlatService flatService) : PageModel
     {
-        private readonly Data.ApplicationDbContext _context;
 
-        public CheckinModel(Data.ApplicationDbContext context)
-        {
-            _context = context;
-        }
 
         [BindProperty]
-        public Flat Flat { get; set; } = default!;
+        public FlatDto Flat { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public async Task<IActionResult> OnGetAsync(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var flat = await _context.Flat.FirstOrDefaultAsync(m => m.Id == id);
+            var flat = await flatService.GetFlatAsync(id);
             if (flat == null)
             {
                 return NotFound();
@@ -40,7 +36,7 @@ namespace LondonEstate.Pages.Admin
             {
                 return Page();
             }
-            var flat = await _context.Flat.FirstOrDefaultAsync(m => m.Id == Flat.Id);
+            var flat = await flatService.GetFlatAsync(Flat.Id);
             if (flat == null)
             {
                 return NotFound();
@@ -52,14 +48,13 @@ namespace LondonEstate.Pages.Admin
             flat.GuestPhone = Flat.GuestPhone;
             flat.GuestName = Flat.GuestName;
             flat.Open = true;
-            flat.TotalPayment = Flat.TotalPayment;
             try
             {
-                await _context.SaveChangesAsync();
+                await flatService.UpdateFlat(flat.Id, flat);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FlatExists(Flat.Id))
+                if (!await FlatExists(Flat.Id))
                 {
                     return NotFound();
                 }
@@ -72,9 +67,9 @@ namespace LondonEstate.Pages.Admin
             return RedirectToPage("./bookings");
         }
 
-        private bool FlatExists(Guid id)
+        private async Task<bool> FlatExists(Guid id)
         {
-            return _context.Flat.Any(e => e.Id == id);
+            return await flatService.FlatExists(id);
         }
     }
 }

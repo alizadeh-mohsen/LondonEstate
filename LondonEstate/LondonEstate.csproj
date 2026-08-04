@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-LondonEstate-9affa6d1-09ba-49f1-8f12-87785f3dd857</UserSecretsId>
@@ -36,5 +36,9 @@
 		<Folder Include="wwwroot\Uploads\Estimates\" />
 		<Folder Include="wwwroot\Uploads\Invoices\" />
 		<Folder Include="wwwroot\Uploads\Agreements\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\LondonEstate.Core\LondonEstate.Core.csproj" />
 	</ItemGroup>
 </Project>

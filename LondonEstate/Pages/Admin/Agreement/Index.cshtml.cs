@@ -1,13 +1,8 @@
-using AutoMapper;
-using LondonEstate.Data;
-using LondonEstate.Services;
-using LondonEstate.Settings;
-using LondonEstate.Utils.Extensions;
+using LondonEstate.Core.Utils.Extensions;
 using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Options;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 
@@ -16,24 +11,6 @@ namespace LondonEstate.Pages.Admin.Agreement;
 [Authorize]
 public class IndexModel : PageModel
 {
-    private readonly ApplicationDbContext _dbContext;
-    private readonly IMapper _mapper;
-    private readonly ILogError _logError;
-    private readonly IWebHostEnvironment _webHostEnvironment;
-    private readonly UploadSettings _uploadSettings;
-
-    public IndexModel(ApplicationDbContext dbContext,
-        IMapper mapper,
-        ILogError logError,
-        IWebHostEnvironment webHostEnvironment,
-        IOptions<UploadSettings> settings)
-    {
-        _dbContext = dbContext;
-        _mapper = mapper;
-        _logError = logError;
-        _webHostEnvironment = webHostEnvironment;
-        _uploadSettings = settings.Value;
-    }
 
     [BindProperty]
     public required AgreementViewModel AgreementViewModel { get; set; }
@@ -73,26 +50,14 @@ public class IndexModel : PageModel
             var fileName = $"GA-{DateTime.Now:yyyyMMdd-HHmm}-{AgreementViewModel.GuestName}.pdf";
             //await UploadPdf(pdfBytes, fileName);
 
-            await SaveReportToDb(fileName);
-
             // Return the PDF as a downloadable file
             return File(pdfBytes, "application/pdf", fileName);
         }
         catch (Exception ex)
         {
             Message = $"Error generating PDF: {ex.Message}";
-            await _logError.LogErrorToDb(ex, "Agreement PDF Generation");
             return Page();
         }
-    }
-
-    private async Task SaveReportToDb(string fileName)
-    {
-        var agreement = _mapper.Map<Models.Agreement>(AgreementViewModel);
-        agreement.FileName = fileName;
-
-        _dbContext.Agreement.Add(agreement);
-        await _dbContext.SaveChangesAsync();
     }
 
     private byte[] GeneratePdf()
@@ -258,23 +223,6 @@ public class IndexModel : PageModel
         });
 
         return document.GeneratePdf();
-    }
-
-    private async Task UploadPdf(byte[] pdfBytes, string fileName)
-    {
-        // Ensure the uploads directory exists
-        var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, _uploadSettings.AgreementUploadDirectory);
-        if (!Directory.Exists(uploadsPath))
-        {
-            Directory.CreateDirectory(uploadsPath);
-        }
-
-        // Generate the file path
-        var filePath = Path.Combine(uploadsPath, fileName);
-
-        // Write the PDF bytes to the file
-        await System.IO.File.WriteAllBytesAsync(filePath, pdfBytes);
-
     }
 
     private void AddRuleItem(ColumnDescriptor column, string title, string description)

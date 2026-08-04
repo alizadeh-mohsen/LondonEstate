@@ -1,5 +1,5 @@
 ﻿@page
-@using LondonEstate.Utils.Extensions
+@using LondonEstate.Core.Utils.Extensions
 @model LondonEstate.Pages.Admin.BookingsModel
 
 @{
@@ -109,7 +109,7 @@
         <thead class="table-primary sticky-top">
             <tr>
                 <th data-sort="string" style="cursor: pointer;">
-                    Property (@Model.Flat.Count)
+                    Property (@Model.Flats.Count)
                     <i class="bi bi-arrow-down-up ms-1" style="font-size: 0.85rem; opacity: 0.5;"></i>
                 </th>
                 <th data-sort="date" style="cursor: pointer;">
@@ -124,7 +124,7 @@
         </thead>
 
         <tbody>
-            @foreach (var item in Model.Flat)
+            @foreach (var item in Model.Flats)
             {
                 var today = DateTime.Today;
                 var checkIn = item.CheckIn?.Date;

@@ -1,18 +1,15 @@
 ﻿using AutoMapper;
+using LondonEstate.Core.Dtos;
 using LondonEstate.ViewModels;
 
-namespace LondonEstate.AutoMapper
+namespace LondonEstate.Core.AutoMapper
 {
 
     public class AppMappingProfile : Profile
     {
         public AppMappingProfile()
         {
-            // Example mapping
-            CreateMap<AgreementViewModel, Models.Agreement>();
-            CreateMap<InvoiceViewModel, Models.Invoice>();
-
-            // Add more mappings here
+            CreateMap<FlatDto, FlatViewModel>().ReverseMap();
         }
     }
 }

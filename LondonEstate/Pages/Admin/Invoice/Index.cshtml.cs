@@ -1,13 +1,8 @@
-using AutoMapper;
-using LondonEstate.Data;
-using LondonEstate.Services;
-using LondonEstate.Settings;
-using LondonEstate.Utils.Extensions;
+using LondonEstate.Core.Utils.Extensions;
 using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Options;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 
@@ -17,21 +12,10 @@ namespace LondonEstate.Pages.Admin.Invoice;
 public class IndexModel : PageModel
 {
     private readonly IWebHostEnvironment _webHostEnvironment;
-    private readonly ApplicationDbContext _dbContext;
-    private readonly IMapper _mapper;
-    private readonly UploadSettings _uploadSettings;
-    private readonly ILogError _logError;
 
-    public IndexModel(IWebHostEnvironment env,
-        ApplicationDbContext dbContext, IMapper mapper, ILogError logError,
-        IOptions<UploadSettings> settings)
+    public IndexModel(IWebHostEnvironment env)
     {
         _webHostEnvironment = env;
-        _dbContext = dbContext;
-        _mapper = mapper;
-        _logError = logError;
-        _uploadSettings = settings.Value;
-
     }
 
     [BindProperty]
@@ -78,7 +62,7 @@ public class IndexModel : PageModel
             var fileName = GenerateInvoiceNumber() + "-" + InvoiceViewModel.IssuedTo + ".pdf";
             //await UploadPdf(pdfBytes, fileName);
 
-            await SaveReportToDb(fileName);
+            //await SaveReportToDb(fileName);
 
             // Return the PDF as a downloadable file
             return File(pdfBytes, "application/pdf", fileName);
@@ -86,8 +70,6 @@ public class IndexModel : PageModel
         catch (Exception ex)
         {
             Message = $"Error generating PDF: {ex.Message}";
-            await _logError.LogErrorToDb(ex, "Invoice PDF Generation");
-
             return Page();
         }
     }
@@ -213,33 +195,6 @@ public class IndexModel : PageModel
         });
 
         return document.GeneratePdf();
-    }
-
-    private async Task SaveReportToDb(string fileName)
-    {
-        var invoice = _mapper.Map<Models.Invoice>(InvoiceViewModel);
-        invoice.FileName = fileName;
-
-        _dbContext.Invoice.Add(invoice);
-        await _dbContext.SaveChangesAsync();
-
-    }
-
-    private async Task UploadPdf(byte[] pdfBytes, string fileName)
-    {
-        // Ensure the uploads directory exists
-        var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, _uploadSettings.InvoiceUploadDirectory);
-        if (!Directory.Exists(uploadsPath))
-        {
-            Directory.CreateDirectory(uploadsPath);
-        }
-
-        // Generate the file path
-        var filePath = Path.Combine(uploadsPath, fileName);
-
-        // Write the PDF bytes to the file
-        await System.IO.File.WriteAllBytesAsync(filePath, pdfBytes);
-
     }
 
     private string GenerateInvoiceNumber()

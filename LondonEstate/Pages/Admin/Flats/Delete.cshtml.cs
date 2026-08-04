@@ -1,32 +1,27 @@
-﻿using LondonEstate.Models;
+﻿using LondonEstate.Core.Dtos;
+using LondonEstate.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace LondonEstate.Pages.Admin.Flats
 {
     [Authorize]
-    public class DeleteModel : PageModel
+    public class DeleteModel(IFlatService flatService) : PageModel
     {
-        private readonly Data.ApplicationDbContext _context;
 
-        public DeleteModel(Data.ApplicationDbContext context)
-        {
-            _context = context;
-        }
 
         [BindProperty]
-        public Flat Flat { get; set; } = default!;
+        public FlatDto Flat { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public async Task<IActionResult> OnGetAsync(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var flat = await _context.Flat.FirstOrDefaultAsync(m => m.Id == id);
+            var flat = await flatService.GetFlatAsync(id);
 
             if (flat == null)
             {
@@ -39,19 +34,18 @@ namespace LondonEstate.Pages.Admin.Flats
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(Guid? id)
+        public async Task<IActionResult> OnPostAsync(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var flat = await _context.Flat.FindAsync(id);
+            var flat = await flatService.GetFlatAsync(id);
             if (flat != null)
             {
                 Flat = flat;
-                _context.Flat.Remove(Flat);
-                await _context.SaveChangesAsync();
+                await flatService.DeleteFlat(id);
             }
 
             return RedirectToPage("./Index");

@@ -1,28 +1,20 @@
-﻿using LondonEstate.Models;
+﻿using LondonEstate.Core.Dtos;
+using LondonEstate.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
-using QuestPDF.Fluent;
-using QuestPDF.Helpers;
 
 namespace LondonEstate.Pages.Admin
 {
     [Authorize]
-    public class BookingsModel : PageModel
+    public class BookingsModel(IFlatService _flatService) : PageModel
     {
-        private readonly Data.ApplicationDbContext _context;
 
-        public BookingsModel(Data.ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
-        {
-            _context = context;
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        }
-
-        public IList<Flat> Flat { get; set; } = default!;
-        public IList<Flat> EmptyFlats { get; set; } = default!;
-        public IList<Flat> EmptyTomorrowFlats { get; set; } = default!;
+        public IList<FlatDto> Flats { get; set; } = default!;
+        public IList<FlatDto> EmptyFlats { get; set; } = default!;
+        public IList<FlatDto> EmptyTomorrowFlats { get; set; } = default!;
 
         [TempData]
         public string? SuccessMessage { get; set; }
@@ -32,28 +24,31 @@ namespace LondonEstate.Pages.Admin
 
         public async Task OnGetAsync()
         {
-            var query = from f in _context.Flat
-                        where f.Open == true
-                        orderby f.Name
-                        select new Flat
-                        {
-                            Id = f.Id,
-                            Name = f.Name,
-                            OnlineName = f.OnlineName,
-                            CheckIn = f.CheckIn,
-                            CheckOut = f.CheckOut,
-                            GuestName = f.GuestName,
-                            TotalPayment = f.TotalPayment
-                        };
+            //var query = from f in _context.Flat
+            //            where f.Open == true
+            //            orderby f.Name
+            //            select new Flat
+            //            {
+            //                Id = f.Id,
+            //                Name = f.Name,
+            //                OnlineName = f.OnlineName,
+            //                CheckIn = f.CheckIn,
+            //                CheckOut = f.CheckOut,
+            //                GuestName = f.GuestName,
+            //                TotalPayment = f.TotalPayment
+            //            };
 
-            Flat = await query.ToListAsync();
+            //Flat = await query.ToListAsync();
+
+
+            Flats = await _flatService.GetAllFlatsAsync();
             var cutoff = DateTime.Today.AddHours(11);
 
 
-            EmptyFlats = Flat.Where(f => f.CheckOut < cutoff).OrderBy(f => f.Name).ToList();
+            EmptyFlats = Flats.Where(f => f.CheckOut < cutoff).OrderBy(f => f.Name).ToList();
 
 
-            EmptyTomorrowFlats = Flat.Where(f => f.CheckOut.HasValue && f.CheckOut.Value.Date == cutoff.Date.AddDays(1)).OrderBy(f => f.OnlineName).ToList();
+            EmptyTomorrowFlats = Flats.Where(f => f.CheckOut.HasValue && f.CheckOut.Value.Date == cutoff.Date.AddDays(1)).OrderBy(f => f.OnlineName).ToList();
         }
 
         public async Task<IActionResult> OnPostUploadAsync(IFormFile? excelFile)
@@ -160,8 +155,7 @@ namespace LondonEstate.Pages.Admin
 
             foreach (var booking in bookingData)
             {
-                var flat = await _context.Flat
-                    .FirstOrDefaultAsync(f => f.OnlineName != null && f.OnlineName.ToLower() == booking.PropertyName.ToLower());
+                var flat = await _flatService.GetFlatByOnlineNameAsync(booking.PropertyName);
 
                 if (flat != null)
                 {
@@ -171,17 +165,17 @@ namespace LondonEstate.Pages.Admin
                     flat.Open = true;
                     flat.BookingNumber = booking.BookingNumber;
                     flat.GuestPhone = booking.PhoneNumber;
-                    flat.TotalPayment = booking.TotalPayment;
+                    //flat.TotalPayment = booking.TotalPayment;
 
-                    _context.Flat.Update(flat);
+                    updatedCount = await _flatService.UpdateFlat(flat.Id, flat);
                     updatedCount++;
                 }
             }
 
-            if (updatedCount > 0)
-            {
-                await _context.SaveChangesAsync();
-            }
+            //if (updatedCount > 0)
+            //{
+            //    await _context.SaveChangesAsync();
+            //}
 
             return updatedCount;
         }
@@ -190,27 +184,8 @@ namespace LondonEstate.Pages.Admin
         {
             try
             {
-                var existingFlats = await _context.Flat.ToListAsync();
-                await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE FlatBackup");
-
-                foreach (var flat in existingFlats)
-                {
-                    var flatBackup = new FlatBackup
-                    {
-                        Id = flat.Id,
-                        Name = flat.Name,
-                        OnlineName = flat.OnlineName,
-                        GuestName = flat.GuestName,
-                        CheckIn = flat.CheckIn,
-                        CheckOut = flat.CheckOut,
-                        BookingNumber = flat.BookingNumber,
-                        GuestPhone = flat.GuestPhone,
-                        TotalPayment = flat.TotalPayment == null ? 0 : flat.TotalPayment.Value,
-                    };
-                    _context.FlatBackup.Add(flatBackup);
-                }
-
-                await _context.SaveChangesAsync();
+                await _flatService.BackupAsync();
+                SuccessMessage = "Successfully backed up all flats.";
             }
             catch (Exception ex)
             {
@@ -223,36 +198,8 @@ namespace LondonEstate.Pages.Admin
         {
             try
             {
-                var backupFlats = await _context.FlatBackup.ToListAsync();
-
-                if (backupFlats.Count == 0)
-                {
-                    ErrorMessage = "No backup data found.";
-                    return RedirectToPage();
-                }
-
-                // Restore all flats from backup
-                foreach (var backup in backupFlats)
-                {
-                    var flat = await _context.Flat.FirstOrDefaultAsync(f => f.Id == backup.Id);
-
-                    if (flat != null)
-                    {
-                        flat.GuestName = backup.GuestName;
-                        flat.GuestPhone = backup.GuestPhone;
-                        flat.BookingNumber = backup.BookingNumber;
-                        flat.CheckIn = backup.CheckIn;
-                        flat.CheckOut = backup.CheckOut;
-                        flat.Name = backup.Name;
-                        flat.OnlineName = backup.OnlineName;
-                        flat.TotalPayment = backup.TotalPayment;
-
-                        _context.Flat.Update(flat);
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-                SuccessMessage = $"Successfully recovered {backupFlats.Count} booking(s) from backup.";
+                await _flatService.RecoverAsync();
+                SuccessMessage = "Successfully recovered all flats from backup.";
             }
             catch (Exception ex)
             {
@@ -262,186 +209,176 @@ namespace LondonEstate.Pages.Admin
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPostGenerateReportAsync()
-        {
-            try
-            {
-                var flats = await _context.Flat
-                    .Where(f => f.Open == true)
-                    .OrderBy(f => f.Name)
-                    .ToListAsync();
+        //public async Task<IActionResult> OnPostGenerateReportAsync()
+        //{
+        //    try
+        //    {
+        //        var flats = await _context.Flat
+        //            .Where(f => f.Open == true)
+        //            .OrderBy(f => f.Name)
+        //            .ToListAsync();
 
-                if (flats.Count == 0)
-                {
-                    ErrorMessage = "No bookings available to generate a report.";
-                    return RedirectToPage();
-                }
+        //        if (flats.Count == 0)
+        //        {
+        //            ErrorMessage = "No bookings available to generate a report.";
+        //            return RedirectToPage();
+        //        }
 
-                var pdfBytes = GenerateCheckoutReport(flats);
-                var fileName = $"Checkout_Report_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.pdf";
+        //        var pdfBytes = GenerateCheckoutReport(flats);
+        //        var fileName = $"Checkout_Report_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.pdf";
 
-                return File(pdfBytes, "application/pdf", fileName);
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = $"An error occurred while generating the report: {ex.Message}";
-                return RedirectToPage();
-            }
-        }
+        //        return File(pdfBytes, "application/pdf", fileName);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorMessage = $"An error occurred while generating the report: {ex.Message}";
+        //        return RedirectToPage();
+        //    }
+        //}
 
-        private byte[] GenerateCheckoutReport(IList<Flat> flats)
-        {
-            var document = Document.Create(container =>
-            {
-                container.Page(page =>
-                {
-                    page.Size(PageSizes.A4);
-                    page.Margin(20);
+        //private byte[] GenerateCheckoutReport(IList<Flat> flats)
+        //{
+        //    var document = Document.Create(container =>
+        //    {
+        //        container.Page(page =>
+        //        {
+        //            page.Size(PageSizes.A4);
+        //            page.Margin(20);
 
-                    page.Header().Text("Check-out Report")
-                        .FontSize(24)
-                        .Bold()
-                        .FontColor(Colors.Blue.Darken4);
+        //            page.Header().Text("Check-out Report")
+        //                .FontSize(24)
+        //                .Bold()
+        //                .FontColor(Colors.Blue.Darken4);
 
-                    page.Content().Column(column =>
-                    {
-                        column.Spacing(10);
+        //            page.Content().Column(column =>
+        //            {
+        //                column.Spacing(10);
 
-                        // Report Header
-                        column.Item().Text($"Generated: {DateTime.Now:dd/MM/yyyy HH:mm:ss}")
-                            .FontSize(10)
-                            .FontColor(Colors.Grey.Darken2);
+        //                // Report Header
+        //                column.Item().Text($"Generated: {DateTime.Now:dd/MM/yyyy HH:mm:ss}")
+        //                    .FontSize(10)
+        //                    .FontColor(Colors.Grey.Darken2);
 
-                        column.Item().Container().Background(Colors.Blue.Lighten4).Padding(5).Text($"Total Properties: {flats.Count}")
-                            .FontSize(12)
-                            .Bold();
+        //                column.Item().Container().Background(Colors.Blue.Lighten4).Padding(5).Text($"Total Properties: {flats.Count}")
+        //                    .FontSize(12)
+        //                    .Bold();
 
-                        // Prepare lists: empties first, then occupied sorted by days left ascending
-                        var today = DateTime.Today;
+        //                // Prepare lists: empties first, then occupied sorted by days left ascending
+        //                var today = DateTime.Today;
 
-                        var emptyFlats = flats
-                            .Where(f => !f.CheckOut.HasValue || (f.CheckOut.Value.Date - today).Days <= 0)
-                            .OrderBy(f => f.Name)
-                            .ToList();
+        //                var emptyFlats = flats
+        //                    .Where(f => !f.CheckOut.HasValue || (f.CheckOut.Value.Date - today).Days <= 0)
+        //                    .OrderBy(f => f.Name)
+        //                    .ToList();
 
-                        var occupiedFlats = flats
-                            .Where(f => f.CheckOut.HasValue && (f.CheckOut.Value.Date - today).Days > 0)
-                            .Select(f => new
-                            {
-                                Flat = f,
-                                DaysLeft = (f.CheckOut.Value.Date - today).Days
-                            })
-                            .OrderBy(x => x.DaysLeft)
-                            .ThenBy(x => x.Flat.Name)
-                            .ToList();
+        //                var occupiedFlats = flats
+        //                    .Where(f => f.CheckOut.HasValue && (f.CheckOut.Value.Date - today).Days > 0)
+        //                    .Select(f => new
+        //                    {
+        //                        Flat = f,
+        //                        DaysLeft = (f.CheckOut.Value.Date - today).Days
+        //                    })
+        //                    .OrderBy(x => x.DaysLeft)
+        //                    .ThenBy(x => x.Flat.Name)
+        //                    .ToList();
 
-                        // Table
-                        column.Item().Table(table =>
-                        {
-                            table.ColumnsDefinition(columns =>
-                            {
-                                columns.RelativeColumn(2f);
-                                columns.RelativeColumn(1.5f);
-                                columns.RelativeColumn(1.5f);
-                                columns.RelativeColumn(1f);
-                            });
+        //                // Table
+        //                column.Item().Table(table =>
+        //                {
+        //                    table.ColumnsDefinition(columns =>
+        //                    {
+        //                        columns.RelativeColumn(2f);
+        //                        columns.RelativeColumn(1.5f);
+        //                        columns.RelativeColumn(1.5f);
+        //                        columns.RelativeColumn(1f);
+        //                    });
 
-                            // Header Row
-                            table.Header(header =>
-                            {
-                                header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Property Name")
-                                    .Bold()
-                                    .FontColor(Colors.White)
-                                    .FontSize(11);
+        //                    // Header Row
+        //                    table.Header(header =>
+        //                    {
+        //                        header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Property Name")
+        //                            .Bold()
+        //                            .FontColor(Colors.White)
+        //                            .FontSize(11);
 
-                                header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Check-in Date")
-                                    .Bold()
-                                    .FontColor(Colors.White)
-                                    .FontSize(11);
+        //                        header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Check-in Date")
+        //                            .Bold()
+        //                            .FontColor(Colors.White)
+        //                            .FontSize(11);
 
-                                header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Check-out Date")
-                                    .Bold()
-                                    .FontColor(Colors.White)
-                                    .FontSize(11);
+        //                        header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Check-out Date")
+        //                            .Bold()
+        //                            .FontColor(Colors.White)
+        //                            .FontSize(11);
 
-                                header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Days Left")
-                                    .Bold()
-                                    .FontColor(Colors.White)
-                                    .FontSize(11);
-                            });
+        //                        header.Cell().Background(Colors.Blue.Darken4).Padding(5).Text("Days Left")
+        //                            .Bold()
+        //                            .FontColor(Colors.White)
+        //                            .FontSize(11);
+        //                    });
 
-                            // Empty flats first (caption "Empty Flat")
-                            foreach (var flat in emptyFlats)
-                            {
-                                var backgroundColor = Colors.Grey.Lighten3;
-                                var daysLeft = (today - flat.CheckOut.Value.Date).Days;
-                                var daysLeftStr = daysLeft == 0 ? "Empty (today)" : $"Empty ({daysLeft} days)";
-                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.Name ?? "N/A")
-                                    .FontSize(10);
+        //                    // Empty flats first (caption "Empty Flat")
+        //                    foreach (var flat in emptyFlats)
+        //                    {
+        //                        var backgroundColor = Colors.Grey.Lighten3;
+        //                        var daysLeft = (today - flat.CheckOut.Value.Date).Days;
+        //                        var daysLeftStr = daysLeft == 0 ? "Empty (today)" : $"Empty ({daysLeft} days)";
+        //                        table.Cell().Background(backgroundColor).Padding(5).Text(flat.Name ?? "N/A")
+        //                            .FontSize(10);
 
-                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckIn?.ToString("dd/MM/yyyy") ?? "N/A")
-                                    .FontSize(10)
-                                    .FontColor(Colors.Black);
+        //                        table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckIn?.ToString("dd/MM/yyyy") ?? "N/A")
+        //                            .FontSize(10)
+        //                            .FontColor(Colors.Black);
 
-                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckOut?.ToString("dd/MM/yyyy") ?? "N/A")
-                                    .FontSize(10)
-                                    .FontColor(Colors.Black);
+        //                        table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckOut?.ToString("dd/MM/yyyy") ?? "N/A")
+        //                            .FontSize(10)
+        //                            .FontColor(Colors.Black);
 
-                                table.Cell().Background(backgroundColor).Padding(5).Text(daysLeftStr)
-                                    .Bold()
-                                    .FontSize(10)
-                                    .FontColor(Colors.Black);
-                            }
+        //                        table.Cell().Background(backgroundColor).Padding(5).Text(daysLeftStr)
+        //                            .Bold()
+        //                            .FontSize(10)
+        //                            .FontColor(Colors.Black);
+        //                    }
 
-                            // Then occupied flats sorted by days left ascending
-                            foreach (var entry in occupiedFlats)
-                            {
-                                var flat = entry.Flat;
-                                var daysLeft = entry.DaysLeft;
+        //                    // Then occupied flats sorted by days left ascending
+        //                    foreach (var entry in occupiedFlats)
+        //                    {
+        //                        var flat = entry.Flat;
+        //                        var daysLeft = entry.DaysLeft;
 
-                                var backgroundColor = daysLeft == 1 ? Colors.Red.Lighten4 : Colors.White;
-                                var fontColor = daysLeft < 1 ? Colors.White : Colors.Black;
+        //                        var backgroundColor = daysLeft == 1 ? Colors.Red.Lighten4 : Colors.White;
+        //                        var fontColor = daysLeft < 1 ? Colors.White : Colors.Black;
 
-                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.Name ?? "N/A")
-                                    .FontSize(10);
+        //                        table.Cell().Background(backgroundColor).Padding(5).Text(flat.Name ?? "N/A")
+        //                            .FontSize(10);
 
-                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckIn?.ToString("dd/MM/yyyy") ?? "N/A")
-                                    .FontSize(10)
-                                    .FontColor(fontColor);
+        //                        table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckIn?.ToString("dd/MM/yyyy") ?? "N/A")
+        //                            .FontSize(10)
+        //                            .FontColor(fontColor);
 
-                                table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckOut?.ToString("dd/MM/yyyy") ?? "N/A")
-                                    .FontSize(10)
-                                    .FontColor(fontColor);
+        //                        table.Cell().Background(backgroundColor).Padding(5).Text(flat.CheckOut?.ToString("dd/MM/yyyy") ?? "N/A")
+        //                            .FontSize(10)
+        //                            .FontColor(fontColor);
 
-                                table.Cell().Background(backgroundColor).Padding(5).Text(daysLeft.ToString())
-                                    .Bold()
-                                    .FontSize(10)
-                                    .FontColor(fontColor);
-                            }
-                        });
-                    });
+        //                        table.Cell().Background(backgroundColor).Padding(5).Text(daysLeft.ToString())
+        //                            .Bold()
+        //                            .FontSize(10)
+        //                            .FontColor(fontColor);
+        //                    }
+        //                });
+        //            });
 
-                    page.Footer().AlignCenter().Text(text =>
-                    {
-                        text.Span("Page ");
-                        text.CurrentPageNumber();
-                    });
-                });
-            });
+        //            page.Footer().AlignCenter().Text(text =>
+        //            {
+        //                text.Span("Page ");
+        //                text.CurrentPageNumber();
+        //            });
+        //        });
+        //    });
 
-            return document.GeneratePdf();
-        }
+        //    return document.GeneratePdf();
+        //}
 
-        private class BookingImportDto
-        {
-            public string PropertyName { get; set; } = string.Empty;
-            public string? BookerName { get; set; }
-            public DateTime Arrival { get; set; }
-            public DateTime Departure { get; set; }
-            public string BookingNumber { get; set; }
-            public string PhoneNumber { get; set; }
-            public decimal TotalPayment { get; set; }
 
-        }
     }
 }
