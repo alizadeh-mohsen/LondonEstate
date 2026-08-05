@@ -50,7 +50,7 @@ namespace LondonEstate.Core.Services
             var flat = await context.Flat.FirstOrDefaultAsync(f => f.OnlineName != null && f.OnlineName.ToLower() == onlineName.ToLower());
             if (flat == null)
             {
-                throw new InvalidOperationException("Flat not found");
+                return null;
             }
 
             return mapper.Map<FlatDto>(flat);
@@ -59,10 +59,10 @@ namespace LondonEstate.Core.Services
         public async Task<int> UpdateFlat(FlatDto flatDto)
         {
             var flat = await context.Flat.FindAsync(flatDto.Id);
-            mapper.Map(flatDto, flat);
+            var updatedFlat = mapper.Map(flatDto, flat);
             return await context.SaveChangesAsync();
-
         }
+
         public async Task<int> UpdateFlatsFromImportAsync(List<BookingImportDto> bookingData)
         {
             int updatedCount = 0;
@@ -82,7 +82,6 @@ namespace LondonEstate.Core.Services
                     flat.Open = true;
                     flat.BookingNumber = booking.BookingNumber;
                     flat.GuestPhone = booking.PhoneNumber;
-                    flat.TotalPayment = booking.TotalPayment;
 
                     context.Flat.Update(flat);
                     updatedCount++;
@@ -115,7 +114,6 @@ namespace LondonEstate.Core.Services
                     CheckOut = flat.CheckOut,
                     BookingNumber = flat.BookingNumber,
                     GuestPhone = flat.GuestPhone,
-                    TotalPayment = flat.TotalPayment == null ? 0 : flat.TotalPayment.Value,
                 };
                 context.FlatBackup.Add(flatBackup);
             }
@@ -142,7 +140,6 @@ namespace LondonEstate.Core.Services
                     flat.CheckOut = backup.CheckOut;
                     flat.Name = backup.Name;
                     flat.OnlineName = backup.OnlineName;
-                    flat.TotalPayment = backup.TotalPayment;
 
                     context.Flat.Update(flat);
                 }

@@ -101,9 +101,8 @@ namespace LondonEstate.Pages.Admin
                             var bookerName = worksheet.Cells[row, 3]?.Value?.ToString()?.Trim();
                             var arrivalStr = worksheet.Cells[row, 4]?.Value?.ToString()?.Trim();
                             var departureStr = worksheet.Cells[row, 5]?.Value?.ToString()?.Trim();
-                            var totalPaymentStr = worksheet.Cells[row, 6]?.Value?.ToString()?.Trim();
-                            var bookingNumber = worksheet.Cells[row, 7]?.Value?.ToString()?.Trim();
-                            var phone = worksheet.Cells[row, 8]?.Value?.ToString()?.Trim();
+                            var bookingNumber = worksheet.Cells[row, 6]?.Value?.ToString()?.Trim();
+                            var phone = worksheet.Cells[row, 7]?.Value?.ToString()?.Trim();
 
                             if (string.IsNullOrEmpty(propertyName))
                                 continue;
@@ -119,9 +118,6 @@ namespace LondonEstate.Pages.Admin
                                     Departure = departure,
                                     BookingNumber = bookingNumber,
                                     PhoneNumber = phone,
-                                    TotalPayment = decimal.TryParse(totalPaymentStr, out var totalPayment) ? totalPayment : 0
-
-
                                 });
                             }
                         }
@@ -167,7 +163,7 @@ namespace LondonEstate.Pages.Admin
                     flat.GuestPhone = booking.PhoneNumber;
                     //flat.TotalPayment = booking.TotalPayment;
 
-                    updatedCount = await _flatService.UpdateFlat(flat.Id, flat);
+                    updatedCount = await _flatService.UpdateFlat(flat);
                     updatedCount++;
                 }
             }

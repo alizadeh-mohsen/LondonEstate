@@ -81,7 +81,7 @@ namespace LondonEstate.Pages.Admin.Flats
             //    // Save relative path to DB
             //    flatFromDb.Image = $"/Images/{newFileName}";
             //}
-            await flatService.UpdateFlat(Flat.Id, flatFromDb);
+            await flatService.UpdateFlat(flatFromDb);
 
 
             return RedirectToPage("./Index");

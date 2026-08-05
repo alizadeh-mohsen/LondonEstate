@@ -8,7 +8,6 @@
         public DateTime Departure { get; set; }
         public string BookingNumber { get; set; }
         public string PhoneNumber { get; set; }
-        public decimal TotalPayment { get; set; }
 
     }
 }

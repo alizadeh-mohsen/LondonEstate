@@ -50,7 +50,7 @@ namespace LondonEstate.Pages.Admin
             flat.Open = true;
             try
             {
-                await flatService.UpdateFlat(flat.Id, flat);
+                await flatService.UpdateFlat(flat);
             }
             catch (DbUpdateConcurrencyException)
             {

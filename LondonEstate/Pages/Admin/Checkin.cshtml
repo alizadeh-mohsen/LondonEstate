@@ -93,12 +93,6 @@
     <script>
         function generateCashbackMessage() {
             const guestName = document.getElementById('cbGuestName').value;
-            const totalPayment = parseFloat(document.getElementById('cbTotalPayment').value);
-
-            if (!guestName || !totalPayment) {
-                alert('Please fill in all fields.');
-                return;
-            }
 
             // Determine cashback amount: 15 if below 700, 20 if above, default 15
             let cashbackAmount = 15;
