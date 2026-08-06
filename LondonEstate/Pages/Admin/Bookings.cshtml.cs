@@ -163,8 +163,9 @@ namespace LondonEstate.Pages.Admin
                     flat.GuestPhone = booking.PhoneNumber;
                     //flat.TotalPayment = booking.TotalPayment;
 
-                    updatedCount = await _flatService.UpdateFlat(flat);
-                    updatedCount++;
+                    var result = await _flatService.UpdateFlat(flat);
+                    if (result > 0)
+                        updatedCount++;
                 }
             }
 

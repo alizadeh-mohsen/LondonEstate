@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-LondonEstate-9affa6d1-09ba-49f1-8f12-87785f3dd857</UserSecretsId>
+		<RazorLangVersion>Latest</RazorLangVersion>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	</PropertyGroup>
 
@@ -39,6 +40,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\LondonEstate.Core\LondonEstate.Core.csproj" />
+		<ProjectReference Include="..\LondonEstate.Core\LondonEstate.Core.csproj" />
 	</ItemGroup>
 </Project>

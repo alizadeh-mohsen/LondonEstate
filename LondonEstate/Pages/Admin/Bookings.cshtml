@@ -62,7 +62,7 @@
             <div class="row g-3">
 
                 <!-- Today Flats -->
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-xs-6">
                     <div class="border rounded p-3 bg-secondary">
                         <div>Count: @Model.EmptyFlats.Count</div>
                         <hr class="my-1" />
@@ -79,26 +79,7 @@
                         </ul>
                     </div>
                 </div>
-
-                <!-- Tomorrow Flats -->
-                <div class="col-12 col-md-6">
-                    <div class="border rounded p-3 bg-secondary">
-                        <div>Count: @Model.EmptyTomorrowFlats.Count</div>
-                        <hr class="my-1" />
-
-                        <ul class="mb-0 ps-3 list-unstyled">
-                            @foreach (var item in Model.EmptyTomorrowFlats)
-                            {
-                                <li class="mb-1 fw-semibold">
-                                    @item.OnlineName
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-
             </div>
-
         </div>
     </div>
 </div>
@@ -175,13 +156,6 @@
 
 
         <div class="d-flex gap-2">
-
-            <!-- Generate PDF Report -->
-            <form method="post" asp-page-handler="GenerateReport">
-                <button type="submit" class="btn btn-info btn">
-                    <i class="bi bi-file-pdf me-1"></i>Generate PDF Report
-                </button>
-            </form>
 
             <!-- Backup -->
             <form method="post" asp-page-handler="Backup">
