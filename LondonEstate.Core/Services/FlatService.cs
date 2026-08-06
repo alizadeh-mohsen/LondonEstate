@@ -58,42 +58,55 @@ namespace LondonEstate.Core.Services
 
         public async Task<int> UpdateFlat(FlatDto flatDto)
         {
-            var flat = await context.Flat.FindAsync(flatDto.Id);
-            var updatedFlat = mapper.Map(flatDto, flat);
+
+            var flatFromDb = await context.Flat.FindAsync(flatDto.Id);
+            if (flatFromDb == null)
+                return 0;
+
+            flatFromDb.Name = flatDto.Name;
+            flatFromDb.OnlineName = flatDto.OnlineName;
+            flatFromDb.Address = flatDto.Address;
+            flatFromDb.FlatUrl = flatDto.FlatUrl;
+            flatFromDb.Wifi = flatDto.Wifi;
+            flatFromDb.CheckinInstruction = flatDto.CheckinInstruction;
+            flatFromDb.Open = flatDto.Open;
+
             return await context.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateFlatsFromImportAsync(List<BookingImportDto> bookingData)
+        public async Task<int> UpdateFlatByImportAsync(BookingImportDto bookingData)
         {
-            int updatedCount = 0;
+            var flat = await context.Flat
+                .FirstOrDefaultAsync(f => f.OnlineName != null && f.OnlineName.ToLower() == bookingData.PropertyName.ToLower());
 
-            //backup existing flats before updating
-
-            foreach (var booking in bookingData)
+            if (flat != null)
             {
-                var flat = await context.Flat
-                    .FirstOrDefaultAsync(f => f.OnlineName != null && f.OnlineName.ToLower() == booking.PropertyName.ToLower());
-
-                if (flat != null)
-                {
-                    flat.GuestName = booking.BookerName;
-                    flat.CheckIn = booking.Arrival;
-                    flat.CheckOut = booking.Departure;
-                    flat.Open = true;
-                    flat.BookingNumber = booking.BookingNumber;
-                    flat.GuestPhone = booking.PhoneNumber;
-
-                    context.Flat.Update(flat);
-                    updatedCount++;
-                }
+                flat.GuestName = bookingData.BookerName;
+                flat.CheckIn = bookingData.Arrival;
+                flat.CheckOut = bookingData.Departure;
+                flat.Open = true;
+                flat.BookingNumber = bookingData.BookingNumber;
+                flat.GuestPhone = bookingData.PhoneNumber;
+                return await context.SaveChangesAsync();
             }
-
-            if (updatedCount > 0)
+            return 0;
+        }
+        public async Task UpdateFlatForCheckinAsync(FlatDto flat)
+        {
+            var flatFromDb = await context.Flat.FindAsync(flat.Id);
+            if (flatFromDb == null)
             {
-                await context.SaveChangesAsync();
+                return;
             }
+            flatFromDb.CheckIn = flat.CheckIn;
+            flatFromDb.CheckOut = flat.CheckOut;
+            flatFromDb.ReservationUrl = flat.ReservationUrl;
+            flatFromDb.BookingNumber = flat.BookingNumber;
+            flatFromDb.GuestPhone = flat.GuestPhone;
+            flatFromDb.GuestName = flat.GuestName;
+            flatFromDb.Open = true;
+            await context.SaveChangesAsync();
 
-            return updatedCount;
         }
 
         public async Task BackupAsync()
@@ -152,5 +165,7 @@ namespace LondonEstate.Core.Services
         {
             return await context.Flat.AnyAsync(f => f.Id == id);
         }
+
+
     }
 }

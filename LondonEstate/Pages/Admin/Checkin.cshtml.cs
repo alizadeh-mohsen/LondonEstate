@@ -36,21 +36,10 @@ namespace LondonEstate.Pages.Admin
             {
                 return Page();
             }
-            var flat = await flatService.GetFlatAsync(Flat.Id);
-            if (flat == null)
-            {
-                return NotFound();
-            }
-            flat.CheckIn = Flat.CheckIn;
-            flat.CheckOut = Flat.CheckOut;
-            flat.ReservationUrl = Flat.ReservationUrl;
-            flat.BookingNumber = Flat.BookingNumber;
-            flat.GuestPhone = Flat.GuestPhone;
-            flat.GuestName = Flat.GuestName;
-            flat.Open = true;
+
             try
             {
-                await flatService.UpdateFlat(flat);
+                await flatService.UpdateFlatForCheckinAsync(Flat);
             }
             catch (DbUpdateConcurrencyException)
             {

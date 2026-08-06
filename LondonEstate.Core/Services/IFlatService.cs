@@ -10,9 +10,10 @@ namespace LondonEstate.Core.Services
         Task<FlatDto> CreateFlat(FlatDto flatDto);
         Task<int> UpdateFlat(FlatDto flatDto);
         Task DeleteFlat(Guid id);
-        Task<int> UpdateFlatsFromImportAsync(List<BookingImportDto> bookingData);
         Task BackupAsync();
         Task RecoverAsync();
         Task<bool> FlatExists(Guid id);
+        Task<int> UpdateFlatByImportAsync(BookingImportDto booking);
+        Task UpdateFlatForCheckinAsync(FlatDto flat);
     }
 }

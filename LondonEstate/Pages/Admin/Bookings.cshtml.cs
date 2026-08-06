@@ -147,35 +147,17 @@ namespace LondonEstate.Pages.Admin
         {
             int updatedCount = 0;
 
-            //backup existing flats before updating
-
             foreach (var booking in bookingData)
             {
-                var flat = await _flatService.GetFlatByOnlineNameAsync(booking.PropertyName);
 
-                if (flat != null)
-                {
-                    flat.GuestName = booking.BookerName;
-                    flat.CheckIn = booking.Arrival;
-                    flat.CheckOut = booking.Departure;
-                    flat.Open = true;
-                    flat.BookingNumber = booking.BookingNumber;
-                    flat.GuestPhone = booking.PhoneNumber;
-                    //flat.TotalPayment = booking.TotalPayment;
-
-                    var result = await _flatService.UpdateFlat(flat);
-                    if (result > 0)
-                        updatedCount++;
-                }
+                var result = await _flatService.UpdateFlatByImportAsync(booking);
+                if (result > 0)
+                    updatedCount++;
             }
-
-            //if (updatedCount > 0)
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
 
             return updatedCount;
         }
+
 
         public async Task<IActionResult> OnPostBackupAsync()
         {
