@@ -7,7 +7,7 @@
     var cutoff = DateTime.Today.AddHours(11);
 }
 
-<div class="mb-4">
+<div class="mb-2">
 
     @if (!string.IsNullOrEmpty(Model.SuccessMessage))
     {
@@ -28,7 +28,7 @@
     }
 
     <!-- SEARCH AND IMPORT CARD -->
-    <div class="card mb-4">
+    <div class="card">
         <div class="card-body">
             <!-- Import -->
             <div class="mb-3">
@@ -46,20 +46,20 @@
                 </form>
             </div>
             <!-- Search -->
-            <div class="row g-3 mb-3">
+            <div class="d-flex gap-0 mb-3">
                 <div class="col-8">
-                    <input type="text" class="form-control" id="searchInput"
+                    <input type="text" class="form-control h-100" id="searchInput"
                            placeholder="Search by property name or guest name..." />
                 </div>
                 <div class="col-4">
-                    <button class="btn btn-secondary w-100" id="clearSearch" type="button">
+                    <button class="btn btn-secondary w-100 h-100" id="clearSearch" type="button">
                         <i class="bi bi-x-circle me-2"></i>Clear
                     </button>
                 </div>
             </div>
 
             <!-- Empty Flats List -->
-            <div class="row g-3">
+            <div class="row">
 
                 <!-- Today Flats -->
                 <div class="col-12 col-xs-6">
@@ -80,8 +80,33 @@
                     </div>
                 </div>
             </div>
+            <div class="row mt-3">
+                    <div class="d-flex gap-2">
+                        <!-- Backup -->
+                        <form method="post" asp-page-handler="Backup">
+                            <button type="submit"
+                                    class="btn btn-success btn"
+                                    onclick="return confirm('Are you sure you want to create a backup of all current bookings?');">
+                                <i class="bi bi-cloud-upload me-1"></i>Backup
+                            </button>
+                        </form>
+
+                        <!-- Recover -->
+                        <form method="post" asp-page-handler="Recover">
+                            <button type="submit"
+                                    class="btn btn-danger btn"
+                                    onclick="return confirm('Are you sure you want to recover from backup? This will overwrite current bookings.');">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>Recover
+                            </button>
+                        </form>
+
+                    </div>
+
+
+            </div>
         </div>
     </div>
+    
 </div>
 
 <!-- TABLE -->
@@ -151,35 +176,7 @@
     </table>
 </div>
 
-<div class="card mb-4">
-    <div class="card-body">
 
-
-        <div class="d-flex gap-2">
-
-            <!-- Backup -->
-            <form method="post" asp-page-handler="Backup">
-                <button type="submit"
-                        class="btn btn-success btn"
-                        onclick="return confirm('Are you sure you want to create a backup of all current bookings?');">
-                    <i class="bi bi-cloud-upload me-1"></i>Backup
-                </button>
-            </form>
-
-            <!-- Recover -->
-            <form method="post" asp-page-handler="Recover">
-                <button type="submit"
-                        class="btn btn-danger btn"
-                        onclick="return confirm('Are you sure you want to recover from backup? This will overwrite current bookings.');">
-                    <i class="bi bi-arrow-counterclockwise me-1"></i>Recover
-                </button>
-            </form>
-
-        </div>
-
-
-    </div>
-</div>
 
 
 <!-- SORTING SCRIPT -->
