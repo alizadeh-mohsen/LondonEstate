@@ -7,7 +7,7 @@
 
 <span class="fw-bold">@Html.DisplayFor(model => model.Flat.Name)</span>
 <br />
-<span >@Html.DisplayFor(model => model.Flat.OnlineName)</span>
+<span>@Html.DisplayFor(model => model.Flat.OnlineName)</span>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -25,144 +25,39 @@
                 <input type="date" asp-for="Flat.CheckOut" class="form-control" />
                 <span asp-validation-for="Flat.CheckOut" class="text-danger"></span>
             </div>
-          
+
             <div class="form-group mt-2">
                 <label asp-for="Flat.GuestName" class="control-label">Guest Name</label>
                 <input asp-for="Flat.GuestName" class="form-control" id="cbGuestName" />
                 @* <span asp-validation-for="Flat.GuestName" class="text-danger"></span> *@
             </div>
-              <div class="form-group mt-2">
+            <div class="form-group mt-2">
                 <label asp-for="Flat.GuestPhone" class="control-label">Guest Phone</label>
                 <input asp-for="Flat.GuestPhone" class="form-control" id="cbPhoneNumber" />
                 @* <span asp-validation-for="Flat.GuestPhone" class="text-danger"></span> *@
-            </div> 
-             <div class="form-group mt-2">
+            </div>
+            <div class="form-group mt-2">
                 <label asp-for="Flat.BookingNumber" class="control-label">Booking No</label>
                 <input asp-for="Flat.BookingNumber" class="form-control" />
                 @* <span asp-validation-for="Flat.BookingNumber" class="text-danger"></span> *@
             </div>
-           @*   <div class="form-group mt-2">
+            @*   <div class="form-group mt-2">
                 <label asp-for="Flat.TotalPayment" class="control-label">Price</label>
                 <input asp-for="Flat.TotalPayment" class="form-control" id="cbTotalPayment" />
             </div> *@
            
             <div class="form-group mt-2">
-                <input type="submit" value="Save" class="btn btn-primary" /> | 
+                <input type="submit" value="Save" class="btn btn-primary" /> |
                 <a asp-page="./Bookings">Cancel</a>
             </div>
         </form>
     </div>
 </div>
 
-<hr />
-
-<!-- WhatsApp Message Generator -->
-<div class="row mt-4">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Generate Cashback Message</h5>
-            </div>
-            <div class="card-body">
-                <form id="cashbackMessageForm" onsubmit="return false;">
-                    
-
-                    <button type="button" class="btn btn-primary mb-3" onclick="generateCashbackMessage()">
-                        <i class="bi bi-file-text me-2"></i>Generate Message
-                    </button>
-
-                    <div class="mb-3">
-                        <label for="generatedCashbackMessage" class="form-label">Generated Message</label>
-                        <textarea class="form-control" id="generatedCashbackMessage" rows="8" readonly></textarea>
-                    </div>
-
-                    <button type="button" class="btn btn-success" onclick="copyCashbackToClipboard()">
-                        <i class="bi bi-clipboard me-2"></i>Copy to Clipboard
-                    </button>
-                    <button type="button" class="btn btn-info" onclick="openCashbackWhatsApp()">
-                        <i class="bi bi-whatsapp me-2"></i>Send on WhatsApp
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        function generateCashbackMessage() {
-            const guestName = document.getElementById('cbGuestName').value;
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 
-            // Determine cashback amount: 15 if below 700, 20 if above, default 15
-            let cashbackAmount = 15;
-            if (totalPayment >= 700) {
-                cashbackAmount = 20;
-            }
-
-            const firstName = guestName.split(' ')[0];
-
-            const message = `Hi ${firstName},
-
-Thank you again for staying with us.
-
-We offer a *£${cashbackAmount} cashback* to guests who leave us a *10/10* review on Booking.com.
-
-If you'd like to take part, please leave your review and once it appears online, send me a WhatsApp message at +447367707044 along with your bank details for the transfer.`;
-
-            document.getElementById('generatedCashbackMessage').value = message;
-        }
-
-        function copyCashbackToClipboard() {
-            const message = document.getElementById('generatedCashbackMessage').value;
-            if (!message) {
-                alert('Please generate a message first.');
-                return;
-            }
-
-            navigator.clipboard.writeText(message).then(() => {
-                const button = event.currentTarget;
-                const originalText = button.innerHTML;
-                button.innerHTML = '<i class="bi bi-check me-2"></i>Copied!';
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                }, 2000);
-            }).catch(() => {
-                alert('Failed to copy message. Please try again.');
-            });
-        }
-
-        function openCashbackWhatsApp() {
-            const message = document.getElementById('generatedCashbackMessage').value;
-            const phoneNumber = document.getElementById('cbPhoneNumber').value;
-
-            if (!message) {
-                alert('Please generate a message first.');
-                return;
-            }
-
-            if (!phoneNumber) {
-                alert('Please enter a phone number.');
-                return;
-            }
-
-            // Clean phone number - remove spaces, dashes, and plus sign
-            let cleanPhone = phoneNumber.replace(/[\s\-\+]/g, '');
-
-            // Ensure the phone number starts with country code
-            if (!cleanPhone.startsWith('44')) {
-                if (cleanPhone.startsWith('0')) {
-                    cleanPhone = '44' + cleanPhone.substring(1);
-                } else if (!cleanPhone.match(/^\d{10,}/)) {
-                    alert('Please enter a valid phone number.');
-                    return;
-                }
-            }
-
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-
-            window.open(whatsappUrl, '_blank');
-        }
-    </script>
 }
