@@ -12,9 +12,9 @@ namespace LondonEstate.Pages.Admin
     public class BookingsModel(IFlatService _flatService) : PageModel
     {
 
-        public IList<FlatDto> Flats { get; set; } = default!;
-        public IList<FlatDto> EmptyFlats { get; set; } = default!;
-        public IList<FlatDto> EmptyTomorrowFlats { get; set; } = default!;
+        public IList<BookingDto> Flats { get; set; } = default!;
+        public IList<BookingDto> EmptyFlats { get; set; } = default!;
+        //public IList<BookingDto> EmptyTomorrowFlats { get; set; } = default!;
 
         [TempData]
         public string? SuccessMessage { get; set; }
@@ -41,14 +41,14 @@ namespace LondonEstate.Pages.Admin
             //Flat = await query.ToListAsync();
 
 
-            Flats = await _flatService.GetAllFlatsAsync();
+            Flats = await _flatService.GetBookingsAsync();
             var cutoff = DateTime.Today.AddHours(11);
 
 
             EmptyFlats = Flats.Where(f => f.CheckOut < cutoff).OrderBy(f => f.Name).ToList();
 
 
-            EmptyTomorrowFlats = Flats.Where(f => f.CheckOut.HasValue && f.CheckOut.Value.Date == cutoff.Date.AddDays(1)).OrderBy(f => f.OnlineName).ToList();
+            //EmptyTomorrowFlats = Flats.Where(f => f.CheckOut.HasValue && f.CheckOut.Value.Date == cutoff.Date.AddDays(1)).OrderBy(f => f.OnlineName).ToList();
         }
 
         public async Task<IActionResult> OnPostUploadAsync(IFormFile? excelFile)
@@ -150,7 +150,7 @@ namespace LondonEstate.Pages.Admin
             foreach (var booking in bookingData)
             {
 
-                var result = await _flatService.UpdateFlatByImportAsync(booking);
+                var result = await _flatService.ImportBookingsAsync(booking);
                 if (result > 0)
                     updatedCount++;
             }
@@ -177,7 +177,7 @@ namespace LondonEstate.Pages.Admin
         {
             try
             {
-                await _flatService.RecoverAsync();
+                await _flatService.RestoreAsync();
                 SuccessMessage = "Successfully recovered all flats from backup.";
             }
             catch (Exception ex)

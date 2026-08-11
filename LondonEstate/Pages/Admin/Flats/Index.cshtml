@@ -41,9 +41,9 @@
         {
             <tr class="flat-row" data-name="@item.Name?.ToLower()" data-online-name="@item.OnlineName?.ToLower()">
                 <td>
-                   <a  href="@Html.DisplayFor(modelItem => item.FlatUrl)" target="_blank">
+                   @* <a  href="@Html.DisplayFor(modelItem => item.FlatUrl)" target="_blank"> *@
                         @Html.DisplayFor(modelItem => item.OnlineName)
-                    </a>
+                    @* </a> *@
                         <div class="@(item.Open ? "" : "text-danger")">
                             @Html.DisplayFor(modelItem => item.Name)
                         </div>

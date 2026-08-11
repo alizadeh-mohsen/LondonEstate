@@ -11,9 +11,8 @@ namespace LondonEstate.Pages.Admin
     public class CheckinModel(IFlatService flatService) : PageModel
     {
 
-
         [BindProperty]
-        public FlatDto Flat { get; set; } = default!;
+        public BookingDto Flat { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
@@ -21,7 +20,7 @@ namespace LondonEstate.Pages.Admin
             {
                 return NotFound();
             }
-            var flat = await flatService.GetFlatAsync(id);
+            var flat = await flatService.GetBookingAsync(id);
             if (flat == null)
             {
                 return NotFound();
@@ -39,7 +38,7 @@ namespace LondonEstate.Pages.Admin
 
             try
             {
-                await flatService.UpdateFlatForCheckinAsync(Flat);
+                await flatService.UpdateBookingAsync(Flat);
             }
             catch (DbUpdateConcurrencyException)
             {

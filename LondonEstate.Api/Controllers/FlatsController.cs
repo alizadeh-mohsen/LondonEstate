@@ -16,39 +16,33 @@ namespace LondonEstate.Api.Controllers
             this.flatService = flatService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        #region Flats
+
+        [HttpGet("all")]
+        public async Task<ActionResult<List<FlatDto>>> GetAllFlats()
         {
             var flats = await flatService.GetAllFlatsAsync();
             return Ok(flats);
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<ActionResult<FlatDto>> GetFlat(Guid id)
         {
             var flat = await flatService.GetFlatAsync(id);
             if (flat == null) return NotFound();
             return Ok(flat);
         }
 
-        [HttpGet("online/{onlineName}")]
-        public async Task<IActionResult> GetByOnlineName(string onlineName)
-        {
-            var flat = await flatService.GetFlatByOnlineNameAsync(onlineName);
-            if (flat == null) return NotFound();
-            return Ok(flat);
-        }
-
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] FlatDto flatDto)
+        public async Task<IActionResult> CreateFlat([FromBody] FlatDto flatDto)
         {
             if (flatDto == null) return BadRequest();
             var created = await flatService.CreateFlat(flatDto);
-            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+            return CreatedAtAction(nameof(GetFlat), new { id = created.Id }, created);
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] FlatDto flatDto)
+        public async Task<IActionResult> Updateflat(Guid id, [FromBody] FlatDto flatDto)
         {
             if (flatDto == null || id != flatDto.Id) return BadRequest();
             var exists = await flatService.FlatExists(id);
@@ -58,13 +52,60 @@ namespace LondonEstate.Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> DeleteFlat(Guid id)
         {
             var exists = await flatService.FlatExists(id);
             if (!exists) return NotFound();
             await flatService.DeleteFlat(id);
             return NoContent();
         }
+        #endregion
+
+        #region Bookings
+
+        [HttpGet("bookings")]
+        public async Task<ActionResult<List<BookingDto>>> GetBookingsAsync()
+        {
+            var flats = await flatService.GetBookingsAsync();
+            return Ok(flats);
+        }
+
+        [HttpGet("booking/{id:guid}")]
+        public async Task<ActionResult<BookingDto>> GetBooking(Guid id)
+        {
+            var flat = await flatService.GetBookingAsync(id);
+            if (flat == null) return NotFound();
+            return Ok(flat);
+        }
+
+        [HttpPost("import")]
+        public async Task<IActionResult> ImportBookings([FromBody] BookingImportDto booking)
+        {
+            if (booking == null) return BadRequest();
+            var result = await flatService.ImportBookingsAsync(booking);
+            return Ok(result);
+        }
+
+        [HttpPut("checkin")]
+        public async Task<IActionResult> UpdateBooking([FromBody] BookingDto flat)
+        {
+            if (flat == null) return BadRequest();
+            await flatService.UpdateBookingAsync(flat);
+            return NoContent();
+        }
+
+        #endregion
+
+        //[HttpGet("online/{onlineName}")]
+        //public async Task<IActionResult> GetByOnlineName(string onlineName)
+        //{
+        //    var flat = await flatService.GetFlatByOnlineNameAsync(onlineName);
+        //    if (flat == null) return NotFound();
+        //    return Ok(flat);
+        //}
+
+        #region Backup and restore
+
 
         [HttpPost("backup")]
         public async Task<IActionResult> Backup()
@@ -74,9 +115,9 @@ namespace LondonEstate.Api.Controllers
         }
 
         [HttpPost("recover")]
-        public async Task<IActionResult> Recover()
+        public async Task<IActionResult> Restore()
         {
-            await flatService.RecoverAsync();
+            await flatService.RestoreAsync();
             return NoContent();
         }
 
@@ -87,20 +128,7 @@ namespace LondonEstate.Api.Controllers
             return Ok(exists);
         }
 
-        [HttpPost("import")]
-        public async Task<IActionResult> UpdateByImport([FromBody] BookingImportDto booking)
-        {
-            if (booking == null) return BadRequest();
-            var result = await flatService.UpdateFlatByImportAsync(booking);
-            return Ok(result);
-        }
+        #endregion
 
-        [HttpPut("checkin")]
-        public async Task<IActionResult> UpdateForCheckin([FromBody] FlatDto flat)
-        {
-            if (flat == null) return BadRequest();
-            await flatService.UpdateFlatForCheckinAsync(flat);
-            return NoContent();
-        }
     }
 }

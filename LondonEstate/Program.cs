@@ -71,7 +71,7 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 // Add session middleware before routing
-app.UseSession();
+//app.UseSession();
 
 app.UseRouting();
 
