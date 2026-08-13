@@ -10,7 +10,7 @@
 <span>@Html.DisplayFor(model => model.Flat.OnlineName)</span>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Flat.Id" />
@@ -49,6 +49,27 @@
             <div class="form-group mt-2">
                 <input type="submit" value="Save" class="btn btn-primary" /> |
                 <a asp-page="./Bookings">Cancel</a>
+            </div>
+        </form>
+        <!-- Move booking to another flat -->
+        <form method="post" asp-page-handler="Move" class="mt-3">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SourceFlatId" value="@Model.Flat.Id" />
+            <div class="input-group">
+                <select asp-for="MoveToFlatId" class="form-select">
+                    <option value="">Select a flat to move to...</option>
+                    @if (Model.Flats != null)
+                    {
+                        foreach (var f in Model.Flats)
+                        {
+                            if (f.Id != Model.Flat.Id)
+                            {
+                                <option value="@f.Id">@f.Name</option>
+                            }
+                        }
+                    }
+                </select>
+                <button type="submit" class="btn btn-warning" onclick="return confirm('Move booking to selected flat?');">Move</button>
             </div>
         </form>
     </div>

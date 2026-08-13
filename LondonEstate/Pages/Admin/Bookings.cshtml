@@ -64,9 +64,17 @@
                 <!-- Today Flats -->
                 <div class="col-12 col-xs-6">
                     <div class="border rounded p-3 bg-secondary">
-                        <div>Empty: @Model.EmptyFlats.Count</div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>Empty Flats: @Model.EmptyFlats.Count</div>
+                            <div>
+                                <button type="button" class="btn btn-primary btn-sm" id="copyEmptyFlatsBtn" 
+                                    title="Copy empty flats to clipboard">
+                                    <i class="bi bi-clipboard me-1"></i>Copy
+                                </button>
+                            </div>
+                        </div>
                         <hr class="my-1" />
-                        <ul class="mb-0 ps-3">
+                        <ul id="emptyFlatsList" class="mb-0 ps-3">
                             @foreach (var item in Model.EmptyFlats)
                             {
                                 <li class="mb-1">
@@ -248,4 +256,40 @@
             th.classList.add(asc ? "sorted-asc" : "sorted-desc");
         });
     });
+
+    // COPY EMPTY FLATS TO CLIPBOARD
+    const copyEmptyFlatsBtn = document.getElementById("copyEmptyFlatsBtn");
+    if (copyEmptyFlatsBtn) {
+        copyEmptyFlatsBtn.addEventListener("click", async () => {
+            const ul = document.getElementById("emptyFlatsList");
+            if (!ul) return;
+
+            const items = Array.from(ul.querySelectorAll("li")).map(li => li.innerText.trim()).filter(Boolean);
+            // join with new lines so each flat appears on its own line in the clipboard
+            const text = items.join("\n");
+
+            if (!text) {
+                const original = copyEmptyFlatsBtn.innerHTML;
+                copyEmptyFlatsBtn.innerHTML = '<i class="bi bi-clipboard-x me-1"></i>Empty';
+                setTimeout(() => copyEmptyFlatsBtn.innerHTML = original, 1500);
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch (e) {
+                // fallback
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); } catch (e) { }
+                document.body.removeChild(ta);
+            }
+
+            const orig = copyEmptyFlatsBtn.innerHTML;
+            copyEmptyFlatsBtn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied!';
+            setTimeout(() => copyEmptyFlatsBtn.innerHTML = orig, 1500);
+        });
+    }
 </script>
