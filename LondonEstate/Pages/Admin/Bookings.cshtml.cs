@@ -12,7 +12,7 @@ namespace LondonEstate.Pages.Admin
     public class BookingsModel(IFlatService _flatService) : PageModel
     {
 
-        public IList<BookingDto> Flats { get; set; } = default!;
+        public IList<FullBookingDto> Flats { get; set; } = default!;
         public IList<BookingDto> EmptyFlats { get; set; } = default!;
         //public IList<BookingDto> EmptyTomorrowFlats { get; set; } = default!;
 
@@ -24,31 +24,13 @@ namespace LondonEstate.Pages.Admin
 
         public async Task OnGetAsync()
         {
-            //var query = from f in _context.Flat
-            //            where f.Open == true
-            //            orderby f.Name
-            //            select new Flat
-            //            {
-            //                Id = f.Id,
-            //                Name = f.Name,
-            //                OnlineName = f.OnlineName,
-            //                CheckIn = f.CheckIn,
-            //                CheckOut = f.CheckOut,
-            //                GuestName = f.GuestName,
-            //                TotalPayment = f.TotalPayment
-            //            };
-
-            //Flat = await query.ToListAsync();
-
-
             Flats = await _flatService.GetBookingsAsync();
             var cutoff = DateTime.Today.AddHours(11);
-
-
-            EmptyFlats = Flats.Where(f => f.CheckOut < cutoff).OrderBy(f => f.Name).ToList();
-
-
-            //EmptyTomorrowFlats = Flats.Where(f => f.CheckOut.HasValue && f.CheckOut.Value.Date == cutoff.Date.AddDays(1)).OrderBy(f => f.OnlineName).ToList();
+            EmptyFlats = [.. Flats.Where(f => f.CheckOut < cutoff).OrderBy(f => f.Name).Select(f => new BookingDto
+            {
+                Id = f.Id,
+                Name = f.Name
+            })];
         }
 
         public async Task<IActionResult> OnPostUploadAsync(IFormFile? excelFile)

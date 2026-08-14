@@ -18,7 +18,7 @@
         //public string? ReservationUrl { get; set; }
         public string? Wifi { get; set; }
         //public string? Image { get; set; }
-        //public ICollection<Bill>? Bills { get; set; }
+        public ICollection<Listing> Listings { get; set; }
 
     }
 }

@@ -8,10 +8,19 @@ namespace LondonEstate.Core.Services
 {
     public class FlatService(ApplicationDbContext context, IMapper mapper) : IFlatService
     {
-       
+
         public async Task<List<FlatDto>> GetAllFlatsAsync()
         {
-            var flats = await context.Flat.ToListAsync();
+            var query = from f in context.Flat
+
+                        orderby f.Name
+                        select new Flat
+                        {
+                            Id = f.Id,
+                            Name = f.Name,
+                        };
+
+            var flats = await query.ToListAsync();
             return mapper.Map<List<FlatDto>>(flats);
         }
         public async Task<FlatDto> GetFlatAsync(Guid id)
@@ -33,7 +42,6 @@ namespace LondonEstate.Core.Services
         }
         public async Task<int> UpdateFlat(FlatDto flatDto)
         {
-
             var flatFromDb = await context.Flat.FindAsync(flatDto.Id);
             if (flatFromDb == null)
                 return 0;
@@ -62,12 +70,38 @@ namespace LondonEstate.Core.Services
         }
 
 
-        public async Task<List<BookingDto>> GetBookingsAsync()
+        public async Task<List<ListingDto>> GetFlatListingsAsync(Guid id)
         {
-            var query = from f in context.Flat
-                        where f.Open == true
-                        orderby f.Name
-                        select new Flat
+            var flats = await context.Listing.Where(l => l.FlatId == id).ToListAsync();
+            return mapper.Map<List<ListingDto>>(flats);
+        }
+        public async Task<ListingDto> CreateListing(ListingDto flatDto)
+        {
+            var listing = mapper.Map<Listing>(flatDto);
+            await context.Listing.AddAsync(listing);
+            await context.SaveChangesAsync();
+            return mapper.Map<ListingDto>(listing);
+        }
+        public async Task DeleteListing(Guid id)
+        {
+            var listing = await context.Listing.FindAsync(id);
+            if (listing == null)
+            {
+                throw new InvalidOperationException("Listing not found");
+            }
+
+            context.Listing.Remove(listing);
+            await context.SaveChangesAsync();
+
+        }
+
+        public async Task<List<FullBookingDto>> GetBookingsAsync()
+        {
+            var query = context.Flat
+                        .Include(f => f.Listings)
+                        .Where(f => f.Open == true)
+                        .OrderBy(f => f.Name)
+                        .Select(f => new Flat
                         {
                             Id = f.Id,
                             Name = f.Name,
@@ -75,10 +109,12 @@ namespace LondonEstate.Core.Services
                             CheckIn = f.CheckIn,
                             CheckOut = f.CheckOut,
                             GuestName = f.GuestName,
-                        };
+                            Listings = f.Listings
+                        });
 
             var flats = await query.ToListAsync();
-            return mapper.Map<List<BookingDto>>(flats);
+
+            return mapper.Map<List<FullBookingDto>>(flats);
         }
         public async Task<BookingDto> GetBookingAsync(Guid id)
         {
@@ -92,13 +128,13 @@ namespace LondonEstate.Core.Services
                             CheckIn = f.CheckIn,
                             CheckOut = f.CheckOut,
                             GuestName = f.GuestName,
-                            GuestPhone=f.GuestPhone,
-                            BookingNumber=f.BookingNumber
+                            GuestPhone = f.GuestPhone,
+                            BookingNumber = f.BookingNumber
                         };
             var flat = await query.FirstOrDefaultAsync(f => f.Id == id);
-            
-            return flat == null ? 
-                throw new InvalidOperationException("Flat not found") : 
+
+            return flat == null ?
+                throw new InvalidOperationException("Flat not found") :
                 mapper.Map<BookingDto>(flat);
         }
         public async Task<int> ImportBookingsAsync(BookingImportDto bookingData)
@@ -136,7 +172,7 @@ namespace LondonEstate.Core.Services
 
         }
 
-        
+
         public async Task BackupAsync()
         {
 
@@ -149,7 +185,7 @@ namespace LondonEstate.Core.Services
                 {
                     Id = flat.Id,
                     Name = flat.Name,
-                    OnlineName = flat.OnlineName,
+                    //OnlineName = flat.OnlineName,
                     GuestName = flat.GuestName,
                     CheckIn = flat.CheckIn,
                     CheckOut = flat.CheckOut,
@@ -179,7 +215,7 @@ namespace LondonEstate.Core.Services
                     flat.CheckIn = backup.CheckIn;
                     flat.CheckOut = backup.CheckOut;
                     flat.Name = backup.Name;
-                    flat.OnlineName = backup.OnlineName;
+                    //flat.OnlineName = backup.OnlineName;
 
                     context.Flat.Update(flat);
                 }

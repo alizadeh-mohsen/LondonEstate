@@ -150,7 +150,7 @@
 
                 <tr class="booking-row"
                     data-property="@item.Name?.ToLower()"
-                    data-online="@item.OnlineName?.ToLower()"
+                    data-online="@string.Join(",", item.Listings.Select(l => l.OnlineName?.ToLower()))"
                     data-guest="@item.GuestName?.ToLower()">
 
                     <!-- PROPERTY -->
@@ -159,7 +159,46 @@
                            class="fw-semibold text-decoration-none text-dark">
                             @item.Name
                         </a>
-                        <div class="text-muted small">@item.OnlineName</div>
+                           <div class="text-muted small">
+                            <a class="text-muted small"
+                               data-bs-toggle="collapse"
+                               href="#listings-@item.Id"
+                               role="button"
+                               aria-expanded="false"
+                               aria-controls="listings-@item.Id">
+                                Show Listings
+                            </a>
+
+                            <div class="collapse mt-2" id="listings-@item.Id">
+                                @foreach (var listing in item.Listings)
+                                {
+                                    <small class="text-muted d-block">@listing.OnlineName</small>
+                                }
+                            </div>
+                        </div>
+
+                       @*   <div class="text-muted small">
+                            <a class="text-muted small d-flex align-items-center"
+                               data-bs-toggle="collapse"
+                               href="#listings-@item.Id"
+                               role="button"
+                               aria-expanded="false"
+                               aria-controls="listings-@item.Id">
+                                <span>Listings</span>
+                                <i class="ms-1 bi bi-chevron-down"></i>
+                            </a>
+
+                            <div class="collapse mt-2" id="listings-@item.Id">
+                                @foreach (var listing in item.Listings)
+                                {
+                                    <small class="text-muted d-block">@listing.OnlineName</small>
+                                }
+                            </div>
+                        </div> *@
+                        
+
+
+
                     </td>
 
                     <!-- DATES -->

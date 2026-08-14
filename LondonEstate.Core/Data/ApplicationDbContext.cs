@@ -24,6 +24,7 @@ namespace LondonEstate.Core.Data
         public DbSet<Vendor> Vendor { get; set; } = default!;
         public DbSet<BillType> BillType { get; set; } = default!;
         public DbSet<FlatBackup> FlatBackup { get; set; } = default!;
+        public DbSet<Listing> Listing { get; set; } = default!;
 
 
         // Added DbSet for RentHistory so EF can track and migrate the table
