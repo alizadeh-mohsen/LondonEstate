@@ -4,11 +4,11 @@
     ViewData["Title"] = "Listings";
 }
 
-<h3>Create Listing</h3>
+<h4 class="text-decoration-underline mb-4">@Model.FlatName</h4>
 <form method="post" asp-page-handler="Create">
     <input type="hidden" asp-for="FlatId" />
     <div class="form-group">
-        <label asp-for="NewListing.ListingName"></label>
+        <label asp-for="NewListing.ListingName">Name</label>
         <input asp-for="NewListing.ListingName" class="form-control" />
     </div>
     <button type="submit" class="btn btn-primary mt-3">Create</button>
@@ -16,26 +16,25 @@
 
 <div class="table-responsive mt-3">
     <table class="table table-sm" id="flatsTable">
-    <thead>
-        <tr>
-            <th>Listing Id</th>
-            <th>Listing Name</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var listing in Model.Listings)
-    {
-        <tr>
-            <td>@listing.ListingName</td>
-            <td>
-                <form method="post" asp-page-handler="Delete" asp-route-id="@listing.Id">
-                    <input type="hidden" asp-for="FlatId" value="@Model.FlatId" />
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                </form>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var listing in Model.Listings)
+            {
+                <tr>
+                    <td>@listing.ListingName</td>
+                    <td>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@listing.Id">
+                            <input type="hidden" asp-for="FlatId" value="@Model.FlatId" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

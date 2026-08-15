@@ -54,10 +54,11 @@
                 </td> *@
 
                 <td>
-                         <a class="btn btn-sm btn-primary m-1 " asp-page="./Details" asp-route-id="@item.Id">Details</a>
-                        <a class="btn btn-sm btn-primary m-1" asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
-                        <a class="btn btn-sm btn-primary m-1" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                        <a class="btn btn-sm btn-primary m-1" asp-page="./Listings" asp-route-id="@item.Id">Listings</a>
+                         <a class="btn btn-sm btn-success m-1 " asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                        <a class="btn btn-sm btn-warning m-1" asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-sm btn-danger m-1" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                        <a class="btn btn-sm btn-info m-1" asp-page="./Listings" asp-route-id="@item.Id" 
+                                asp-route-name="@item.Name">Listings</a>
                 </td>
             </tr>
         }

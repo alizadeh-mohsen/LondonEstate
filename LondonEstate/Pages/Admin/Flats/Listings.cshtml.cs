@@ -12,12 +12,15 @@ namespace LondonEstate.Pages.Admin.Flats
         [BindProperty(SupportsGet = true)]
         public Guid FlatId { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string FlatName { get; set; } = string.Empty;
+
         public List<ListingDto> Listings { get; set; } = new();
 
         [BindProperty]
         public ListingDto NewListing { get; set; } = new();
 
-        public async Task<IActionResult> OnGetAsync(Guid id)
+        public async Task<IActionResult> OnGetAsync(Guid id, string name)
         {
             if (id == Guid.Empty)
             {
@@ -25,6 +28,7 @@ namespace LondonEstate.Pages.Admin.Flats
             }
 
             FlatId = id;
+            FlatName = name;
             Listings = await flatService.GetFlatListingsAsync(id);
             return Page();
         }
