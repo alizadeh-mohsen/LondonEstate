@@ -150,7 +150,7 @@
 
                 <tr class="booking-row"
                     data-property="@item.Name?.ToLower()"
-                    data-online="@string.Join(",", item.Listings.Select(l => l.OnlineName?.ToLower()))"
+                    data-online="@string.Join(",", item.Listings.Select(l => l.ListingName?.ToLower()))"
                     data-guest="@item.GuestName?.ToLower()">
 
                     <!-- PROPERTY -->
@@ -172,7 +172,7 @@
                             <div class="collapse mt-2" id="listings-@item.Id">
                                 @foreach (var listing in item.Listings)
                                 {
-                                    <small class="text-muted d-block">@listing.OnlineName</small>
+                                    <small class="text-muted d-block">@listing.ListingName</small>
                                 }
                             </div>
                         </div>

@@ -12,7 +12,7 @@ namespace LondonEstate.Pages.Admin
     public class BookingsModel(IFlatService _flatService) : PageModel
     {
 
-        public IList<FullBookingDto> Flats { get; set; } = default!;
+        public IList<BookingDto> Flats { get; set; } = default!;
         public IList<BookingDto> EmptyFlats { get; set; } = default!;
         //public IList<BookingDto> EmptyTomorrowFlats { get; set; } = default!;
 

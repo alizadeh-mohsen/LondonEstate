@@ -9,5 +9,7 @@
         public string? CheckinInstruction { get; set; }
         public string? Address { get; set; }
         public string? Wifi { get; set; }
+        public ICollection<ListingDto>? Listings { get; set; }
+
     }
 }

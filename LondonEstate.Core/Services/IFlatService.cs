@@ -6,6 +6,7 @@ namespace LondonEstate.Core.Services
     {
         //Flat
         Task<List<FlatDto>> GetAllFlatsAsync();
+        Task<List<FlatDto>> GetAllFlatsInfoAsync();
         Task<FlatDto> GetFlatAsync(Guid id);
         Task<FlatDto> CreateFlat(FlatDto flatDto);
         Task<int> UpdateFlat(FlatDto flatDto);
@@ -17,7 +18,7 @@ namespace LondonEstate.Core.Services
         Task DeleteListing(Guid id);
 
         //Booking
-        Task<List<FullBookingDto>> GetBookingsAsync();
+        Task<List<BookingDto>> GetBookingsAsync();
         Task<BookingDto> GetBookingAsync(Guid id);
         //Task<FlatDto> GetFlatByOnlineNameAsync(string onlineName);
         Task UpdateBookingAsync(BookingDto flat);

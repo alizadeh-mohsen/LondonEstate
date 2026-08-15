@@ -23,6 +23,22 @@ namespace LondonEstate.Core.Services
             var flats = await query.ToListAsync();
             return mapper.Map<List<FlatDto>>(flats);
         }
+        public async Task<List<FlatDto>> GetAllFlatsInfoAsync()
+        {
+            var query = from f in context.Flat
+
+                        orderby f.Name
+                        select new Flat
+                        {
+                            Id = f.Id,
+                            Name = f.Name,
+                            CheckinInstruction = f.CheckinInstruction,
+                            Wifi = f.Wifi,
+                        };
+
+            var flats = await query.ToListAsync();
+            return mapper.Map<List<FlatDto>>(flats);
+        }
         public async Task<FlatDto> GetFlatAsync(Guid id)
         {
             var flat = await context.Flat.FindAsync(id);
@@ -95,7 +111,7 @@ namespace LondonEstate.Core.Services
 
         }
 
-        public async Task<List<FullBookingDto>> GetBookingsAsync()
+        public async Task<List<BookingDto>> GetBookingsAsync()
         {
             var query = context.Flat
                         .Include(f => f.Listings)
@@ -114,7 +130,7 @@ namespace LondonEstate.Core.Services
 
             var flats = await query.ToListAsync();
 
-            return mapper.Map<List<FullBookingDto>>(flats);
+            return mapper.Map<List<BookingDto>>(flats);
         }
         public async Task<BookingDto> GetBookingAsync(Guid id)
         {
@@ -139,8 +155,8 @@ namespace LondonEstate.Core.Services
         }
         public async Task<int> ImportBookingsAsync(BookingImportDto bookingData)
         {
-            var flat = await context.Flat
-                .FirstOrDefaultAsync(f => f.OnlineName != null && f.OnlineName.ToLower() == bookingData.PropertyName.ToLower());
+            var flat = await context.Flat.
+                FirstOrDefaultAsync(l => l.Listings.Any(f => f.ListingName.ToLower() == bookingData.PropertyName.ToLower()));
 
             if (flat != null)
             {
@@ -228,17 +244,6 @@ namespace LondonEstate.Core.Services
         {
             return await context.Flat.AnyAsync(f => f.Id == id);
         }
-
-        //public async Task<FlatDto> GetFlatByOnlineNameAsync(string onlineName)
-        //{
-        //    var flat = await context.Flat.FirstOrDefaultAsync(f => f.OnlineName != null && f.OnlineName.ToLower() == onlineName.ToLower());
-        //    if (flat == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    return mapper.Map<FlatDto>(flat);
-        //}
 
     }
 }

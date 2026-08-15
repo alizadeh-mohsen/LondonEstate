@@ -25,6 +25,13 @@ namespace LondonEstate.Api.Controllers
             return Ok(flats);
         }
 
+        [HttpGet("info")]
+        public async Task<ActionResult<List<FlatDto>>> GetAllFlatsInfo()
+        {
+            var flats = await flatService.GetAllFlatsInfoAsync();
+            return Ok(flats);
+        }
+
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<FlatDto>> GetFlat(Guid id)
         {

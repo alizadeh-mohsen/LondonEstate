@@ -107,12 +107,15 @@ namespace LondonEstate.Pages.Admin
                 GuestPhone = sourceBooking.GuestPhone,
                 BookingNumber = sourceBooking.BookingNumber
             };
+            sourceBooking.CheckOut = DateTime.Now.Date; // Optionally set the source booking's checkout to now
 
             await flatService.UpdateBookingAsync(targetBooking);
+            await flatService.UpdateBookingAsync(sourceBooking);
 
             // Optionally keep source booking as-is. If you want to clear source, implement here.
 
             return RedirectToPage("./bookings");
+
         }
 
         private async Task<bool> FlatExists(Guid id)

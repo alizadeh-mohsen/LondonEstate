@@ -12,7 +12,7 @@ namespace LondonEstate.Pages.Admin
 
         public async Task OnGetAsync()
         {
-            Flats = await flatService.GetAllFlatsAsync();
+            Flats = await flatService.GetAllFlatsInfoAsync();
         }
     }
 }

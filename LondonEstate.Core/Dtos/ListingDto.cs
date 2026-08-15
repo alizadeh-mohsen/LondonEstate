@@ -4,6 +4,6 @@
     {
         public Guid Id { get; set; }
         public Guid FlatId { get; set; }
-        public string? OnlineName { get; set; }
+        public string? ListingName { get; set; }
     }
 }

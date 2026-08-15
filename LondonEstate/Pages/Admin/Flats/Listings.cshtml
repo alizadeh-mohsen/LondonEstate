@@ -8,8 +8,8 @@
 <form method="post" asp-page-handler="Create">
     <input type="hidden" asp-for="FlatId" />
     <div class="form-group">
-        <label asp-for="NewListing.OnlineName"></label>
-        <input asp-for="NewListing.OnlineName" class="form-control" />
+        <label asp-for="NewListing.ListingName"></label>
+        <input asp-for="NewListing.ListingName" class="form-control" />
     </div>
     <button type="submit" class="btn btn-primary mt-3">Create</button>
 </form>
@@ -18,7 +18,8 @@
     <table class="table table-sm" id="flatsTable">
     <thead>
         <tr>
-            <th>Online Name</th>
+            <th>Listing Id</th>
+            <th>Listing Name</th>
             <th></th>
         </tr>
     </thead>
@@ -26,7 +27,7 @@
     @foreach (var listing in Model.Listings)
     {
         <tr>
-            <td>@listing.OnlineName</td>
+            <td>@listing.ListingName</td>
             <td>
                 <form method="post" asp-page-handler="Delete" asp-route-id="@listing.Id">
                     <input type="hidden" asp-for="FlatId" value="@Model.FlatId" />
