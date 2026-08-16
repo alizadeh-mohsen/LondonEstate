@@ -1,8 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using Font = Microsoft.Maui.Font;
-
-namespace LondonEstate.MAUI
+﻿namespace LondonEstate.MAUI
 {
     public partial class AppShell : Shell
     {
@@ -10,42 +6,104 @@ namespace LondonEstate.MAUI
         {
             InitializeComponent();
             var currentTheme = Application.Current!.RequestedTheme;
-            ThemeSegmentedControl.SelectedIndex = currentTheme == AppTheme.Light ? 0 : 1;
-        }
-        public static async Task DisplaySnackbarAsync(string message)
-        {
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            //ThemeSegmentedControl.SelectedIndex = currentTheme == AppTheme.Light ? 0 : 1;
+            Routing.RegisterRoute("LoginPage", typeof(LoginPage));
+            Routing.RegisterRoute("main", typeof(MainPage));
+            //Routing.RegisterRoute("projects", typeof(ProjectListPage));
+            //Routing.RegisterRoute("manage", typeof(ManageMetaPage));
 
-            var snackbarOptions = new SnackbarOptions
+
+        }
+        //public static async Task DisplaySnackbarAsync(string message)
+        //{
+        //    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+        //    var snackbarOptions = new SnackbarOptions
+        //    {
+        //        BackgroundColor = Color.FromArgb("#FF3300"),
+        //        TextColor = Colors.White,
+        //        ActionButtonTextColor = Colors.Yellow,
+        //        CornerRadius = new CornerRadius(0),
+        //        Font = Font.SystemFontOfSize(18),
+        //        ActionButtonFont = Font.SystemFontOfSize(14)
+        //    };
+
+        //    var snackbar = Snackbar.Make(message, visualOptions: snackbarOptions);
+
+        //    await snackbar.Show(cancellationTokenSource.Token);
+        //}
+
+        //public static async Task DisplayToastAsync(string message)
+        //{
+        //    // Toast is currently not working in MCT on Windows
+        //    if (OperatingSystem.IsWindows())
+        //        return;
+
+        //    var toast = Toast.Make(message, textSize: 18);
+
+        //    var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        //    await toast.Show(cts.Token);
+        //}
+
+        //private void SfSegmentedControl_SelectionChanged(object? sender, Syncfusion.Maui.Toolkit.SegmentedControl.SelectionChangedEventArgs e)
+        //{
+        //    Application.Current!.UserAppTheme = e.NewIndex == 0 ? AppTheme.Light : AppTheme.Dark;
+        //}
+        //}
+
+        public void BuildAuthenticatedShell()
+        {
+            // Clear login-only shell
+            Items.Clear();
+
+            // Add authenticated pages
+            Items.Add(new FlyoutItem
             {
-                BackgroundColor = Color.FromArgb("#FF3300"),
-                TextColor = Colors.White,
-                ActionButtonTextColor = Colors.Yellow,
-                CornerRadius = new CornerRadius(0),
-                Font = Font.SystemFontOfSize(18),
-                ActionButtonFont = Font.SystemFontOfSize(14)
-            };
+                Title = "Dashboard",
+                Icon = "dashboard.png",
+                Items =
+            {
+                new ShellContent
+                {
+                    Title = "Dashboard",
+                    ContentTemplate = new DataTemplate(typeof(MainPage)),
+                    Route = "main"
+                }
+            }
+            });
 
-            var snackbar = Snackbar.Make(message, visualOptions: snackbarOptions);
+            Items.Add(new FlyoutItem
+            {
+                Title = "Projects",
+                Icon = "projects.png",
+                Items =
+            {
+                new ShellContent
+                {
+                    Title = "Projects",
+                    //ContentTemplate = new DataTemplate(typeof(ProjectListPage)),
+                    Route = "projects"
+                }
+            }
+            });
 
-            await snackbar.Show(cancellationTokenSource.Token);
-        }
+            Items.Add(new FlyoutItem
+            {
+                Title = "Manage Meta",
+                Icon = "meta.png",
+                Items =
+            {
+                new ShellContent
+                {
+                    Title = "Manage Meta",
+                    //ContentTemplate = new DataTemplate(typeof(ManageMetaPage)),
+                    Route = "manage"
+                }
+            }
+            });
 
-        public static async Task DisplayToastAsync(string message)
-        {
-            // Toast is currently not working in MCT on Windows
-            if (OperatingSystem.IsWindows())
-                return;
-
-            var toast = Toast.Make(message, textSize: 18);
-
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            await toast.Show(cts.Token);
-        }
-
-        private void SfSegmentedControl_SelectionChanged(object? sender, Syncfusion.Maui.Toolkit.SegmentedControl.SelectionChangedEventArgs e)
-        {
-            Application.Current!.UserAppTheme = e.NewIndex == 0 ? AppTheme.Light : AppTheme.Dark;
+            // Re-enable flyout
+            FlyoutBehavior = FlyoutBehavior.Flyout;
         }
     }
 }

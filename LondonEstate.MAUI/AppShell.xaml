@@ -5,10 +5,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
     xmlns:pages="clr-namespace:LondonEstate.MAUI.Pages"
-    Shell.FlyoutBehavior="Flyout"
+    Shell.FlyoutBehavior="Disabled"
     Title="LondonEstate.MAUI">
 
     <ShellContent
+    Route="LoginPage"
+    ContentTemplate="{DataTemplate pages:LoginPage}" />
+
+
+    <!--<ShellContent
         Title="Dashboard"
         Icon="{StaticResource IconDashboard}"
         ContentTemplate="{DataTemplate pages:MainPage}"
@@ -39,6 +44,6 @@
                 </sf:SfSegmentedControl.ItemsSource>
             </sf:SfSegmentedControl>
         </Grid>
-    </Shell.FlyoutFooter>
+    </Shell.FlyoutFooter>-->
 
 </Shell>
