@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LondonEstate.Api", "LondonE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LondonEstate.Core", "LondonEstate.Core\LondonEstate.Core.csproj", "{120088CE-9ED6-425A-9875-759F0B6638BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LondonEstate.MAUI", "LondonEstate.MAUI\LondonEstate.MAUI.csproj", "{E25C0ABB-ED07-4945-A21B-90434276C08B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,11 @@ Global
 		{120088CE-9ED6-425A-9875-759F0B6638BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{120088CE-9ED6-425A-9875-759F0B6638BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{120088CE-9ED6-425A-9875-759F0B6638BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E25C0ABB-ED07-4945-A21B-90434276C08B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E25C0ABB-ED07-4945-A21B-90434276C08B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E25C0ABB-ED07-4945-A21B-90434276C08B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E25C0ABB-ED07-4945-A21B-90434276C08B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E25C0ABB-ED07-4945-A21B-90434276C08B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
