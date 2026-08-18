@@ -113,30 +113,86 @@ namespace LondonEstate.MAUI
 
             Items.Add(new FlyoutItem
             {
-                Title = "Projects",
+                Title = "Bookings",
                 Icon = "projects.png",
                 Items =
             {
                 new ShellContent
                 {
-                    Title = "Projects",
-                    //ContentTemplate = new DataTemplate(typeof(ProjectListPage)),
-                    Route = "projects"
+                    Title = "Bookings",
+                    ContentTemplate = new DataTemplate(typeof(BookingsPage)),
+                    Route = "Bookings"
                 }
             }
             });
 
             Items.Add(new FlyoutItem
             {
-                Title = "Manage Meta",
+                Title = "Flats",
                 Icon = "meta.png",
                 Items =
             {
                 new ShellContent
                 {
-                    Title = "Manage Meta",
-                    //ContentTemplate = new DataTemplate(typeof(ManageMetaPage)),
-                    Route = "manage"
+                    Title = "Flats",
+                    ContentTemplate = new DataTemplate(typeof(FlatsPage)),
+                    Route = "flats"
+                }
+            }
+            });
+            Items.Add(new FlyoutItem
+            {
+                Title = "Invoice",
+                Icon = "meta.png",
+                Items =
+            {
+                new ShellContent
+                {
+                    Title = "Invoice",
+                    ContentTemplate = new DataTemplate(typeof(InvoicePage)),
+                    Route = "invoice"
+                }
+            }
+            });
+            Items.Add(new FlyoutItem
+            {
+                Title = "Flats",
+                Icon = "meta.png",
+                Items =
+            {
+                new ShellContent
+                {
+                    Title = "Agreements",
+                    ContentTemplate = new DataTemplate(typeof(AgreementPage)),
+                    Route = "agreements"
+                }
+            }
+            });
+            Items.Add(new FlyoutItem
+            {
+                Title = "Instruction",
+                Icon = "meta.png",
+                Items =
+            {
+                new ShellContent
+                {
+                    Title = "Instruction",
+                    ContentTemplate = new DataTemplate(typeof(InstructionPage)),
+                    Route = "instruction"
+                }
+            }
+            });
+            Items.Add(new FlyoutItem
+            {
+                Title = "Greetings",
+                Icon = "meta.png",
+                Items =
+            {
+                new ShellContent
+                {
+                    Title = "Greetings",
+                    ContentTemplate = new DataTemplate(typeof(GreetingsPage)),
+                    Route = "greetings"
                 }
             }
             });

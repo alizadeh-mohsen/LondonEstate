@@ -1,35 +1,74 @@
-﻿@page
-@model LondonEstate.Pages.Admin.DashboardModel
-@{
-    ViewData["Title"] = "Rent estimate";
-}
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LondonEstate.MobileApp.Pages.Admin.DashboardPage"
+             Title="Rent estimate"
+             BackgroundColor="#F4F5F7">
 
-<link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
-<div class="dashboard-container">
-    <div class="dashboard-grid">
-        <a href="/Admin/Bookings" class="dashboard-card bg-primary">
-            <div class="card-content">
-                <h2 class="text-light">Bookings</h2>
-            </div>
-        </a><a href="/Admin/Greetings" class="dashboard-card bg-success">
+    <ContentPage.Resources>
+        <Style x:Key="CardStyle" TargetType="Border">
+                    <Setter Property="StrokeShape" Value="RoundedRectangle 12" />
+                    <Setter Property="Stroke" Value="Transparent" />
+                    <Setter Property="HeightRequest" Value="120" />
+                    <Setter Property="Padding" Value="0" />
+        </Style>
 
-            <div class="card-content">
-                <h2 class="text-light">Greetings</h2>
-            </div>
-        </a>
-        <a href="/Admin/Instructions" class="dashboard-card bg-warning">
+        <Style x:Key="CardLabelStyle" TargetType="Label">
+                    <Setter Property="TextColor" Value="White" />
+                    <Setter Property="FontSize" Value="20" />
+                    <Setter Property="FontAttributes" Value="Bold" />
+                    <Setter Property="HorizontalOptions" Value="Center" />
+                    <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
 
-            <div class="card-content">
-                <h2 class="text-light">Instructions</h2>
-            </div>
-        </a>
-        <a href="/Admin/Invoice" class="dashboard-card bg-info">
+    <ScrollView>
+        <Grid Padding="16"
+              RowSpacing="16"
+              ColumnSpacing="16"
+              RowDefinitions="Auto,Auto"
+              ColumnDefinitions="*,*">
 
+            <!-- Bookings -->
+            <Border Grid.Row="0" Grid.Column="0"
+                    Style="{StaticResource CardStyle}"
+                    BackgroundColor="#0d6efd">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBookingsTapped" />
+                </Border.GestureRecognizers>
+                <Label Text="Bookings" Style="{StaticResource CardLabelStyle}" />
+            </Border>
 
-            <div class="card-content">
-                <h2 class="text-light">Invoices</h2>
-            </div>
-        </a>
-      
-    </div>
-</div>
+            <!-- Greetings -->
+            <Border Grid.Row="0" Grid.Column="1"
+                    Style="{StaticResource CardStyle}"
+                    BackgroundColor="#198754">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnGreetingsTapped" />
+                </Border.GestureRecognizers>
+                <Label Text="Greetings" Style="{StaticResource CardLabelStyle}" />
+            </Border>
+
+            <!-- Instructions -->
+            <Border Grid.Row="1" Grid.Column="0"
+                    Style="{StaticResource CardStyle}"
+                    BackgroundColor="#ffc107">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnInstructionsTapped" />
+                </Border.GestureRecognizers>
+                <Label Text="Instructions" Style="{StaticResource CardLabelStyle}" TextColor="#212529" />
+            </Border>
+
+            <!-- Invoices -->
+            <Border Grid.Row="1" Grid.Column="1"
+                    Style="{StaticResource CardStyle}"
+                    BackgroundColor="#0dcaf0">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnInvoicesTapped" />
+                </Border.GestureRecognizers>
+                <Label Text="Invoices" Style="{StaticResource CardLabelStyle}" TextColor="#212529" />
+            </Border>
+
+        </Grid>
+    </ScrollView>
+</ContentPage>
