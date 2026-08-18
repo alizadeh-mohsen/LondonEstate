@@ -1,15 +1,15 @@
-using LondonEstate.MAUI.Services.Api;
+using LondonEstate.MAUI.Services;
 
 namespace LondonEstate.MAUI.Pages;
 
 public partial class LoginPage : ContentPage
 {
-    private readonly AuthApi _authApi;
+    private readonly IAuthService _authApi;
 
-    public LoginPage()
+    public LoginPage(IAuthService authService)
     {
         InitializeComponent();
-        _authApi = new AuthApi();
+        _authApi = authService;
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)

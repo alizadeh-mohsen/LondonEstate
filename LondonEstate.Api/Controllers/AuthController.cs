@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using LondonEstate.Api.Dtos;
+using LondonEstate.Api.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace LondonEstate.Api.Controllers
 {
@@ -12,257 +10,121 @@ namespace LondonEstate.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        private readonly ILogger<AuthController> _logger;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ITokenService _tokenService;
 
-        public AuthController(IConfiguration configuration, ILogger<AuthController> logger)
+        public AuthController(SignInManager<IdentityUser> signInManager,
+                              UserManager<IdentityUser> userManager,
+                              ITokenService tokenService)
         {
-            _configuration = configuration;
-            _logger = logger;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _tokenService = tokenService;
         }
 
-        /// <summary>
-        /// Register a new user
-        /// </summary>
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDto model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) return Unauthorized();
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+            if (!result.Succeeded) return Unauthorized();
+
+            var token = _tokenService.CreateToken(user);
+            var refreshToken = _tokenService.CreateRefreshToken(user);
+            var refreshTokenHash = HashToken(refreshToken);
+            await _tokenService.SaveRefreshTokenAsync(user.Id, refreshTokenHash, DateTime.UtcNow.AddDays(7));
+            return Ok(new { token, refreshToken });
+
+            //var token = _tokenService.CreateToken(user);
+            //return Ok(new { token });
+        }
+
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register(LoginDto model)
         {
-            try
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var existing = await _userManager.FindByEmailAsync(model.Email);
+            if (existing != null)
+                return BadRequest(new { message = "User with this email already exists" });
+
+            var user = new IdentityUser
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
-                if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
-                    return BadRequest(new { message = "Email and password are required" });
-
-                // TODO: Add user registration logic with your authentication service
-                // Example: await _authService.RegisterAsync(request);
-
-                return Ok(new { message = "User registered successfully. Please login." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Registration error: {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { message = "An error occurred during registration" });
-            }
-        }
-
-        /// <summary>
-        /// Login with email and password
-        /// </summary>
-        [HttpPost("login")]
-        [AllowAnonymous]
-        public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
-                if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
-                    return BadRequest(new { message = "Email and password are required" });
-
-                // TODO: Implement authentication logic
-                // Example: var user = await _authService.AuthenticateAsync(request.Email, request.Password);
-                // if (user == null)
-                //     return Unauthorized(new { message = "Invalid email or password" });
-
-                var token = GenerateJwtToken(request.Email);
-                var refreshToken = GenerateRefreshToken();
-
-                // TODO: Store refresh token in database
-                // await _authService.SaveRefreshTokenAsync(user.Id, refreshToken);
-
-                return Ok(new AuthResponse
-                {
-                    AccessToken = token,
-                    RefreshToken = refreshToken,
-                    ExpiresIn = int.Parse(_configuration["Jwt:ExpirationMinutes"] ?? "60"),
-                    Message = "Login successful"
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Login error: {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { message = "An error occurred during login" });
-            }
-        }
-
-        /// <summary>
-        /// Refresh access token using refresh token
-        /// </summary>
-        [HttpPost("refresh")]
-        [AllowAnonymous]
-        public async Task<ActionResult<AuthResponse>> RefreshToken([FromBody] RefreshTokenRequest request)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(request.RefreshToken))
-                    return BadRequest(new { message = "Refresh token is required" });
-
-                // TODO: Validate refresh token from database
-                // var isValid = await _authService.ValidateRefreshTokenAsync(request.RefreshToken);
-                // if (!isValid)
-                //     return Unauthorized(new { message = "Invalid or expired refresh token" });
-
-                // TODO: Get user information from refresh token
-                var email = "user@example.com"; // Replace with actual user retrieval
-
-                var newAccessToken = GenerateJwtToken(email);
-                var newRefreshToken = GenerateRefreshToken();
-
-                // TODO: Update refresh token in database
-                // await _authService.UpdateRefreshTokenAsync(userId, newRefreshToken);
-
-                return Ok(new AuthResponse
-                {
-                    AccessToken = newAccessToken,
-                    RefreshToken = newRefreshToken,
-                    ExpiresIn = int.Parse(_configuration["Jwt:ExpirationMinutes"] ?? "60"),
-                    Message = "Token refreshed successfully"
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Refresh token error: {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { message = "An error occurred during token refresh" });
-            }
-        }
-
-        /// <summary>
-        /// Logout user
-        /// </summary>
-        [HttpPost("logout")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult> Logout()
-        {
-            try
-            {
-                var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-
-                if (string.IsNullOrEmpty(userEmail))
-                    return BadRequest(new { message = "User information not found" });
-
-                // TODO: Implement logout logic (invalidate refresh tokens, cleanup sessions)
-                // await _authService.LogoutAsync(userEmail);
-
-                return Ok(new { message = "Logged out successfully" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Logout error: {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { message = "An error occurred during logout" });
-            }
-        }
-
-        /// <summary>
-        /// Get current user information
-        /// </summary>
-        [HttpGet("me")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<UserInfo> GetCurrentUser()
-        {
-            try
-            {
-                var email = User.FindFirst(ClaimTypes.Email)?.Value;
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-                if (string.IsNullOrEmpty(email))
-                    return Unauthorized();
-
-                return Ok(new UserInfo
-                {
-                    Id = userId,
-                    Email = email
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Get current user error: {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        #region Helper Methods
-
-        private string GenerateJwtToken(string email)
-        {
-            var jwtSettings = _configuration.GetSection("Jwt");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expirationMinutes = int.Parse(jwtSettings["ExpirationMinutes"] ?? "60");
-
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-                new Claim("iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
+                UserName = model.Email,
+                Email = model.Email
             };
 
-            var token = new JwtSecurityToken(
-                issuer: jwtSettings["Issuer"],
-                audience: jwtSettings["Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(expirationMinutes),
-                signingCredentials: creds
-            );
+            var createResult = await _userManager.CreateAsync(user, model.Password);
+            if (!createResult.Succeeded)
+                return BadRequest(createResult.Errors);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            // Optionally sign in the user or return a token
+            var token = _tokenService.CreateToken(user);
+            return Ok(new { token });
         }
 
-        private string GenerateRefreshToken()
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
         {
-            var randomNumber = new byte[32];
-            using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            await _tokenService.RevokeRefreshTokenAsync(HashToken(token));
+            return Ok(new { message = "Logged out successfully" });
+        }
+
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Refresh(RefreshDto model)
+        {
+            if (string.IsNullOrWhiteSpace(model.RefreshToken))
+                return BadRequest(new { message = "Refresh token is required" });
+
+            // Validate signature
+            var email = _tokenService.ValidateRefreshToken(model.RefreshToken);
+            if (string.IsNullOrEmpty(email))
+                return Unauthorized(new { message = "Invalid or expired refresh token" });
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Unauthorized();
+
+            // Create new tokens
+            var newAccessToken = _tokenService.CreateToken(user);
+            var newRefreshToken = _tokenService.CreateRefreshToken(user);
+            var refreshTokenHash = HashToken(newRefreshToken);
+            var expiryDate = DateTime.UtcNow.AddDays(7);
+
+            // Save new refresh token, revoke old one
+            await _tokenService.SaveRefreshTokenAsync(user.Id, refreshTokenHash, expiryDate);
+            await _tokenService.RevokeRefreshTokenAsync(HashToken(model.RefreshToken));
+
+            return Ok(new { token = newAccessToken, refreshToken = newRefreshToken });
+        }
+
+        private string HashToken(string token)
+        {
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
             {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
+                return Convert.ToBase64String(sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(token)));
             }
         }
 
-        #endregion
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> Me()
+        {
+            var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(email)) return BadRequest();
+            var user = await _userManager.FindByEmailAsync(email);
+            return Ok(new { user.Id, user.Email, user.UserName });
+        }
+
     }
 
-    #region Request/Response Models
-
-    public class LoginRequest
-    {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
-
-    public class RegisterRequest
-    {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public string ConfirmPassword { get; set; } = string.Empty;
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-    }
-
-    public class RefreshTokenRequest
-    {
-        public string RefreshToken { get; set; } = string.Empty;
-    }
-
-    public class AuthResponse
-    {
-        public string? AccessToken { get; set; }
-        public string? RefreshToken { get; set; }
-        public int ExpiresIn { get; set; }
-        public string? Message { get; set; }
-    }
-
-    public class UserInfo
-    {
-        public string? Id { get; set; }
-        public string? Email { get; set; }
-    }
-
-    #endregion
 }

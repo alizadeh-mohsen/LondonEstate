@@ -25,7 +25,7 @@ namespace LondonEstate.Core.Data
         public DbSet<BillType> BillType { get; set; } = default!;
         public DbSet<FlatBackup> FlatBackup { get; set; } = default!;
         public DbSet<Listing> Listing { get; set; } = default!;
-
+        public DbSet<RefreshToken> RefreshTokens { get; set; } = default!;
 
         // Added DbSet for RentHistory so EF can track and migrate the table
         public DbSet<RentHistory> RentHistory { get; set; } = default!;
@@ -131,6 +131,15 @@ namespace LondonEstate.Core.Data
                 entity.HasKey(rh => rh.Id);
                 entity.HasIndex(rh => rh.RentId);
                 entity.Property(rh => rh.PaidDate).IsRequired();
+            });
+
+            modelBuilder.Entity<RefreshToken>(entity =>
+            {
+                entity.HasKey(rt => rt.Id);
+                entity.HasIndex(rt => rt.UserId);
+                entity.HasIndex(rt => rt.TokenHash).IsUnique();
+                entity.Property(rt => rt.ExpiryDate).IsRequired();
+                entity.Property(rt => rt.CreatedDate).IsRequired();
             });
         }
     }
