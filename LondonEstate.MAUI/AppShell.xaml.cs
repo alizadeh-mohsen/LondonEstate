@@ -1,56 +1,95 @@
-﻿namespace LondonEstate.MAUI
+﻿using LondonEstate.MAUI.Services;
+
+namespace LondonEstate.MAUI
 {
     public partial class AppShell : Shell
     {
+        private readonly IAuthService _authService;
+
         public AppShell()
         {
             InitializeComponent();
+
+            // Get auth service from DI container
+            _authService = IPlatformApplication.Current?.Services.GetService<IAuthService>()!;
+
             var currentTheme = Application.Current!.RequestedTheme;
-            //ThemeSegmentedControl.SelectedIndex = currentTheme == AppTheme.Light ? 0 : 1;
+
             Routing.RegisterRoute("LoginPage", typeof(LoginPage));
             Routing.RegisterRoute("main", typeof(MainPage));
+            Routing.RegisterRoute("settings", typeof(SettingsPage));
             //Routing.RegisterRoute("projects", typeof(ProjectListPage));
             //Routing.RegisterRoute("manage", typeof(ManageMetaPage));
-
-
         }
-        //public static async Task DisplaySnackbarAsync(string message)
-        //{
-        //    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        //    var snackbarOptions = new SnackbarOptions
-        //    {
-        //        BackgroundColor = Color.FromArgb("#FF3300"),
-        //        TextColor = Colors.White,
-        //        ActionButtonTextColor = Colors.Yellow,
-        //        CornerRadius = new CornerRadius(0),
-        //        Font = Font.SystemFontOfSize(18),
-        //        ActionButtonFont = Font.SystemFontOfSize(14)
-        //    };
+        /// <summary>
+        /// Called when shell appears - checks if user is still authenticated
+        /// </summary>
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await CheckAuthenticationStateAsync();
+        }
 
-        //    var snackbar = Snackbar.Make(message, visualOptions: snackbarOptions);
+        /// <summary>
+        /// Checks if user is authenticated and restores shell state
+        /// </summary>
+        private async Task CheckAuthenticationStateAsync()
+        {
+            try
+            {
+                // Check if user has valid token
+                bool isAuthenticated = await _authService.IsAuthenticatedAsync();
 
-        //    await snackbar.Show(cancellationTokenSource.Token);
-        //}
+                if (isAuthenticated)
+                {
+                    // User is logged in, build authenticated shell
+                    BuildAuthenticatedShell();
+                }
+                else
+                {
+                    // Check if refresh token exists for automatic re-authentication
+                    var refreshToken = await SecureStorage.GetAsync("refresh_token");
 
-        //public static async Task DisplayToastAsync(string message)
-        //{
-        //    // Toast is currently not working in MCT on Windows
-        //    if (OperatingSystem.IsWindows())
-        //        return;
+                    if (!string.IsNullOrWhiteSpace(refreshToken))
+                    {
+                        try
+                        {
+                            // Try to refresh token
+                            await _authService.RefreshTokenAsync(refreshToken);
+                            BuildAuthenticatedShell();
+                        }
+                        catch
+                        {
+                            // Refresh failed, show login
+                            ShowLoginPage();
+                        }
+                    }
+                    else
+                    {
+                        // No token or refresh token, show login
+                        ShowLoginPage();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Authentication check error: {ex.Message}");
+                ShowLoginPage();
+            }
+        }
 
-        //    var toast = Toast.Make(message, textSize: 18);
+        /// <summary>
+        /// Navigate to login page
+        /// </summary>
+        private async Task ShowLoginPage()
+        {
+            await Shell.Current.GoToAsync("LoginPage");
+        }
 
-        //    var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        //    await toast.Show(cts.Token);
-        //}
-
-        //private void SfSegmentedControl_SelectionChanged(object? sender, Syncfusion.Maui.Toolkit.SegmentedControl.SelectionChangedEventArgs e)
-        //{
-        //    Application.Current!.UserAppTheme = e.NewIndex == 0 ? AppTheme.Light : AppTheme.Dark;
-        //}
-        //}
-
+        /// <summary>
+        /// Build the authenticated shell with menu items
+        /// </summary>
         public void BuildAuthenticatedShell()
         {
             // Clear login-only shell

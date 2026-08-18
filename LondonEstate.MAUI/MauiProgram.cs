@@ -33,20 +33,36 @@ namespace LondonEstate.MAUI
                     fonts.AddFont("SegoeUI-Semibold.ttf", "SegoeSemibold");
                     fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
                 });
+            // Register AuthService with default HttpClient (for auth endpoints)
             builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
             {
-
 #if ANDROID
                 client.BaseAddress = new Uri("http://10.0.2.2:5002");
 #else
                 client.BaseAddress = new Uri("http://localhost:5002");
 #endif
-
-
             });
+
+            // Register authenticated HttpClient with automatic token injection
+            // Use this for protected API calls
+            builder.Services.AddHttpClient<AuthenticatedHttpClient>(client =>
+            {
+#if ANDROID
+                client.BaseAddress = new Uri("http://10.0.2.2:5002");
+#else
+                client.BaseAddress = new Uri("http://localhost:5002");
+#endif
+            });
+
+            // Register the authentication handler
+            builder.Services.AddTransient<AuthenticatedHttpClientHandler>();
+
+            // Register token refresh manager
+            builder.Services.AddSingleton<TokenRefreshManager>();
 
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<SettingsPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();

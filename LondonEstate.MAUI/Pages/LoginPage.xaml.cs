@@ -4,12 +4,12 @@ namespace LondonEstate.MAUI.Pages;
 
 public partial class LoginPage : ContentPage
 {
-    private readonly IAuthService _authApi;
+    private readonly IAuthService _authService;
 
     public LoginPage(IAuthService authService)
     {
         InitializeComponent();
-        _authApi = authService;
+        _authService = authService;
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
@@ -28,9 +28,8 @@ public partial class LoginPage : ContentPage
 
         try
         {
-            var token = await _authApi.LoginAsync(email, password);
-
-            await SecureStorage.SetAsync("auth_token", token);
+            // Login (token is automatically stored by AuthService)
+            await _authService.LoginAsync(email, password);
 
             // Build authenticated shell
             (Application.Current.MainPage as AppShell)?.BuildAuthenticatedShell();
@@ -40,8 +39,12 @@ public partial class LoginPage : ContentPage
         }
         catch (Exception ex)
         {
-            ErrorLabel.Text = "Invalid login. Please try again.";
+            ErrorLabel.Text = ex.Message.Contains("401") 
+                ? "Invalid email or password." 
+                : "Login failed. Please try again.";
             ErrorLabel.IsVisible = true;
+
+            System.Diagnostics.Debug.WriteLine($"Login error: {ex.Message}");
         }
     }
 }

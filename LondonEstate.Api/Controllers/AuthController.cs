@@ -32,11 +32,20 @@ namespace LondonEstate.Api.Controllers
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
             if (!result.Succeeded) return Unauthorized();
 
-            var token = _tokenService.CreateToken(user);
+            var accessToken = _tokenService.CreateToken(user);
             var refreshToken = _tokenService.CreateRefreshToken(user);
             var refreshTokenHash = HashToken(refreshToken);
             await _tokenService.SaveRefreshTokenAsync(user.Id, refreshTokenHash, DateTime.UtcNow.AddDays(7));
-            return Ok(new { token, refreshToken });
+
+            var loginResponse = new LoginResponse
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+                ExpiresIn = 86400, // 1 day in seconds
+                Message = "Login successful"
+            };
+
+            return Ok(loginResponse);
 
             //var token = _tokenService.CreateToken(user);
             //return Ok(new { token });
