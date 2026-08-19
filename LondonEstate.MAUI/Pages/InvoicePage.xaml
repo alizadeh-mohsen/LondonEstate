@@ -5,7 +5,7 @@
              Title="InvoicePage">
     <VerticalStackLayout>
         <Label 
-            Text="Welcome to .NET MAUI!"
+            Text="Invoice Page"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
     </VerticalStackLayout>

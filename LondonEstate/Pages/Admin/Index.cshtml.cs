@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace LondonEstate.Pages.Admin
 {
     [Authorize]
-    public class DashboardModel : PageModel
+    public class IndexModel : PageModel
     {
         public void OnGet()
         {
