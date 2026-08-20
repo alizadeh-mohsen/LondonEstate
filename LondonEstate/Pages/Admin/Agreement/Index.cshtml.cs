@@ -30,7 +30,8 @@ public class IndexModel : PageModel
             OwnerName = "Sina Haghighat Parasat",
             Date = DateTime.Now,
             CheckInDate = DateTime.Now,
-            CheckOutDate = DateTime.Now.AddDays(1)
+            CheckOutDate = DateTime.Now.AddDays(1),
+            AccommodationAddress = string.Empty
         };
     }
 
@@ -104,6 +105,7 @@ public class IndexModel : PageModel
                     column.Item().Text($"Guest Name: {AgreementViewModel.GuestName}");
                     column.Item().Text($"Check-in Date: {AgreementViewModel.CheckInDate.ToUkDateString()} – 3:00 PM");
                     column.Item().Text($"Check-out Date: {AgreementViewModel.CheckOutDate.ToUkDateString()} – 11:00 AM");
+                    column.Item().Text($"Accommodation Address: {AgreementViewModel.AccommodationAddress}");
 
                     column.Item().PaddingTop(20);
 
