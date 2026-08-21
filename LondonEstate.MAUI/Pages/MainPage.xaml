@@ -2,12 +2,90 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LondonEstate.MAUI.Pages.MainPage"
-             Title="Rent Estimate"
+             Title="Host pilot"
              BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F1F1F}">
-    <VerticalStackLayout>
-        <Label 
-          Text="Main Page"
-          VerticalOptions="Center" 
-          HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="20">
+
+            <Grid RowDefinitions="Auto, Auto"
+                  ColumnDefinitions="*, *"
+                  RowSpacing="15"
+                  ColumnSpacing="15">
+
+                <!-- Bookings Card (Primary - Blue) -->
+                <Border Grid.Row="0" Grid.Column="0"
+                        BackgroundColor="#0D6EFD"
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0"
+                        HeightRequest="120">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBookingsTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="Bookings"
+                               TextColor="White"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- Greetings Card (Success - Green) -->
+                <Border Grid.Row="0" Grid.Column="1"
+                        BackgroundColor="#198754"
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0"
+                        HeightRequest="120">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnGreetingsTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="Greetings"
+                               TextColor="White"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- Instructions Card (Warning - Amber/Yellow) -->
+                <Border Grid.Row="1" Grid.Column="0"
+                        BackgroundColor="#FFC107"
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0"
+                        HeightRequest="120">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnInstructionsTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="Instructions"
+                               TextColor="#212529"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- Invoices Card (Info - Cyan) -->
+                <Border Grid.Row="1" Grid.Column="1"
+                        BackgroundColor="#0DCAF0"
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0"
+                        HeightRequest="120">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnInvoicesTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="Invoices"
+                               TextColor="White"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" />
+                    </Grid>
+                </Border>
+
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

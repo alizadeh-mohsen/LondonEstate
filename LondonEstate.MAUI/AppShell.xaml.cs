@@ -18,8 +18,10 @@ namespace LondonEstate.MAUI
             Routing.RegisterRoute("LoginPage", typeof(LoginPage));
             Routing.RegisterRoute("main", typeof(MainPage));
             Routing.RegisterRoute("settings", typeof(SettingsPage));
-            //Routing.RegisterRoute("projects", typeof(ProjectListPage));
-            //Routing.RegisterRoute("manage", typeof(ManageMetaPage));
+            Routing.RegisterRoute(nameof(BookingsPage), typeof(BookingsPage));
+            Routing.RegisterRoute(nameof(GreetingsPage), typeof(GreetingsPage));
+            Routing.RegisterRoute(nameof(InstructionPage), typeof(InstructionPage));
+            Routing.RegisterRoute(nameof(InvoicePage), typeof(InvoicePage));
         }
 
         /// <summary>
