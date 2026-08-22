@@ -1,12 +1,182 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:dtos="clr-namespace:LondonEstate.Core.Dtos;assembly=LondonEstate.Core"
              x:Class="LondonEstate.MAUI.Pages.BookingsPage"
-             Title="BookingsPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Booking Page"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="Bookings">
+
+    <ScrollView Padding="12">
+        <VerticalStackLayout Spacing="12">
+
+            <!-- STATUS ALERT MESSAGE -->
+            <Border IsVisible="{Binding HasStatusMessage}"
+                    StrokeShape="RoundRectangle 8" StrokeThickness="1" 
+                    Padding="10">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" Binding="{Binding IsSuccess}" Value="True">
+                        <Setter Property="BackgroundColor" Value="#D4EDDA" />
+                        <Setter Property="Stroke" Value="#C3E6CB" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Border" Binding="{Binding IsSuccess}" Value="False">
+                        <Setter Property="BackgroundColor" Value="#F8D7DA" />
+                        <Setter Property="Stroke" Value="#F5C6CB" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="*, Auto">
+                    <Label Text="{Binding StatusMessage}" VerticalOptions="Center">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsSuccess}" Value="True">
+                                <Setter Property="TextColor" Value="#155724" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsSuccess}" Value="False">
+                                <Setter Property="TextColor" Value="#721C24" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Button Grid.Column="1" Text="✕" Command="{Binding DismissStatusCommand}" 
+                            BackgroundColor="Transparent" TextColor="#6C757D" HeightRequest="30" WidthRequest="30" Padding="0"/>
+                </Grid>
+            </Border>
+
+            <!-- SEARCH & ACTIONS CARD -->
+            <Border Stroke="#DEE2E6" StrokeShape="RoundRectangle 8" StrokeThickness="1" BackgroundColor="White" Padding="12">
+                <VerticalStackLayout Spacing="10">
+
+                    <!-- Import --><!--
+                    <Button Text="Import Bookings (.xlsx)"
+                            Command="{Binding ImportBookingsCommand}"
+                            BackgroundColor="#0D6EFD" TextColor="White"
+                            CornerRadius="4" />-->
+
+                    <!-- Search Bar -->
+                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="6">
+                        <Entry Placeholder="Search by property or guest..."
+                               Text="{Binding SearchText}"
+                               HeightRequest="40" />
+                        <Button Grid.Column="1" Text="Clear"
+                                Command="{Binding ClearSearchCommand}"
+                                BackgroundColor="#6C757D" TextColor="White"
+                                HeightRequest="40" />
+                    </Grid>
+
+                    <!-- Empty Flats List Box -->
+                    <Border BackgroundColor="#6C757D" StrokeShape="RoundRectangle 8" StrokeThickness="1" Padding="10">
+                        <VerticalStackLayout Spacing="6">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <Label Text="{Binding EmptyFlats.Count, StringFormat='Empty Flats: {0}'}" 
+                                       TextColor="White" FontAttributes="Bold" VerticalOptions="Center"/>
+                                <Button Grid.Column="1" Text="Copy List"
+                                        Command="{Binding CopyEmptyFlatsCommand}"
+                                        BackgroundColor="#0D6EFD" TextColor="White"
+                                        HeightRequest="32" Padding="8,0" FontSize="12"/>
+                            </Grid>
+
+                            <BoxView HeightRequest="1" Color="White" Opacity="0.5"/>
+
+                            <BindableLayout.ItemsSource>
+                                <Binding Path="EmptyFlats"/>
+                            </BindableLayout.ItemsSource>
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="dtos:BookingDto">
+                                    <Label Text="{Binding Name}" TextColor="White" TextDecorations="Underline">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NavigateToCheckinCommand}" 
+                                                CommandParameter="{Binding Id}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Backup & Recover Buttons -->
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                        <Button Text="Backup" Command="{Binding BackupCommand}"
+                                BackgroundColor="#198754" TextColor="White"/>
+                        <Button Grid.Column="1" Text="Recover" Command="{Binding RecoverCommand}"
+                                BackgroundColor="#DC3545" TextColor="White"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- BOOKINGS DATA TABLE -->
+            <Border Stroke="#DEE2E6" StrokeShape="RoundRectangle 8" StrokeThickness="1"  Padding="0">
+                <VerticalStackLayout>
+                    <!-- Table Header -->
+                    <Grid ColumnDefinitions="2*, 1.5*, 1.5*" BackgroundColor="#0D6EFD" Padding="8">
+                        <Label Text="Property" TextColor="White" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="Dates" TextColor="White" FontAttributes="Bold"/>
+                        <Label Grid.Column="2" Text="Guest" TextColor="White" FontAttributes="Bold"/>
+                    </Grid>
+
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Margin="10"/>
+
+                    <!-- Table Rows -->
+                    <CollectionView ItemsSource="{Binding Flats}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="dtos:BookingDto">
+                                <Grid ColumnDefinitions="2*, 1.5*, 1.5*" Padding="8" ColumnSpacing="4">
+
+                                    <!-- Property Details -->
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" TextColor="#0D6EFD">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NavigateToCheckinCommand}" 
+                                                    CommandParameter="{Binding Id}" />
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                        <!--<toolkit:Expander>
+                                            --><!-- EXPANDER HEADER --><!--
+                                            <toolkit:Expander.Header>
+                                                <HorizontalStackLayout Spacing="6" Padding="0,4">
+                                                    <Label Text="Listings" FontSize="11" TextColor="Gray" TextDecorations="Underline"/>
+                                                    --><!-- Optional expand indicator arrow --><!--
+                                                    <Label Text="▼" FontSize="9" TextColor="Gray" VerticalOptions="Center"/>
+                                                </HorizontalStackLayout>
+                                            </toolkit:Expander.Header>
+
+                                            --><!-- EXPANDER CONTENT --><!--
+                                            <toolkit:Expander.Content>
+                                                <VerticalStackLayout Padding="8,0,0,0"
+                             BindableLayout.ItemsSource="{Binding Listings}">
+                                                    <BindableLayout.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Text="{Binding ListingName}" FontSize="10" TextColor="Gray"/>
+                                                        </DataTemplate>
+                                                    </BindableLayout.ItemTemplate>
+                                                </VerticalStackLayout>
+                                            </toolkit:Expander.Content>
+                                        </toolkit:Expander>-->
+                                    </VerticalStackLayout>
+
+                                    <!-- Dates -->
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <Label Text="{Binding CheckIn, StringFormat='{0:dd/MM/yyyy}'}" FontSize="12"/>
+                                        <Label Text="{Binding CheckOut, StringFormat='{0:dd/MM/yyyy}'}" FontSize="12"/>
+                                    </VerticalStackLayout>
+
+                                    <!-- Guest -->
+                                    <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="2">
+                                        <Label Text="{Binding GuestName}" FontSize="12"/>
+                                        <!-- Tomorrow Badge (If checkout is tomorrow) -->
+                                        <Border BackgroundColor="#DC3545" StrokeShape="RoundRectangle 8" StrokeThickness="1" Padding="4,2" HorizontalOptions="Start">
+                                            <Border.Triggers>
+                                                <!-- Add visual trigger logic or bind directly to a boolean property on DTO -->
+                                            </Border.Triggers>
+                                            <Label Text="Tomorrow" TextColor="White" FontSize="9"/>
+                                        </Border>
+                                    </VerticalStackLayout>
+
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
