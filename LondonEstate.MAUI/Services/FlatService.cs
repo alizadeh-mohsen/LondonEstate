@@ -11,15 +11,17 @@ public class FlatService : IFlatService
 {
     private readonly HttpClient _http;
 
-    public FlatService(HttpClient http)
+    public FlatService(IHttpClientFactory factory)
     {
-        _http = http;
+        _http = factory.CreateClient("ApiClient");
     }
 
-    public async Task<List<BookingDto>> GetBookingsAsync()
+    public async Task<List<BookingDto>> GetBookings()
     {
-        return await _http.GetFromJsonAsync<List<BookingDto>>("api/bookings");
+        var result = await _http.GetFromJsonAsync<List<BookingDto>>("/api/flats/bookings");
+        return result ?? new List<BookingDto>();
     }
+
 }
 
 

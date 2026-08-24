@@ -40,7 +40,7 @@ namespace LondonEstate.MAUI
                     fonts.AddFont("FluentSystemIcons-Regular.ttf", FluentUI.FontFamily);
                 });
             // Register AuthService with default HttpClient (for auth endpoints)
-            builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
+            builder.Services.AddHttpClient("ApiClient", client =>
             {
 #if ANDROID
                 client.BaseAddress = new Uri("http://10.0.2.2:5002");
@@ -58,7 +58,8 @@ namespace LondonEstate.MAUI
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<SettingsPage>();
-            builder.Services.AddScoped<IFlatService, FlatService>();
+            builder.Services.AddTransient<IAuthService, AuthService>();
+            builder.Services.AddTransient<IFlatService, FlatService>();
             builder.Services.AddSingleton<BookingsViewModel>();
             builder.Services.AddTransient<BookingsPage>();
             builder.Services.AddTransient<GreetingsPage>();

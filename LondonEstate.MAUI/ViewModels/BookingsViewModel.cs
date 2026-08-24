@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LondonEstate.MAUI.Dtos;
+using LondonEstate.Core.Dtos;
 using LondonEstate.MAUI.Services;
 using System.Collections.ObjectModel;
 
@@ -43,7 +43,7 @@ public partial class BookingsViewModel : ObservableObject
         IsBusy = true;
         try
         {
-            var rawFlats = await _flatService.GetBookingsAsync();
+            var rawFlats = await _flatService.GetBookings();
             _allFlats = rawFlats.ToList();
 
             var cutoff = DateTime.Today.AddHours(11);

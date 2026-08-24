@@ -8,17 +8,19 @@ namespace LondonEstate.MAUI.Services;
 /// Authentication service implementation
 /// Handles login, logout, token storage, and token refresh
 /// </summary>
-public class AuthService(HttpClient _http) : IAuthService
+public class AuthService : IAuthService
 {
     // Secure storage keys
     private const string ACCESS_TOKEN_KEY = "auth_token";
     private const string REFRESH_TOKEN_KEY = "refresh_token";
     private const string TOKEN_EXPIRY_KEY = "token_expiry";
+    private readonly HttpClient _http;
 
-    /// <summary>
-    /// Login with email and password
-    /// Stores access token and refresh token in secure storage
-    /// </summary>
+    public AuthService(IHttpClientFactory factory)
+    {
+        _http = factory.CreateClient("ApiClient");
+    }
+
     public async Task<string> LoginAsync(string email, string password)
     {
         var payload = new
