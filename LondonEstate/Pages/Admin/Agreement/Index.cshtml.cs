@@ -1,6 +1,5 @@
 using LondonEstate.Core.Utils.Extensions;
 using LondonEstate.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using QuestPDF.Fluent;
@@ -8,7 +7,7 @@ using QuestPDF.Helpers;
 
 namespace LondonEstate.Pages.Admin.Agreement;
 
-[Authorize]
+//[Authorize]
 public class IndexModel : PageModel
 {
 

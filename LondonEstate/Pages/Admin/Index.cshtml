@@ -1,35 +1,333 @@
 ﻿@page
+@using LondonEstate.Core.Utils.Extensions
 @model LondonEstate.Pages.Admin.IndexModel
 @{
-    ViewData["Title"] = "Rent estimate";
+    ViewData["Title"] = "Host Pilot";
+    var cutoff = DateTime.Today.AddHours(11);
 }
 
-<link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
-<div class="dashboard-container">
-    <div class="dashboard-grid">
-        <a href="/Admin/Bookings" class="dashboard-card bg-primary">
-            <div class="card-content">
-                <h2 class="text-light">Bookings</h2>
+<div class="mb-2">
+
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @Model.SuccessMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle me-2"></i>
+            @Model.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- SEARCH AND IMPORT CARD -->
+    <div class="card">
+        <div class="card-body">
+            <!-- Import -->
+            <div class="mb-3">
+                <form method="post" asp-page-handler="Upload" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xlsx,.xls" required />
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-cloud-upload me-2"></i>Import Bookings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </a><a href="/Admin/Greetings" class="dashboard-card bg-success">
+            <!-- Search -->
+            <div class="d-flex gap-0 mb-3">
+                <div class="col-8">
+                    <input type="text" class="form-control h-100" id="searchInput"
+                           placeholder="Search by property name or guest name..." />
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-secondary w-100 h-100" id="clearSearch" type="button">
+                        <i class="bi bi-x-circle me-2"></i>Clear
+                    </button>
+                </div>
+            </div>
 
-        <div class="card-content">
-            <h2 class="text-light">Greetings</h2>
+            <!-- Empty Flats List -->
+            <div class="row">
+
+                <!-- Today Flats -->
+                <div class="col-12 col-xs-6">
+                    <div class="border rounded p-3 bg-secondary">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>Empty Flats: @Model.EmptyFlats.Count</div>
+                            <div>
+                                <button type="button" class="btn btn-primary btn-sm" id="copyEmptyFlatsBtn"
+                                        title="Copy empty flats to clipboard">
+                                    <i class="bi bi-clipboard me-1"></i>Copy
+                                </button>
+                            </div>
+                        </div>
+                        <hr class="my-1" />
+                        <ul id="emptyFlatsList" class="mb-0 ps-3">
+                            @foreach (var item in Model.EmptyFlats)
+                            {
+                                <li class="mb-1">
+                                    <a asp-page="./Checkin" asp-route-id="@item.Id"
+                                       class="fw-semibold text-decoration-none text-dark">
+                                        @item.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="d-flex gap-2">
+                    <!-- Backup -->
+                    <form method="post" asp-page-handler="Backup">
+                        <button type="submit"
+                                class="btn btn-success btn"
+                                onclick="return confirm('Are you sure you want to create a backup of all current bookings?');">
+                            <i class="bi bi-cloud-upload me-1"></i>Backup
+                        </button>
+                    </form>
+
+                    <!-- Recover -->
+                    <form method="post" asp-page-handler="Recover">
+                        <button type="submit"
+                                class="btn btn-danger btn"
+                                onclick="return confirm('Are you sure you want to recover from backup? This will overwrite current bookings.');">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i>Recover
+                        </button>
+                    </form>
+
+                </div>
+
+
+            </div>
         </div>
-    </a>
-    <a href="/Admin/Instructions" class="dashboard-card bg-warning">
-
-        <div class="card-content">
-            <h2 class="text-light">Instructions</h2>
-        </div>
-    </a>
-    <a href="/Admin/Invoice" class="dashboard-card bg-info">
-
-
-        <div class="card-content">
-            <h2 class="text-light">Invoices</h2>
-        </div>
-    </a>
+    </div>
 
 </div>
+
+<!-- TABLE -->
+<div class="table-responsive" style="max-height: 75vh; overflow-y: auto;">
+    <table class="table table-hover table-sm align-middle" id="bookingTable">
+        <thead class="table-primary sticky-top">
+            <tr>
+                <th data-sort="string" style="cursor: pointer;">
+                    Property (@Model.Flats.Count)
+                    <i class="bi bi-arrow-down-up ms-1" style="font-size: 0.85rem; opacity: 0.5;"></i>
+                </th>
+                <th data-sort="date" style="cursor: pointer;">
+                    Dates
+                    <i class="bi bi-arrow-down-up ms-1" style="font-size: 0.85rem; opacity: 0.5;"></i>
+                </th>
+                <th data-sort="string" style="cursor: pointer;">
+                    Guest
+                    <i class="bi bi-arrow-down-up ms-1" style="font-size: 0.85rem; opacity: 0.5;"></i>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.Flats)
+            {
+                var today = DateTime.Today;
+                var checkIn = item.CheckIn?.Date;
+                var checkOut = item.CheckOut?.Date;
+
+                var isAfterCutoff = item.CheckOut is DateTime co && co > cutoff;
+                var status = checkOut == today.AddDays(1) ? "tomorrow" : "";
+                var badge = !string.IsNullOrEmpty(status) ? $"<span class='badge bg-danger text-white'>{status}</span>" : "";
+
+                <tr class="booking-row"
+                    data-property="@item.Name?.ToLower()"
+                    data-online="@string.Join(",", item.Listings.Select(l => l.ListingName?.ToLower()))"
+                    data-guest="@item.GuestName?.ToLower()">
+
+                    <!-- PROPERTY -->
+                    <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
+                        <a asp-page="./Checkin" asp-route-id="@item.Id"
+                           class="fw-semibold text-decoration-none text-dark">
+                            @item.Name
+                        </a>
+                        <div class="text-muted small">
+                            <a class="text-muted small"
+                               data-bs-toggle="collapse"
+                               href="#listings-@item.Id"
+                               role="button"
+                               aria-expanded="false"
+                               aria-controls="listings-@item.Id">
+                                Show Listings
+                            </a>
+
+                            <div class="collapse mt-2" id="listings-@item.Id">
+                                @foreach (var listing in item.Listings)
+                                {
+                                    <small class="text-muted d-block">@listing.ListingName</small>
+                                }
+                            </div>
+                        </div>
+
+                        @*   <div class="text-muted small">
+                            <a class="text-muted small d-flex align-items-center"
+                               data-bs-toggle="collapse"
+                               href="#listings-@item.Id"
+                               role="button"
+                               aria-expanded="false"
+                               aria-controls="listings-@item.Id">
+                                <span>Listings</span>
+                                <i class="ms-1 bi bi-chevron-down"></i>
+                            </a>
+
+                            <div class="collapse mt-2" id="listings-@item.Id">
+                                @foreach (var listing in item.Listings)
+                                {
+                                    <small class="text-muted d-block">@listing.OnlineName</small>
+                                }
+                            </div>
+                        </div> *@
+                        
+
+
+
+                    </td>
+
+                    <!-- DATES -->
+                    <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
+                        <div class="fw-semibold">
+                            <div>  @item.CheckIn?.ToUkDateString()</div><div>@item.CheckOut?.ToUkDateString()</div>
+                        </div>
+
+
+                    </td>
+
+                    <!-- GUEST -->
+                    <td class="@(isAfterCutoff ? "bg-secondary" : "bg-white text-white")">
+                        <div class="small">@item.GuestName</div>
+                        <div class="mt-1">
+                            @Html.Raw(badge)
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
+
+
+
+<!-- SORTING SCRIPT -->
+<script>
+    // SEARCH FUNCTIONALITY
+    const searchInput = document.getElementById("searchInput");
+    const clearSearchBtn = document.getElementById("clearSearch");
+    const bookingRows = document.querySelectorAll("#bookingTable tbody tr.booking-row");
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+
+        bookingRows.forEach(row => {
+            const propertyName = row.getAttribute("data-property") || "";
+            const onlineName = row.getAttribute("data-online") || "";
+            const guestName = row.getAttribute("data-guest") || "";
+
+            const matches =
+                propertyName.includes(searchTerm) ||
+                onlineName.includes(searchTerm) ||
+                guestName.includes(searchTerm) ||
+                searchTerm === "";
+
+            row.style.display = matches ? "" : "none";
+        });
+    }
+
+    searchInput.addEventListener("input", filterTable);
+
+    clearSearchBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        filterTable();
+    });
+
+    // SORTING FUNCTIONALITY
+    document.querySelectorAll("#bookingTable th[data-sort]").forEach(th => {
+        th.style.cursor = "pointer";
+        th.addEventListener("click", () => {
+            const table = th.closest("table");
+            const tbody = table.querySelector("tbody");
+            const rows = Array.from(tbody.querySelectorAll("tr.booking-row:not([style*='display: none'])"));
+            const index = Array.from(th.parentNode.children).indexOf(th);
+            const type = th.dataset.sort;
+            const asc = !th.classList.contains("sorted-asc");
+
+            rows.sort((a, b) => {
+                let A = a.children[index].innerText.trim();
+                let B = b.children[index].innerText.trim();
+
+                if (type === "date") {
+                    A = Date.parse(A.replace(/–/g, "-")) || 0;
+                    B = Date.parse(B.replace(/–/g, "-")) || 0;
+                }
+
+                return asc ? A.localeCompare(B) : B.localeCompare(A);
+            });
+
+            tbody.innerHTML = "";
+            rows.forEach(r => tbody.appendChild(r));
+
+            // Add back hidden rows at the end
+            bookingRows.forEach(row => {
+                if (row.style.display === "none") {
+                    tbody.appendChild(row);
+                }
+            });
+
+            table.querySelectorAll("th").forEach(x => x.classList.remove("sorted-asc", "sorted-desc"));
+            th.classList.add(asc ? "sorted-asc" : "sorted-desc");
+        });
+    });
+
+    // COPY EMPTY FLATS TO CLIPBOARD
+    const copyEmptyFlatsBtn = document.getElementById("copyEmptyFlatsBtn");
+    if (copyEmptyFlatsBtn) {
+        copyEmptyFlatsBtn.addEventListener("click", async () => {
+            const ul = document.getElementById("emptyFlatsList");
+            if (!ul) return;
+
+            const items = Array.from(ul.querySelectorAll("li")).map(li => li.innerText.trim()).filter(Boolean);
+            // join with new lines so each flat appears on its own line in the clipboard
+            const text = items.join("\n");
+
+            if (!text) {
+                const original = copyEmptyFlatsBtn.innerHTML;
+                copyEmptyFlatsBtn.innerHTML = '<i class="bi bi-clipboard-x me-1"></i>Empty';
+                setTimeout(() => copyEmptyFlatsBtn.innerHTML = original, 1500);
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch (e) {
+                // fallback
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); } catch (e) { }
+                document.body.removeChild(ta);
+            }
+
+            const orig = copyEmptyFlatsBtn.innerHTML;
+            copyEmptyFlatsBtn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied!';
+            setTimeout(() => copyEmptyFlatsBtn.innerHTML = orig, 1500);
+        });
+    }
+</script>

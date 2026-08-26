@@ -203,11 +203,27 @@
             
             // Extract Property Name (not in this template, so leave empty for manual entry)
 
-            if (!checkInMatch || !checkOutMatch || !guestMatch || !phoneMatch || !bookingMatch) {
-                alert('Could not extract all required information. Please check the template format.');
+            if (!checkInMatch ) {
+                alert('Check-in date not found.');
                 return;
             }
-
+            if (!checkOutMatch ) {
+                alert('Check-out date not found.');
+                return;
+            }
+            if (!guestMatch ) {
+                alert('Guest name not found.');
+                return;
+            }
+            if (!phoneMatch ) {
+                alert('Phone number not found.');
+                return;
+            }
+            if (!bookingMatch ) {
+                alert('Booking number not found.');
+                return;
+            }
+           
             // Convert date strings to YYYY-MM-DD format
             const months = { 'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
                            'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12' };

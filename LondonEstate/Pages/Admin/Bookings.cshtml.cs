@@ -1,6 +1,5 @@
 ﻿using LondonEstate.Core.Dtos;
 using LondonEstate.Core.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +7,7 @@ using OfficeOpenXml;
 
 namespace LondonEstate.Pages.Admin
 {
-    [Authorize]
+    //[Authorize]
     public class BookingsModel(IFlatService _flatService) : PageModel
     {
 

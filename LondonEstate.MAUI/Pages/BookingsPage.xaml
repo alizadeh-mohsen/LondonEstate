@@ -91,13 +91,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Backup & Recover Buttons -->
-                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
-                        <Button Text="Backup" Command="{Binding BackupCommand}"
-                                BackgroundColor="#198754" TextColor="White"/>
-                        <Button Grid.Column="1" Text="Recover" Command="{Binding RecoverCommand}"
-                                BackgroundColor="#DC3545" TextColor="White"/>
-                    </Grid>
+                 
                 </VerticalStackLayout>
             </Border>
 

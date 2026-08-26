@@ -1,11 +1,10 @@
 ﻿using LondonEstate.Core.Dtos;
 using LondonEstate.Core.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LondonEstate.Pages.Admin.Flats
 {
-    [Authorize]
+    //[Authorize]
     public class IndexModel(IFlatService flatService) : PageModel
     {
         public IList<FlatDto> Flat { get; set; } = default!;

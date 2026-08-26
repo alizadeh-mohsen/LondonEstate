@@ -1,5 +1,4 @@
 using LondonEstate.Core.Dtos;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using OfficeOpenXml;
@@ -8,7 +7,7 @@ namespace LondonEstate.Pages.Admin.Greetings
 {
 
 
-    [Authorize]
+    //[Authorize]
     public class IndexModel : PageModel
     {
         public List<GreetingData> Greetings { get; set; } = new();

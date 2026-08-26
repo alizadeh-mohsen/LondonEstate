@@ -20,8 +20,8 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    @if (User.Identity != null && User.Identity.IsAuthenticated)
-                    {
+                  @*   @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    { *@
                         <ul class="navbar-nav flex-grow-1">
                             <!-- Main menu items moved to top-level -->
                             <li class="nav-item">
@@ -46,7 +46,7 @@
                                 <a class="nav-link text-white @(Context.Request.Path == "/Admin/Greetings" ? "active" : "")" asp-area="" asp-page="/Admin/Greetings/Index">Greetings</a>
                             </li>
                         </ul>
-                    }
+                    @* } *@
 
                     <partial name="_LoginPartial" />
                 </div>

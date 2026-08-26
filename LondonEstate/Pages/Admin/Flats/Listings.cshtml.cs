@@ -1,12 +1,11 @@
 using LondonEstate.Core.Dtos;
 using LondonEstate.Core.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LondonEstate.Pages.Admin.Flats
 {
-    [Authorize]
+    //[Authorize]
     public class ListingsModel(IFlatService flatService) : PageModel
     {
         [BindProperty(SupportsGet = true)]
