@@ -64,7 +64,8 @@
                         <thead class="table-light">
                             <tr>
                                
-                                <th>Message</th>
+                                <th>Guest</th>
+                                <th>Flat</th>
                                 <th>Phone</th>
                                 <th>Action</th>
                             </tr>
@@ -73,7 +74,8 @@
                             @foreach (var greeting in Model.Greetings)
                             {
                                 <tr>
-                                    <td>@greeting.WhatsAppMessage</td>
+                                    <td>@greeting.BookerName</td>
+                                    <td>@greeting.Location</td>
                                     <td>@greeting.Phone</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-success send-whatsapp"
