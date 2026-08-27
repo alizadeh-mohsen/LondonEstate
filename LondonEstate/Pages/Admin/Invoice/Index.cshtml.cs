@@ -1,3 +1,4 @@
+using LondonEstate.Core.Services;
 using LondonEstate.Core.Utils.Extensions;
 using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -11,20 +12,24 @@ namespace LondonEstate.Pages.Admin.Invoice;
 public class IndexModel : PageModel
 {
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IFlatService _flatService;
 
-    public IndexModel(IWebHostEnvironment env)
+    public IndexModel(IWebHostEnvironment env, IFlatService flatService)
     {
         _webHostEnvironment = env;
+        _flatService = flatService;
     }
 
     [BindProperty]
     public InvoiceViewModel InvoiceViewModel { get; set; }
+    public List<string> AddressList { get; set; } = new();
 
 
     public string? Message { get; set; }
 
-    public void OnGet()
+    public async Task OnGet()
     {
+        await PopulateAddressesAsync();
         InvoiceViewModel = new InvoiceViewModel
         {
             CompanyName = "Key Bridge Estate",
@@ -38,7 +43,7 @@ public class IndexModel : PageModel
             AmountPaid = null,
             IssuedTo = string.Empty,
             Property = string.Empty,
-            PaymentMethod = string.Empty
+            PaymentMethod = "Booking.com"
         };
     }
 
@@ -46,6 +51,7 @@ public class IndexModel : PageModel
     {
         if (!ModelState.IsValid)
         {
+            await PopulateAddressesAsync();
             Message = "Please fill in all required fields.";
             return Page();
         }
@@ -68,11 +74,16 @@ public class IndexModel : PageModel
         }
         catch (Exception ex)
         {
+            await PopulateAddressesAsync();
             Message = $"Error generating PDF: {ex.Message}";
             return Page();
         }
     }
 
+    private async Task PopulateAddressesAsync()
+    {
+        AddressList = await _flatService.GetAllFlatAddressAsync();
+    }
     private byte[] GeneratePdf()
     {
         var invoiceNumber = GenerateInvoiceNumber();

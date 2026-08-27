@@ -245,5 +245,14 @@ namespace LondonEstate.Core.Services
             return await context.Flat.AnyAsync(f => f.Id == id);
         }
 
+        public async Task<List<string>> GetAllFlatAddressAsync()
+        {
+            var query = context.Flat
+                        .Select(f => f.Address!)
+                        .Distinct()
+                        .OrderBy(a => a);
+
+            return await query.ToListAsync();
+        }
     }
 }

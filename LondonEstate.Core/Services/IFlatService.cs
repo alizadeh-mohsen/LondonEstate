@@ -7,6 +7,7 @@ namespace LondonEstate.Core.Services
         //Flat
         Task<List<FlatDto>> GetAllFlatsAsync();
         Task<List<FlatDto>> GetAllFlatsInfoAsync();
+        Task<List<string>> GetAllFlatAddressAsync();
         Task<FlatDto> GetFlatAsync(Guid id);
         Task<FlatDto> CreateFlat(FlatDto flatDto);
         Task<int> UpdateFlat(FlatDto flatDto);

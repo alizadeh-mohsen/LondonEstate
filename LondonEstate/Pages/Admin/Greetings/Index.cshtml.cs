@@ -113,17 +113,19 @@ namespace LondonEstate.Pages.Admin.Greetings
         {
             // Extract first name from booker name
             string firstName = bookerName?.Split(' ')[0] ?? "Guest";
-
-            string message = $"Booking.com Reservation No: {reservationNo} - ({arrival:dd MMM yyyy} - {departure:dd MMM yyyy}) - {location}" +
-                Environment.NewLine + Environment.NewLine +
+            string warningIcon = "⚠️ ";
+            string message =
+                $"Booking.com" + Environment.NewLine +
+                $"*Reservation No:* {reservationNo}" + Environment.NewLine +
+                $"*Stay:* {arrival:dd MMM yyyy} - {departure:dd MMM yyyy} " + Environment.NewLine +
+                $"*Check-in:* 3 PM" + Environment.NewLine +
+                $"*Luggage drop off:* From 11 AM" + Environment.NewLine +
+                $"*Property:* {location.Replace("\r\n", ", ").Replace("\n", ", ")}" + Environment.NewLine + Environment.NewLine +
                 $"Hi {firstName}," + Environment.NewLine +
-                "I am Nima your host for booking in London." + Environment.NewLine +
-                Environment.NewLine +
-                "*Check-in at 3 PM*" + Environment.NewLine +
-                "*Luggage drop off after 11 AM*" + Environment.NewLine +
-                Environment.NewLine +
-                "Check-in instruction will be sent to you tomorrow." + Environment.NewLine +
-                "Could you please share your estimated arrival time?";
+                "Check-in instruction will be sent to you tomorrow. " +
+                "Could you please share your estimated arrival time?" + Environment.NewLine + Environment.NewLine +
+                $"{warningIcon} *If you drop off your luggage before check-in, please return the keys to the lockbox after " +
+                "leaving, so our cleaner can access the property.*";
 
             return message;
         }

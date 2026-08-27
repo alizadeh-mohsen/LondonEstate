@@ -153,17 +153,22 @@
                                    @* placeholder="e.g., John Smith"  *@
                                    required />
                         </div>
-                        <div class="mb-2">
-                            <label for="AccommodationAddress" class="form-label">
-                                <strong> Accommodation Address:</strong>
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="AccommodationAddress"
-                                   asp-for="AgreementViewModel.AccommodationAddress"
-                                   @* placeholder="e.g., John Smith"  *@
-                                   required />
-                        </div>
+                    <div class="mb-2">
+                        <label for="AccommodationAddress" class="form-label">
+                            <strong>Accommodation Address:</strong>
+                        </label>
+
+                        <select class="form-select"
+                                id="AccommodationAddress"
+                                asp-for="AgreementViewModel.AccommodationAddress"
+                                asp-items="@(new SelectList(Model.AddressList))"
+                                required>
+                            <option value="">-- Select Address --</option>
+                        </select>
+                        <span asp-validation-for="AgreementViewModel.AccommodationAddress" class="text-danger"></span>
+                    </div>
+                     
+
 
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">

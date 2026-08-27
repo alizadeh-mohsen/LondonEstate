@@ -1,3 +1,4 @@
+using LondonEstate.Core.Services;
 using LondonEstate.Core.Utils.Extensions;
 using LondonEstate.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -8,16 +9,19 @@ using QuestPDF.Helpers;
 namespace LondonEstate.Pages.Admin.Agreement;
 
 //[Authorize]
-public class IndexModel : PageModel
+public class IndexModel(IFlatService flatService) : PageModel
 {
 
     [BindProperty]
     public required AgreementViewModel AgreementViewModel { get; set; }
 
     public string? Message { get; set; }
+    public List<string> AddressList { get; set; } = new();
 
-    public void OnGet()
+    public async Task OnGet()
     {
+        await PopulateAddressesAsync();
+
         AgreementViewModel = new AgreementViewModel
         {
             CompanyName = "London Estate & Letting Agents Ltd",
@@ -38,26 +42,30 @@ public class IndexModel : PageModel
     {
         if (!ModelState.IsValid)
         {
+            // Re-populate the drop-down list before re-displaying the page
+            await PopulateAddressesAsync();
             Message = "Please fill in all required fields.";
             return Page();
         }
 
         try
         {
-            // Generate the PDF
             var pdfBytes = GeneratePdf();
-
             var fileName = $"GA-{DateTime.Now:yyyyMMdd-HHmm}-{AgreementViewModel.GuestName}.pdf";
-            //await UploadPdf(pdfBytes, fileName);
-
-            // Return the PDF as a downloadable file
             return File(pdfBytes, "application/pdf", fileName);
         }
         catch (Exception ex)
         {
+            // Re-populate here as well to ensure the view renders properly on error
+            await PopulateAddressesAsync();
             Message = $"Error generating PDF: {ex.Message}";
             return Page();
         }
+    }
+
+    private async Task PopulateAddressesAsync()
+    {
+        AddressList = await flatService.GetAllFlatAddressAsync();
     }
 
     private byte[] GeneratePdf()

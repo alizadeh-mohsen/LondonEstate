@@ -87,6 +87,20 @@
                                        @* placeholder="e.g., Jane Doe"  *@
                                        required />
                             </div>
+                        <div class="mb-2">
+                            <label for="Property" class="form-label">
+                                <strong>Property:</strong>
+                            </label>
+
+                            <select class="form-select"
+                                    id="Property"
+                                    asp-for="InvoiceViewModel.Property"
+                                    asp-items="@(new SelectList(Model.AddressList))"
+                                    required>
+                                <option value="">-- Select Address --</option>
+                            </select>
+                            <span asp-validation-for="InvoiceViewModel.Property" class="text-danger"></span>
+                        </div>
                             <div class="col-md-4 mb-2">
                                 <label for="CheckInDate" class="form-label">
                                     <strong>   Check-in Date:</strong>
@@ -125,18 +139,8 @@
                                    required />
                         </div>
 
-                        <div class="col-md-6 mb-2">
-                            <label for="Property" class="form-label">
-                                <strong>Property:</strong>
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="Property"
-                                   asp-for="InvoiceViewModel.Property"
-                                   @* placeholder="e.g., 12345678"  *@
-                                   required />
-                        </div>
-
+                     
+                  
                         <div class="col-md-6 mb-2">
                             <label for="AmountPaid" class="form-label">
                                 <strong>Amount Paid (£):</strong>
