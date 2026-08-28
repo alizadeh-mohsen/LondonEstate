@@ -24,26 +24,28 @@ public class IndexModel : PageModel
     public InvoiceViewModel InvoiceViewModel { get; set; }
     public List<string> AddressList { get; set; } = new();
 
+    const string CompanyName = "Key Bridge Estate";
+    DateTime Date = DateTime.Now;
+    const string Email = "Office@LondonEstatee.co.uk";
+    const string Phone = "+44 73 079 33344";
+    const string PaymentMethod = "Booking.com"; 
 
     public string? Message { get; set; }
+
+  
 
     public async Task OnGet()
     {
         await PopulateAddressesAsync();
         InvoiceViewModel = new InvoiceViewModel
         {
-            CompanyName = "Key Bridge Estate",
             PaymentDate = DateTime.Today,
             IssuedBy = "Key Bridge Estate Limited",
-            Date = DateTime.Now,
             CheckInDate = DateTime.Now,
             CheckOutDate = DateTime.Now.AddDays(1),
-            Email = "Office@LondonEstatee.co.uk",
-            Phone = "+44 73 079 33344",
             AmountPaid = null,
             IssuedTo = string.Empty,
             Property = string.Empty,
-            PaymentMethod = "Booking.com"
         };
     }
 
@@ -109,7 +111,7 @@ public class IndexModel : PageModel
                     column.Spacing(5);
 
                     // Company Name (Centered, Bold, Large)
-                    column.Item().AlignCenter().Text(InvoiceViewModel.CompanyName)
+                    column.Item().AlignCenter().Text(CompanyName)
                         .FontSize(16)
                         .Bold();
 
@@ -128,7 +130,7 @@ public class IndexModel : PageModel
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(70).Text("Issued Date:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.Date.ToUkDateString());
+                        row.RelativeItem().Text(Date.ToUkDateString());
                     });
                     column.Item().Row(row =>
                     {
@@ -172,7 +174,7 @@ public class IndexModel : PageModel
                     column.Item().Row(row =>
                     {
                         row.ConstantItem(100).Text("Payment Method:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.PaymentMethod);                // Value takes remaining space
+                        row.RelativeItem().Text(PaymentMethod);                // Value takes remaining space
                     });
 
                     column.Item().PaddingTop(10);
@@ -192,12 +194,10 @@ public class IndexModel : PageModel
 
                     page.Footer().Row(row =>
                     {
-
-
                         row.ConstantItem(40).Text("Email:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.Email);                // Value takes remaining space
+                        row.RelativeItem().Text(Email);                // Value takes remaining space
                         row.ConstantItem(40).Text("Phone:").SemiBold(); // Fixed width for labels
-                        row.RelativeItem().Text(InvoiceViewModel.Phone);
+                        row.RelativeItem().Text(Phone);
                     });
 
                 });

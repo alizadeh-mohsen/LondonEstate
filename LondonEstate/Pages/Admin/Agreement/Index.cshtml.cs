@@ -18,20 +18,23 @@ public class IndexModel(IFlatService flatService) : PageModel
     public string? Message { get; set; }
     public List<string> AddressList { get; set; } = new();
 
+    const string CompanyName = "Key Bridge Estate";
+    const string SortCode = "30-99-50";
+    const string Account = "26105560";
+    const string OwnerName = "Sina Haghighat Parasat";
+     DateTime Date = DateTime.Now;
+
     public async Task OnGet()
     {
         await PopulateAddressesAsync();
 
         AgreementViewModel = new AgreementViewModel
         {
-            CompanyName = "London Estate & Letting Agents Ltd",
-            SortCode = "30-99-50",
-            Account = "26105560",
+
             Rent = null,
             Deposit = 100,
             GuestName = string.Empty,
-            OwnerName = "Sina Haghighat Parasat",
-            Date = DateTime.Now,
+
             CheckInDate = DateTime.Now,
             CheckOutDate = DateTime.Now.AddDays(1),
             AccommodationAddress = string.Empty
@@ -70,7 +73,7 @@ public class IndexModel(IFlatService flatService) : PageModel
 
     private byte[] GeneratePdf()
     {
-        var agreementDate = AgreementViewModel.Date.ToUkDateString();
+        var agreementDate = Date.ToUkDateString();
         var document = Document.Create(container =>
         {
             container.Page(page =>
@@ -84,22 +87,22 @@ public class IndexModel(IFlatService flatService) : PageModel
                     column.Spacing(5);
 
                     // Company Name (Centered, Bold, Large)
-                    column.Item().AlignCenter().Text(AgreementViewModel.CompanyName)
+                    column.Item().AlignCenter().Text(CompanyName)
                         .FontSize(16)
                         .Bold();
 
                     //column.Item().PaddingTop(5);
 
                     // Title
-                    column.Item().AlignCenter().Text($"Guest Agreement – {AgreementViewModel.Date.ToUkDateString()}")
+                    column.Item().AlignCenter().Text($"Guest Agreement – {Date.ToUkDateString()}")
                         .FontSize(14)
                         .Bold();
 
                     column.Item().PaddingTop(15);
 
                     // Payment Details
-                    column.Item().Text($"Sort Code: {AgreementViewModel.SortCode}").Bold();
-                    column.Item().Text($"Account Number: {AgreementViewModel.Account}").Bold();
+                    column.Item().Text($"Sort Code: {SortCode}").Bold();
+                    column.Item().Text($"Account Number: {Account}").Bold();
                     column.Item().Text($"Accommodation Charge: {AgreementViewModel.Rent.Value.ToUkCurrencyString()}").Bold();
 
                     column.Item().PaddingTop(10);
@@ -223,7 +226,7 @@ public class IndexModel(IFlatService flatService) : PageModel
                         row.RelativeItem().Column(col =>
                         {
                             col.Item().Text($"Host Signature:");
-                            col.Item().Text(AgreementViewModel.OwnerName).FontFamily("Segoe Script").FontSize(14).Italic();
+                            col.Item().Text(OwnerName).FontFamily("Segoe Script").FontSize(14).Italic();
                             col.Item().PaddingTop(5).Text($"Date: {agreementDate}");
                         });
                     });

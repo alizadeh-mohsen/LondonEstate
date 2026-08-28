@@ -21,74 +21,21 @@
                     }
 
                     <form method="post">
-                        @* <h5 class="border-bottom pb-2 mb-2">Company Information</h5> *@
-                        
-                        <div class="mb-2">
-                            <label for="CompanyName" class="form-label">
-                                <strong>Company Name:</strong>
-                            </label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="CompanyName" 
-                                   asp-for="AgreementViewModel.CompanyName" 
-                                   @* placeholder="e.g., ABC Properties Ltd"  *@
-                                   required />
-                        </div>
-
-                        <div class="mb-2">
-                            <label for="OwnerName" class="form-label">
-                                <strong>Host/Owner Name:</strong>
-                            </label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="OwnerName"
-                                   asp-for="AgreementViewModel.OwnerName"
-                                   @* placeholder="e.g., Jane Doe"  *@
-                                   required />
-                        </div>
-                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Payment Details</h5> *@
 
                         <div class="row">
-                            <div class="col-md-6 mb-2">
-                                <label for="SortCode" class="form-label">
-                                    <strong>Sort Code:</strong>
+                            <div class="mb-2">
+                                <label for="AccommodationAddress" class="form-label">
+                                    <strong>Accommodation Address:</strong>
                                 </label>
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="SortCode" 
-                                       asp-for="AgreementViewModel.SortCode" 
-                                       @* placeholder="e.g., 12-34-56"  *@
-                                       required />
-                            </div>
 
-                            <div class="col-md-6 mb-2">
-                                <label for="Account" class="form-label">
-                                    <strong>Account Number:</strong>
-                                </label>
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="Account" 
-                                       asp-for="AgreementViewModel.Account" 
-                                       @* placeholder="e.g., 12345678"  *@
-                                       required />
-                            </div>
-                        </div>
-
-                      
-
-
-                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Dates</h5> *@
-
-                        <div class="row">
-                            <div class="col-md-4 mb-2">
-                                <label for="Today" class="form-label">
-                                    <strong>  Agreement Date:</strong>
-                                </label>
-                                <input type="date" 
-                                       class="form-control" 
-                                       id="Date" 
-                                       asp-for="AgreementViewModel.Date" 
-                                       required />
+                                <select class="form-select"
+                                        id="AccommodationAddress"
+                                        asp-for="AgreementViewModel.AccommodationAddress"
+                                        asp-items="@(new SelectList(Model.AddressList))"
+                                        required>
+                                    <option value="">-- Select Address --</option>
+                                </select>
+                                <span asp-validation-for="AgreementViewModel.AccommodationAddress" class="text-danger"></span>
                             </div>
 
                             <div class="col-md-4 mb-2">
@@ -153,20 +100,7 @@
                                    @* placeholder="e.g., John Smith"  *@
                                    required />
                         </div>
-                    <div class="mb-2">
-                        <label for="AccommodationAddress" class="form-label">
-                            <strong>Accommodation Address:</strong>
-                        </label>
-
-                        <select class="form-select"
-                                id="AccommodationAddress"
-                                asp-for="AgreementViewModel.AccommodationAddress"
-                                asp-items="@(new SelectList(Model.AddressList))"
-                                required>
-                            <option value="">-- Select Address --</option>
-                        </select>
-                        <span asp-validation-for="AgreementViewModel.AccommodationAddress" class="text-danger"></span>
-                    </div>
+                   
                      
 
 

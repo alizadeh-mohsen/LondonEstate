@@ -5,9 +5,7 @@
 }
 
 <div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3">Guest Greetings</h1>
-    </div>
+    
 
     @if (!string.IsNullOrEmpty(Model.SuccessMessage))
     {
@@ -43,10 +41,7 @@
                         </div>
                     </div>
                 </div>
-                <small class="text-muted d-block mt-2">
-                    Required columns: Property Name (A), Location (B), Booker Name (C), Arrival (D),
-                    Departure (E), Reservation No (G), Phone (H)
-                </small>
+               
             </form>
         </div>
     </div>
@@ -101,59 +96,15 @@
         <div class="card-body">
             <form id="messageGeneratorForm" onsubmit="return false;">
                 <!-- Parse from Template Section -->
-                <div class="alert alert-info mb-4">
-                    <strong>Option 1:</strong> Paste your Booking.com template below to auto-extract details
-                </div>
+                
                 <div class="mb-3">
                     <label for="bookingTemplate" class="form-label">Paste Booking Template</label>
-                    <textarea class="form-control" id="bookingTemplate" rows="8" placeholder="Paste your booking details here..."></textarea>
-                    <button type="button" class="btn btn-secondary mt-2" onclick="parseTemplate()">
-                        <i class="bi bi-magic me-2"></i>Extract Details
+                    <textarea class="form-control" id="bookingTemplate" rows="8" oninput="parseTemplate()"></textarea>
+                    <button type="button" class="btn btn-primary mt-2" onclick="parseTemplate()">
+                        <i class="bi bi-magic me-2"></i>Generate Message
                     </button>
                 </div>
 
-                <hr />
-
-                <div class="alert alert-info mb-4">
-                    <strong>Option 2:</strong> Or manually fill in the details below
-                </div>
-
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label for="checkInDate" class="form-label">Check-in Date</label>
-                        <input type="date" class="form-control" id="checkInDate" required />
-                    </div>
-                    <div class="col-md-6">
-                        <label for="checkOutDate" class="form-label">Check-out Date</label>
-                        <input type="date" class="form-control" id="checkOutDate" required />
-                    </div>
-                </div>
-
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label for="bookingNumber" class="form-label">Booking Number</label>
-                        <input type="text" class="form-control" id="bookingNumber" required />
-                    </div>
-                    <div class="col-md-6">
-                        <label for="propertyName" class="form-label">Property Name</label>
-                        <input type="text" class="form-control" id="propertyName"  required />
-                    </div>
-                </div>
-
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label for="guestName" class="form-label">Guest Name</label>
-                        <input type="text" class="form-control" id="guestName"  required />
-                    </div>
-                    <div class="col-md-6">
-                        <label for="phoneNumber" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="phoneNumber"  required />
-                    </div>
-                </div>
-
-                <button type="button" class="btn btn-primary mb-3" onclick="generateMessage()">
-                    <i class="bi bi-file-text me-2"></i>Generate Message
-                </button>
 
                 <div class="mb-3">
                     <label for="generatedMessage" class="form-label">Generated Message</label>
@@ -173,13 +124,11 @@
 
 @section Scripts {
     <script>
-        // Format date to "dd MMM yyyy" format
         function formatDate(dateString) {
             const options = { day: '2-digit', month: 'short', year: 'numeric' };
             return new Date(dateString + 'T00:00:00').toLocaleDateString('en-GB', options);
         }
 
-        // Parse template and extract booking details
         function parseTemplate() {
             const template = document.getElementById('bookingTemplate').value;
 
@@ -188,22 +137,11 @@
                 return;
             }
 
-            // Extract Check-in date (format: "Day DD Mon YYYY")
             const checkInMatch = template.match(/Check-in\s*\n\s*([A-Za-z]{3})\s+(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})/);
-            
-            // Extract Check-out date
             const checkOutMatch = template.match(/Check-out\s*\n\s*([A-Za-z]{3})\s+(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})/);
-            
-            // Extract Guest name (before "Genius" or email)
             const guestMatch = template.match(/Guest name:\s*\n\s*([^\n]+?)\s*(?:Genius|cz|\n)/);
-            
-            // Extract Phone number
             const phoneMatch = template.match(/\+\d[\d\s\-()]{7,}/);
-            
-            // Extract Booking number
             const bookingMatch = template.match(/Booking number:\s*\n\s*(\d+)/);
-            
-            // Extract Property Name (not in this template, so leave empty for manual entry)
 
             if (!checkInMatch ) {
                 alert('Check-in date not found.');
@@ -237,35 +175,36 @@
             const bookingNumber = bookingMatch[1];
 
             // Populate form fields
-            document.getElementById('checkInDate').value = checkInDate;
-            document.getElementById('checkOutDate').value = checkOutDate;
-            document.getElementById('guestName').value = guestName;
-            document.getElementById('phoneNumber').value = phoneNumber;
-            document.getElementById('bookingNumber').value = bookingNumber;
+            // document.getElementById('checkInDate').value = checkInDate;
+            // document.getElementById('checkOutDate').value = checkOutDate;
+            // document.getElementById('guestName').value = guestName;
+            // document.getElementById('phoneNumber').value = phoneNumber;
+            // document.getElementById('bookingNumber').value = bookingNumber;
 
             document.getElementById('bookingTemplate').value = '';
 
             // Scroll to property name field for manual entry
-            document.getElementById('propertyName').focus();
+            // document.getElementById('propertyName').focus();
             // alert(`Extracted: Guest - ${guestName}, Phone - ${phoneNumber}, Booking - ${bookingNumber}\n\nPlease enter the Property Name manually.`);
-        }
+        //     generateMessage();
+        // }
 
-        function generateMessage() {
-            const checkInDate = document.getElementById('checkInDate').value;
-            const checkOutDate = document.getElementById('checkOutDate').value;
-            const bookingNumber = document.getElementById('bookingNumber').value;
-            const propertyName = document.getElementById('propertyName').value;
-            const guestName = document.getElementById('guestName').value;
+        // function generateMessage() {
+            // const checkInDate = document.getElementById('checkInDate').value;
+            // const checkOutDate = document.getElementById('checkOutDate').value;
+            // const bookingNumber = document.getElementById('bookingNumber').value;
+            // const propertyName = document.getElementById('propertyName').value;
+            // const guestName = document.getElementById('guestName').value;
 
-            if (!checkInDate || !checkOutDate || !bookingNumber || !propertyName || !guestName) {
-                alert('Please fill in all fields.');
-                return;
-            }
+            // if (!checkInDate || !checkOutDate || !bookingNumber || !propertyName || !guestName) {
+            //     alert('Please fill in all fields.');
+            //     return;
+            // }
 
             const formattedCheckIn = formatDate(checkInDate);
             const formattedCheckOut = formatDate(checkOutDate);
             const firstName = guestName.split(' ')[0];
-
+            const propertyName = 'xxxx';
             const message =
                 `Booking.com
         *Reservation No:* ${bookingNumber}
