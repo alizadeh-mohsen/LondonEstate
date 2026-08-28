@@ -266,15 +266,18 @@
             const formattedCheckOut = formatDate(checkOutDate);
             const firstName = guestName.split(' ')[0];
 
-            const message = `Booking.com Reservation No: ${bookingNumber} - (${formattedCheckIn} - ${formattedCheckOut}) - ${propertyName}
-Greater London, United Kingdom
+            const message =
+                `Booking.com
+        *Reservation No:* ${bookingNumber}
+        *Stay:* ${formattedCheckIn} - ${formattedCheckOut}
+        *Check-in:* 3 PM
+        *Luggage drop off:* From 11 AM
+        *Property:* ${propertyName}, Greater London, United Kingdom
 
-Hi ${firstName}, I am Nima, your host for booking in London.
+        Hi ${firstName}, I am Nima, your host for booking in London.
+        Check-in instruction will be sent to you tomorrow. Could you please share your estimated arrival time?
 
-*Check-in at 3 PM*
-*Luggage drop off after 11 AM*
-
-I'll send you the check-in instruction tomorrow. Could you please share your estimated arrival time?`;
+        ⚠️ *If you drop off your luggage before check-in, please return the keys to the lockbox after leaving, so our cleaner can access the property.*`;
 
             document.getElementById('generatedMessage').value = message;
         }
