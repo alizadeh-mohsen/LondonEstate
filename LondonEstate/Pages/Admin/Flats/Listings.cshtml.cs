@@ -12,7 +12,8 @@ namespace LondonEstate.Pages.Admin.Flats
         public Guid FlatId { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string FlatName { get; set; } = string.Empty;
+        public string? FlatName { get; set; }
+
 
         public List<ListingDto> Listings { get; set; } = new();
 
@@ -42,7 +43,7 @@ namespace LondonEstate.Pages.Admin.Flats
 
             NewListing.FlatId = FlatId;
             await flatService.CreateListing(NewListing);
-            return RedirectToPage(new { id = FlatId });
+            return RedirectToPage(new { id = FlatId, name = FlatName });
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(Guid id)
@@ -53,7 +54,8 @@ namespace LondonEstate.Pages.Admin.Flats
             }
 
             await flatService.DeleteListing(id);
-            return RedirectToPage(new { id = FlatId });
+            return RedirectToPage(new { id = FlatId, name = FlatName });
+
         }
     }
 }

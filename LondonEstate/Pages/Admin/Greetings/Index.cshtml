@@ -137,8 +137,8 @@
                 return;
             }
 
-            const checkInMatch = template.match(/Check-in\s*\n\s*([A-Za-z]{3})\s+(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})/);
-            const checkOutMatch = template.match(/Check-out\s*\n\s*([A-Za-z]{3})\s+(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})/);
+            const checkInMatch = template.match(/Check-in\s*\n\s*([A-Za-z]{3})\s+(\d{1,2})\s+([A-Za-z]{4})\s+(\d{4})/);
+            const checkOutMatch = template.match(/Check-out\s*\n\s*([A-Za-z]{3})\s+(\d{1,2})\s+([A-Za-z]{4})\s+(\d{4})/);
             const guestMatch = template.match(/Guest name:\s*\n\s*([^\n]+?)\s*(?:Genius|cz|\n)/);
             const phoneMatch = template.match(/\+\d[\d\s\-()]{7,}/);
             const bookingMatch = template.match(/Booking number:\s*\n\s*(\d+)/);
@@ -166,7 +166,7 @@
            
             // Convert date strings to YYYY-MM-DD format
             const months = { 'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
-                           'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12' };
+                           'Jul': '07', 'Aug': '08', 'Sept': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12' };
             
             const checkInDate = `${checkInMatch[4]}-${months[checkInMatch[3]]}-${String(checkInMatch[2]).padStart(2, '0')}`;
             const checkOutDate = `${checkOutMatch[4]}-${months[checkOutMatch[3]]}-${String(checkOutMatch[2]).padStart(2, '0')}`;
