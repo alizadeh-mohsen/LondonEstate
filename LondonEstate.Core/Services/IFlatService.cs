@@ -21,6 +21,7 @@ namespace LondonEstate.Core.Services
         //Booking
         Task<List<BookingDto>> GetBookingsAsync();
         Task<BookingDto> GetBookingAsync(Guid id);
+        Task<BookingDto> GetBookingWithListingsAsync(Guid id);
         //Task<FlatDto> GetFlatByOnlineNameAsync(string onlineName);
         Task UpdateBookingAsync(BookingDto flat);
 

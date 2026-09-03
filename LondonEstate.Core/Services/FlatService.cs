@@ -153,6 +153,31 @@ namespace LondonEstate.Core.Services
                 throw new InvalidOperationException("Flat not found") :
                 mapper.Map<BookingDto>(flat);
         }
+        public async Task<BookingDto> GetBookingWithListingsAsync(Guid id)
+        {
+            var query = context.Flat
+                        .Where(f => f.Open == true)
+                        .Select(f => new Flat
+                        {
+                            Id = f.Id,
+                            Name = f.Name,
+                            OnlineName = f.OnlineName,
+                            CheckIn = f.CheckIn,
+                            CheckOut = f.CheckOut,
+                            GuestName = f.GuestName,
+                            GuestPhone = f.GuestPhone,
+                            BookingNumber = f.BookingNumber
+                        });
+            var flat = await query.FirstOrDefaultAsync(f => f.Id == id);
+
+            if (flat == null)
+                throw new InvalidOperationException("Flat not found");
+
+
+            var listings = await GetFlatListingsAsync(id);
+            flat.Listings = mapper.Map<List<Listing>>(listings);
+            return mapper.Map<BookingDto>(flat);
+        }
         public async Task<int> ImportBookingsAsync(BookingImportDto bookingData)
         {
             var flat = await context.Flat.

@@ -7,7 +7,12 @@
 
 <span class="fw-bold">@Html.DisplayFor(model => model.Flat.Name)</span>
 <br />
-<span>@Html.DisplayFor(model => model.Flat.OnlineName)</span>
+<div>
+    @foreach (var listing in Model.Flat.Listings)
+    {
+        <small class="text-muted d-block"><i>@listing.ListingName</i></small>
+    }
+</div>
 <hr />
 <div class="row">
     <div class="col-md-6">

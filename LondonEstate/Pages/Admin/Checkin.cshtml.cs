@@ -27,7 +27,7 @@ namespace LondonEstate.Pages.Admin
             {
                 return NotFound();
             }
-            var flat = await flatService.GetBookingAsync(id);
+            var flat = await flatService.GetBookingWithListingsAsync(id);
             if (flat == null)
             {
                 return NotFound();

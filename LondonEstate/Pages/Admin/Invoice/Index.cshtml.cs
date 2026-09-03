@@ -28,11 +28,12 @@ public class IndexModel : PageModel
     DateTime Date = DateTime.Now;
     const string Email = "Office@LondonEstatee.co.uk";
     const string Phone = "+44 73 079 33344";
-    const string PaymentMethod = "Booking.com"; 
+    const string PaymentMethod = "Booking.com";
+    const string IssuedBy = "Key Bridge Estate Limited";
 
     public string? Message { get; set; }
 
-  
+
 
     public async Task OnGet()
     {
@@ -40,7 +41,7 @@ public class IndexModel : PageModel
         InvoiceViewModel = new InvoiceViewModel
         {
             PaymentDate = DateTime.Today,
-            IssuedBy = "Key Bridge Estate Limited",
+            IssuedBy = IssuedBy,
             CheckInDate = DateTime.Now,
             CheckOutDate = DateTime.Now.AddDays(1),
             AmountPaid = null,
