@@ -61,8 +61,9 @@
                                
                                 <th>Guest</th>
                                 <th>Flat</th>
-                                <th>Phone</th>
+                                <th>Booking number</th>
                                 <th>Action</th>
+                                <th>Fail</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,7 +72,7 @@
                                 <tr>
                                     <td>@greeting.BookerName</td>
                                     <td>@greeting.Location</td>
-                                    <td>@greeting.Phone</td>
+                                    <td>@greeting.ReservationNo</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-success send-whatsapp"
                                                 data-message="@greeting.WhatsAppMessage"
@@ -79,6 +80,7 @@
                                             <i class="bi bi-whatsapp me-1"></i>Send
                                         </button>
                                     </td>
+                                    <td><input type="checkbox" /></td>
                                 </tr>
                             }
                         </tbody>
@@ -174,32 +176,7 @@
             const phoneNumber = phoneMatch[0].trim();
             const bookingNumber = bookingMatch[1];
 
-            // Populate form fields
-            // document.getElementById('checkInDate').value = checkInDate;
-            // document.getElementById('checkOutDate').value = checkOutDate;
-            // document.getElementById('guestName').value = guestName;
-            // document.getElementById('phoneNumber').value = phoneNumber;
-            // document.getElementById('bookingNumber').value = bookingNumber;
-
             document.getElementById('bookingTemplate').value = '';
-
-            // Scroll to property name field for manual entry
-            // document.getElementById('propertyName').focus();
-            // alert(`Extracted: Guest - ${guestName}, Phone - ${phoneNumber}, Booking - ${bookingNumber}\n\nPlease enter the Property Name manually.`);
-        //     generateMessage();
-        // }
-
-        // function generateMessage() {
-            // const checkInDate = document.getElementById('checkInDate').value;
-            // const checkOutDate = document.getElementById('checkOutDate').value;
-            // const bookingNumber = document.getElementById('bookingNumber').value;
-            // const propertyName = document.getElementById('propertyName').value;
-            // const guestName = document.getElementById('guestName').value;
-
-            // if (!checkInDate || !checkOutDate || !bookingNumber || !propertyName || !guestName) {
-            //     alert('Please fill in all fields.');
-            //     return;
-            // }
 
             const formattedCheckIn = formatDate(checkInDate);
             const formattedCheckOut = formatDate(checkOutDate);

@@ -11,8 +11,8 @@ namespace LondonEstate.Pages.Admin.Greetings
     public class IndexModel : PageModel
     {
         public List<GreetingData> Greetings { get; set; } = new();
-        public string SuccessMessage { get; set; }
-        public string ErrorMessage { get; set; }
+        public string? SuccessMessage { get; set; }
+        public string? ErrorMessage { get; set; }
 
         public void OnGet()
         {
