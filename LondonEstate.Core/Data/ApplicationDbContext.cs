@@ -26,6 +26,7 @@ namespace LondonEstate.Core.Data
         public DbSet<FlatBackup> FlatBackup { get; set; } = default!;
         public DbSet<Listing> Listing { get; set; } = default!;
         public DbSet<RefreshToken> RefreshTokens { get; set; } = default!;
+        public DbSet<Reminder> Reminder { get; set; } = default!;
 
         // Added DbSet for RentHistory so EF can track and migrate the table
         public DbSet<RentHistory> RentHistory { get; set; } = default!;

@@ -37,6 +37,7 @@ builder.Services.AddRazorPages();
 
 // Register Flat service for dependency injection
 builder.Services.AddScoped<IFlatService, FlatService>();
+builder.Services.AddScoped<IReminderService, ReminderService>();
 
 
 Log.Logger = new LoggerConfiguration()

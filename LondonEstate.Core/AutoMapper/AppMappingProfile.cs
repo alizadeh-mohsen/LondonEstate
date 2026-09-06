@@ -14,6 +14,7 @@ namespace LondonEstate.Core.AutoMapper
             CreateMap<Flat, BookingImportDto>().ReverseMap();
             CreateMap<Flat, BookingDto>().ReverseMap();
             CreateMap<Listing, ListingDto>().ReverseMap();
+            CreateMap<Reminder, ReminderDto>().ReverseMap();
         }
     }
 }

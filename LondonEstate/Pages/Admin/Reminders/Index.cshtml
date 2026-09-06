@@ -1,0 +1,70 @@
+﻿@page
+@model LondonEstate.Pages.Admin.reminders.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>
+    <a class="btn btn-primary" asp-page="Create">Create New</a>
+</p>
+<div class="table-responsive">
+    <table class="table table-sm" id="flatsTable">
+
+        <thead>
+            <tr>
+                <th>Property (@Model.Reminder.Count)</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.Reminder)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Due)</td>
+
+                    <td>@Html.DisplayFor(modelItem => item.Note)</td>
+
+                    <td>
+                        <a class="btn btn-sm btn-danger m-1"
+                           asp-page="./Delete"
+                           asp-route-id="@item.Id">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+
+
+<script>
+    // SEARCH FUNCTIONALITY
+    const searchInput = document.getElementById("searchInput");
+    const clearSearchBtn = document.getElementById("clearSearch");
+    const flatRows = document.querySelectorAll("#flatsTable tbody tr.flat-row");
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+
+        flatRows.forEach(row => {
+            const name = row.getAttribute("data-name") || "";
+            const onlineName = row.getAttribute("data-online-name") || "";
+
+            const matches = name.includes(searchTerm) || onlineName.includes(searchTerm) || searchTerm === "";
+
+            row.style.display = matches ? "" : "none";
+        });
+    }
+
+    searchInput.addEventListener("input", filterTable);
+
+    clearSearchBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        filterTable();
+    });
+</script>
