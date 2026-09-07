@@ -8,14 +8,18 @@ namespace LondonEstate.Pages.Admin.Reminders
     //[Authorize]
     public class CreateModel(IReminderService reminderService) : PageModel
     {
-
+        [BindProperty]
+        public ReminderDto Reminder { get; set; } = default!;
         public IActionResult OnGet()
         {
+            Reminder = new ReminderDto
+            {
+                Due = DateOnly.FromDateTime(DateTime.Today)
+            };
             return Page();
         }
 
-        [BindProperty]
-        public ReminderDto Reminder { get; set; } = default!;
+
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()

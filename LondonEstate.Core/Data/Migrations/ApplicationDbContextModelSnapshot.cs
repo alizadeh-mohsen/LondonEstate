@@ -442,8 +442,8 @@ namespace LondonEstate.Core.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Due")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("Due")
+                        .HasColumnType("date");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
