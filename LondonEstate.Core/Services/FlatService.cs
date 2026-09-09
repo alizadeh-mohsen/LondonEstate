@@ -132,6 +132,27 @@ namespace LondonEstate.Core.Services
 
             return mapper.Map<List<BookingDto>>(flats);
         }
+
+        public async Task<List<BookingDto>> GetBackupBookingsAsync()
+        {
+            var query = context.FlatBackup
+                        .OrderBy(f => f.Name)
+                        .Select(f => new BookingDto
+                        {
+                            Id = f.Id,
+                            Name = f.Name,
+                            CheckIn = f.CheckIn,
+                            CheckOut = f.CheckOut,
+                            GuestName = f.GuestName,
+                            GuestPhone = f.GuestPhone,
+                            BookingNumber = f.BookingNumber,
+                        });
+
+            var flats = await query.ToListAsync();
+
+            return flats;
+        }
+
         public async Task<BookingDto> GetBookingAsync(Guid id)
         {
             var query = from f in context.Flat

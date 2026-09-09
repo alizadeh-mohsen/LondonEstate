@@ -20,6 +20,8 @@ namespace LondonEstate.Core.Services
 
         //Booking
         Task<List<BookingDto>> GetBookingsAsync();
+        Task<List<BookingDto>> GetBackupBookingsAsync();
+
         Task<BookingDto> GetBookingAsync(Guid id);
         Task<BookingDto> GetBookingWithListingsAsync(Guid id);
         //Task<FlatDto> GetFlatByOnlineNameAsync(string onlineName);
@@ -34,6 +36,5 @@ namespace LondonEstate.Core.Services
 
 
         Task<int> ImportBookingsAsync(BookingImportDto booking);
-
     }
 }
