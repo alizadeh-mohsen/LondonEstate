@@ -14,7 +14,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Admin/Index">Home</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Panel/Index">Home</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -25,28 +25,28 @@
                         <ul class="navbar-nav flex-grow-1">
                             <!-- Main menu items moved to top-level -->
                             <li class="nav-item">
-                                <a class="nav-link text-white @(Context.Request.Path == "/Admin/Bookings" ? "active" : "")" asp-area="" asp-page="/Admin/Bookings">Bookings</a>
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Bookings" ? "active" : "")" asp-area="" asp-page="/Panel/Bookings">Bookings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white @(Context.Request.Path == "/Admin/Flats/Index" ? "active" : "")" asp-area="" asp-page="/Admin/Flats/Index">Flats</a>
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Flats/Index" ? "active" : "")" asp-area="" asp-page="/Panel/Flats/Index">Flats</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white @(Context.Request.Path == "/Admin/Invoice/Index" ? "active" : "")" asp-area="" asp-page="/Admin/Invoice/Index">Invoice</a>
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Invoice/Index" ? "active" : "")" asp-area="" asp-page="/Panel/Invoice/Index">Invoice</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white @(Context.Request.Path == "/Admin/Agreement/Index" ? "active" : "")" asp-area="" asp-page="/Admin/Agreement/Index">Agreement</a>
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Agreement/Index" ? "active" : "")" asp-area="" asp-page="/Panel/Agreement/Index">Agreement</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white @(Context.Request.Path == "/Admin/Backup/Index" ? "active" : "")" asp-area="" asp-page="/Admin/Backup/Index">Backup</a>
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Backup/Index" ? "active" : "")" asp-area="" asp-page="/Panel/Backup/Index">Backup</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white @(Context.Request.Path == "/Admin/Instructions" ? "active" : "")" asp-area="" asp-page="/Admin/Instructions">Instructions</a>
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Instructions" ? "active" : "")" asp-area="" asp-page="/Panel/Instructions">Instructions</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white @(Context.Request.Path == "/Admin/Greetings" ? "active" : "")" asp-area="" asp-page="/Admin/Greetings/Index">Greetings</a>
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Greetings" ? "active" : "")" asp-area="" asp-page="/Panel/Greetings/Index">Greetings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white @(Context.Request.Path == "/Admin/Reminders" ? "active" : "")" asp-area="" asp-page="/Admin/Reminders/Index">Reminders</a>
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Reminders" ? "active" : "")" asp-area="" asp-page="/Panel/Reminders/Index">Reminders</a>
                             </li>
                         </ul>
                     @* } *@
