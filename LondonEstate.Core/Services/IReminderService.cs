@@ -5,6 +5,7 @@ namespace LondonEstate.Core.Services
     public interface IReminderService
     {
         Task<List<ReminderDto>> GetAllRemindersAsync();
+        Task<List<ReminderDto>> GetTodayRemindersAsync();
         Task<ReminderDto> GetReminderAsync(Guid id);
         Task<ReminderDto> CreateReminderAsync(ReminderDto reminderDto);
         Task<int> UpdateReminderAsync(ReminderDto reminderDto);

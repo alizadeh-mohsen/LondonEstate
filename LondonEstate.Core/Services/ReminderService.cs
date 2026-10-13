@@ -22,6 +22,21 @@ namespace LondonEstate.Core.Services
 
             return mapper.Map<List<ReminderDto>>(reminders);
         }
+        public async Task<List<ReminderDto>> GetTodayRemindersAsync()
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            var reminders = await context.Reminder
+                .Select(r => new Reminder
+                {
+                    Id = r.Id,
+                    Due = r.Due,
+                    Note = r.Note
+                }).Where(r => r.Due == today)
+                .ToListAsync();
+
+            return mapper.Map<List<ReminderDto>>(reminders);
+        }
 
 
         public async Task<ReminderDto> GetReminderAsync(Guid id)

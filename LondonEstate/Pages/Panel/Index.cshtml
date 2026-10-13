@@ -26,38 +26,68 @@
         </div>
     }
 
-    <!-- SEARCH AND IMPORT CARD -->
     <div class="card">
         <div class="card-body">
-            <!-- Import -->
-            <div class="mb-3">
-                <form method="post" asp-page-handler="Upload" enctype="multipart/form-data">
-                    <div class="row g-3">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xlsx,.xls" required />
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="bi bi-cloud-upload me-2"></i>Import Bookings
-                                </button>
+
+            <div class="row">
+
+                <!-- LEFT COLUMN: Import + Search -->
+                <div class="@(Model.TodayReminders.Count > 0 ? "col-md-6" : "col-12")">
+
+                    <!-- Import -->
+                    <div class="mb-3">
+                        <form method="post" asp-page-handler="Upload" enctype="multipart/form-data">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="excelFile" name="excelFile"
+                                               accept=".xlsx,.xls" required />
+                                        <button class="btn btn-danger" type="submit">
+                                            <i class="bi bi-cloud-upload me-2"></i>Import Bookings
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Search -->
+                    <div class="d-flex gap-2 mb-3">
+                        <div class="flex-grow-1">
+                            <input type="text" class="form-control h-100" id="searchInput"
+                                   placeholder="Search by property name or guest name..." />
+                        </div>
+                        <div style="width: 140px;">
+                            <button class="btn btn-secondary w-100 h-100" id="clearSearch" type="button">
+                                <i class="bi bi-x-circle me-2"></i>Clear
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN: Today Reminders -->
+                @if (Model.TodayReminders.Count > 0)
+                {
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="border rounded p-3 bg-danger-subtle">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>Today's Reminders</div>
+                                </div>
+                                <hr class="my-1" />
+                                <ul id="emptyFlatsList" class="mb-0 ps-3">
+                                    @foreach (var item in Model.TodayReminders)
+                                    {
+                                        <li class="mb-1">@item.Note</li>
+                                    }
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <!-- Search -->
-            <div class="d-flex gap-0 mb-3">
-                <div class="col-8">
-                    <input type="text" class="form-control h-100" id="searchInput"
-                           placeholder="Search by property name or guest name..." />
-                </div>
-                <div class="col-4">
-                    <button class="btn btn-secondary w-100 h-100" id="clearSearch" type="button">
-                        <i class="bi bi-x-circle me-2"></i>Clear
-                    </button>
-                </div>
-            </div>
+                }
 
-            <!-- Empty Flats List -->
+            </div>
             <div class="row">
 
                 <!-- Today Flats -->
@@ -113,6 +143,11 @@
             </div>
         </div>
     </div>
+
+
+
+
+
 
 </div>
 

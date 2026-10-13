@@ -8,11 +8,12 @@ using OfficeOpenXml;
 namespace LondonEstate.Pages.Panel
 {
     //[Authorize]
-    public class IndexModel(IFlatService _flatService) : PageModel
+    public class IndexModel(IFlatService _flatService, IReminderService _reminderService) : PageModel
     {
         public IList<BookingDto> Flats { get; set; } = default!;
         public IList<BookingDto> EmptyFlats { get; set; } = default!;
-        //public IList<BookingDto> EmptyTomorrowFlats { get; set; } = default!;
+        public IList<ReminderDto> TodayReminders { get; set; } = default!;
+
 
         [TempData]
         public string? SuccessMessage { get; set; }
@@ -29,6 +30,9 @@ namespace LondonEstate.Pages.Panel
                 Id = f.Id,
                 Name = f.Name
             })];
+
+            TodayReminders = await _reminderService.GetTodayRemindersAsync();
+
         }
 
         public async Task<IActionResult> OnPostUploadAsync(IFormFile? excelFile)
