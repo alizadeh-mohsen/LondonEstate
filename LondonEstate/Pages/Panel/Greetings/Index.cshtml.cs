@@ -123,7 +123,7 @@ namespace LondonEstate.Pages.Panel.Greetings
                 $"*Property:* {location.Replace("\r\n", ", ").Replace("\n", ", ")}" + Environment.NewLine + Environment.NewLine +
                 $"Hi {firstName}," + Environment.NewLine +
                 "Check-in instruction will be sent to you tomorrow. " +
-                "Could you please share your estimated arrival time?" + Environment.NewLine + Environment.NewLine +
+                "Could you please confirm your estimated arrival time?" + Environment.NewLine + Environment.NewLine +
                 $"{warningIcon} *If you drop off your luggage before check-in, please return the keys to the lockbox after " +
                 "leaving, so our cleaner can access the property.*";
 

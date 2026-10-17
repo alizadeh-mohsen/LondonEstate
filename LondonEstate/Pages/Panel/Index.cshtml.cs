@@ -172,5 +172,88 @@ namespace LondonEstate.Pages.Panel
             return RedirectToPage();
         }
 
+        public async Task<IActionResult> OnPostExportFlatsAsync()
+        {
+            try
+            {
+                // Fetch all flats
+                var flats = await _flatService.GetBookingsAsync();
+
+                if (!flats.Any())
+                {
+                    ErrorMessage = "No flats to export.";
+                    return RedirectToPage();
+                }
+
+                // Create Excel package
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Flats");
+
+                    // Set up headers
+                    var headers = new[] { "Flat", "Listing", "Guest", "Check-In", "Check-Out", "Booking Number", "Phone" };
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        worksheet.Cells[1, i + 1].Value = headers[i];
+                        worksheet.Cells[1, i + 1].Style.Font.Bold = true;
+                        worksheet.Cells[1, i + 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(217, 225, 242));
+                    }
+
+                    // Add data rows
+                    int row = 2;
+                    foreach (var flat in flats)
+                    {
+                        bool isEmpty = flat.CheckOut?.Date == DateTime.Today.Date;
+
+                        worksheet.Cells[row, 1].Value = flat.Name ?? "";
+                        worksheet.Cells[row, 2].Value = flat.OnlineName ?? "";
+                        worksheet.Cells[row, 3].Value = flat.GuestName ?? "";
+                        worksheet.Cells[row, 4].Value = flat.CheckIn?.ToString("MMM-dd") ?? "";
+                        worksheet.Cells[row, 5].Value = flat.CheckOut?.ToString("MMM-dd") ?? "";
+                        worksheet.Cells[row, 6].Value = flat.BookingNumber ?? "";
+                        worksheet.Cells[row, 7].Value = flat.GuestPhone ?? "";
+
+                        // Format date columns
+                        if (flat.CheckIn.HasValue)
+                            worksheet.Cells[row, 4].Style.Numberformat.Format = "mmm-dd";
+                        if (flat.CheckOut.HasValue)
+                            worksheet.Cells[row, 5].Style.Numberformat.Format = "mmm-dd";
+
+                        // Highlight empty rows with yellow background
+                        if (isEmpty)
+                        {
+                            for (int col = 1; col <= headers.Length; col++)
+                            {
+
+                                worksheet.Cells[row, col].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[row, col].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(255, 255, 0)); // Yellow
+                                worksheet.Cells[row, col].Style.Font.Bold = true;
+                                if (col > 2)
+                                    worksheet.Cells[row, col].Style.Font.Color.SetColor(System.Drawing.Color.FromArgb(255, 255, 0)); // Yellow
+                            }
+                        }
+
+                        row++;
+                    }
+
+                    // Auto-fit columns
+                    worksheet.Cells[1, 1, row - 1, headers.Length].AutoFitColumns();
+
+                    // Generate file
+                    //var fileName = $"Flats_Report_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.xlsx";
+                    var fileName = $"Flats_Report_{DateTime.Now:MM-dd}.xlsx";
+                    var fileBytes = package.GetAsByteArray();
+
+                    return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"An error occurred while exporting flats: {ex.Message}";
+                return RedirectToPage();
+            }
+        }
+
     }
 }

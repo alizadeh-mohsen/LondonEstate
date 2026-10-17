@@ -125,7 +125,9 @@ namespace LondonEstate.Core.Services
                             CheckIn = f.CheckIn,
                             CheckOut = f.CheckOut,
                             GuestName = f.GuestName,
-                            Listings = f.Listings
+                            GuestPhone = f.GuestPhone,
+                            BookingNumber = f.BookingNumber,
+                            Listings = f.Listings,
                         });
 
             var flats = await query.ToListAsync();
@@ -212,6 +214,7 @@ namespace LondonEstate.Core.Services
                 flat.Open = true;
                 flat.BookingNumber = bookingData.BookingNumber;
                 flat.GuestPhone = bookingData.PhoneNumber;
+                flat.OnlineName = bookingData.PropertyName;
                 return await context.SaveChangesAsync();
             }
             return 0;
@@ -247,7 +250,7 @@ namespace LondonEstate.Core.Services
                 {
                     Id = flat.Id,
                     Name = flat.Name,
-                    //OnlineName = flat.OnlineName,
+                    OnlineName = flat.OnlineName,
                     GuestName = flat.GuestName,
                     CheckIn = flat.CheckIn,
                     CheckOut = flat.CheckOut,
@@ -277,7 +280,7 @@ namespace LondonEstate.Core.Services
                     flat.CheckIn = backup.CheckIn;
                     flat.CheckOut = backup.CheckOut;
                     flat.Name = backup.Name;
-                    //flat.OnlineName = backup.OnlineName;
+                    flat.OnlineName = backup.OnlineName;
 
                     context.Flat.Update(flat);
                 }

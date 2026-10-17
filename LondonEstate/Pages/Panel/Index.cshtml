@@ -76,7 +76,7 @@
                                     <div>Today's Reminders</div>
                                 </div>
                                 <hr class="my-1" />
-                                <ul id="emptyFlatsList" class="mb-0 ps-3">
+                                <ul class="mb-0 ps-3">
                                     @foreach (var item in Model.TodayReminders)
                                     {
                                         <li class="mb-1">@item.Note</li>
@@ -134,6 +134,14 @@
                                 class="btn btn-danger btn"
                                 onclick="return confirm('Are you sure you want to recover from backup? This will overwrite current bookings.');">
                             <i class="bi bi-arrow-counterclockwise me-1"></i>Recover
+                        </button>
+                    </form>
+
+                    <!-- Export Flats -->
+                    <form method="post" asp-page-handler="ExportFlats">
+                        <button type="submit"
+                                class="btn btn-info btn">
+                            <i class="bi bi-file-earmark-spreadsheet me-1"></i>Export to Excel
                         </button>
                     </form>
 

@@ -11,7 +11,7 @@ namespace LondonEstate.Core.Services
         public async Task<List<ReminderDto>> GetAllRemindersAsync()
         {
             var reminders = await context.Reminder
-                .OrderBy(r => r.Due)
+                .OrderByDescending(r => r.Due)
                 .Select(r => new Reminder
                 {
                     Id = r.Id,
