@@ -14,100 +14,44 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Admin/Index">Home</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Panel/Index">Home</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    @if (User.Identity != null && User.Identity.IsAuthenticated)
-                    {
+                  @*   @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    { *@
                         <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item dropdown ">
-                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Properties
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Bookings" ? "active" : "")" asp-area="" asp-page="/Admin/Bookings">Bookings</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Flats" ? "active" : "")" asp-area="" asp-page="/Admin/Flats/Index">Manage</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Vendors" ? "active" : "")" asp-area="" asp-page="/Admin/Vendors/Index">Vendors</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/BillTypes" ? "active" : "")" asp-area="" asp-page="/Admin/BillTypes/Index">BillTypes</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Bills" ? "active" : "")" asp-area="" asp-page="/Admin/Bills/Index">Bills</a>
-                                    </li>
-                                </ul>
+                            <!-- Main menu items moved to top-level -->
+                            @* <li class="nav-item">
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Bookings" ? "active" : "")" asp-area="" asp-page="/Panel/Bookings">Bookings</a>
+                            </li> *@
+                            <li class="nav-item">
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Flats/Index" ? "active" : "")" asp-area="" asp-page="/Panel/Flats/Index">Flats</a>
                             </li>
-                            <li class="nav-item dropdown ">
-                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Invoices
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Invoice" ? "active" : "")" asp-area="" asp-page="/Admin/Invoice/Index">Generate Invoice</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Agreement" ? "active" : "")" asp-area="" asp-page="/Admin/Agreement/Index">Guest Agreement</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/InvoiceReports" ? "active" : "")" asp-area="" asp-page="/Admin/InvoiceReports/Index">Invoice Reports</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/AgreementReports" ? "active" : "")" asp-area="" asp-page="/Admin/AgreementReports/Index">Agreement Reports</a>
-                                    </li>
-                                </ul>
+                            <li class="nav-item">
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Invoice/Index" ? "active" : "")" asp-area="" asp-page="/Panel/Invoice/Index">Invoice</a>
                             </li>
-
-                            <li class="nav-item dropdown ">
-                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Rents
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/RentEstimate" ? "active" : "")" asp-area="" asp-page="/Admin/RentEstimate/Index">Rent estimates</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Rents" ? "active" : "")" asp-area="" asp-page="/Admin/Rents/Index">Rents</a>
-                                    </li>
-
-
-                                </ul>
+                            <li class="nav-item">
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Agreement/Index" ? "active" : "")" asp-area="" asp-page="/Panel/Agreement/Index">Agreement</a>
                             </li>
-                            <li class="nav-item dropdown ">
-                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Admin
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Users" ? "active" : "")" asp-area="" asp-page="/Admin/Users/Index">Users</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Customers" ? "active" : "")" asp-area="" asp-page="/Admin/Customers/Index">Customers</a>
-                                    </li>
-
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/ConfirmEmail" ? "active" : "")" asp-area="" asp-page="/Admin/ConfirmEmail">Confirm Email</a>
-                                    </li>
-
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/ErrorReport" ? "active" : "")" asp-area="" asp-page="/Admin/ErrorReport/Index">Errors</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(Context.Request.Path == "/Admin/Greetings/Index" ? "active" : "")" asp-area="" asp-page="/Admin/Greetings/Index">Greetings</a>
-                                    </li>
-                                </ul>
+                            <li class="nav-item">
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Backup/Index" ? "active" : "")" asp-area="" asp-page="/Panel/Backup/Index">Backup</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Instructions" ? "active" : "")" asp-area="" asp-page="/Panel/Instructions">Instructions</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Greetings" ? "active" : "")" asp-area="" asp-page="/Panel/Greetings/Index">Greetings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white @(Context.Request.Path == "/Panel/Reminders" ? "active" : "")" asp-area="" asp-page="/Panel/Reminders/Index">Reminders</a>
                             </li>
                         </ul>
-                    }
+                    @* } *@
 
-                    <partial name="_LoginPartial" />
+                    @* <partial name="_LoginPartial" /> *@
                 </div>
             </div>
         </nav>
@@ -157,13 +101,13 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-            var toastList = toastElList.map(function(toastEl) {
-                return new bootstrap.Toast(toastEl);
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+                var toastList = toastElList.map(function(toastEl) {
+                    return new bootstrap.Toast(toastEl);
+                });
+                toastList.forEach(toast => toast.show());
             });
-            toastList.forEach(toast => toast.show());
-        });
     </script>
 
 </body>

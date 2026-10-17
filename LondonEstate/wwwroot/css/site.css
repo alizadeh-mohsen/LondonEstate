@@ -35,10 +35,6 @@ body {
     .card-title {
         font-size: 1rem;
     }
-    #bookingTable td:nth-child(4),
-    #bookingTable th:nth-child(4) {
-        display: none; /* hide actions column */
-    }
 
     #bookingTable td {
         padding: .4rem .5rem;

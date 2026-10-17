@@ -1,0 +1,261 @@
+﻿@page
+@model LondonEstate.Pages.Panel.Greetings.IndexModel
+@{
+    ViewData["Title"] = "Greetings";
+}
+
+<div class="container-fluid py-4">
+    
+
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @Model.SuccessMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @Model.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Import Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Import Greetings</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" asp-page-handler="Upload" enctype="multipart/form-data">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="file" class="form-control" id="excelFile" name="excelFile"
+                                   accept=".xlsx,.xls" required />
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-cloud-upload me-2"></i>Import Greetings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+               
+            </form>
+        </div>
+    </div>
+
+    <!-- Greetings Grid -->
+    @if (Model.Greetings.Any())
+    {
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Imported Greetings (@Model.Greetings.Count)</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                               
+                                <th>Guest</th>
+                                <th>Flat</th>
+                                <th>Booking number</th>
+                                <th>Action</th>
+                                <th>Fail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var greeting in Model.Greetings)
+                            {
+                                <tr>
+                                    <td>@greeting.BookerName</td>
+                                    <td>@greeting.Location</td>
+                                    <td>@greeting.ReservationNo</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-success send-whatsapp"
+                                                data-message="@greeting.WhatsAppMessage"
+                                                data-phone="@greeting.Phone">
+                                            <i class="bi bi-whatsapp me-1"></i>Send
+                                        </button>
+                                    </td>
+                                    <td><input type="checkbox" /></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Custom Message Generator -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Generate Custom Message</h5>
+        </div>
+        <div class="card-body">
+            <form id="messageGeneratorForm" onsubmit="return false;">
+                <!-- Parse from Template Section -->
+                
+                <div class="mb-3">
+                    <label for="bookingTemplate" class="form-label">Paste Booking Template</label>
+                    <textarea class="form-control" id="bookingTemplate" rows="8" oninput="parseTemplate()"></textarea>
+                    <button type="button" class="btn btn-primary mt-2" onclick="parseTemplate()">
+                        <i class="bi bi-magic me-2"></i>Generate Message
+                    </button>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="generatedMessage" class="form-label">Generated Message</label>
+                    <textarea class="form-control" id="generatedMessage" rows="10" readonly></textarea>
+                </div>
+
+                <button type="button" class="btn btn-success" onclick="copyToClipboard()">
+                    <i class="bi bi-clipboard me-2"></i>Copy to Clipboard
+                </button>
+                <button type="button" class="btn btn-info" onclick="openWhatsApp()">
+                    <i class="bi bi-whatsapp me-2"></i>Send on WhatsApp
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function formatDate(dateString) {
+            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            return new Date(dateString + 'T00:00:00').toLocaleDateString('en-GB', options);
+        }
+
+        function parseTemplate() {
+            const template = document.getElementById('bookingTemplate').value;
+
+            if (!template) {
+                alert('Please paste the booking template first.');
+                return;
+            }
+
+            const checkInMatch = template.match(/Check-in\s*\n\s*([A-Za-z]{3})\s+(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})/);
+            const checkOutMatch = template.match(/Check-out\s*\n\s*([A-Za-z]{3})\s+(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})/);
+            const guestMatch = template.match(/Guest name:\s*\n\s*([^\n]+?)\s*(?:Genius|cz|\n)/);
+            const phoneMatch = template.match(/\+\d[\d\s\-()]{7,}/);
+            const bookingMatch = template.match(/Booking number:\s*\n\s*(\d+)/);
+
+            if (!checkInMatch ) {
+                alert('Check-in date not found.');
+                return;
+            }
+            if (!checkOutMatch ) {
+                alert('Check-out date not found.');
+                return;
+            }
+            if (!guestMatch ) {
+                alert('Guest name not found.');
+                return;
+            }
+            if (!phoneMatch ) {
+                alert('Phone number not found.');
+                return;
+            }
+            if (!bookingMatch ) {
+                alert('Booking number not found.');
+                return;
+            }
+           
+            // Convert date strings to YYYY-MM-DD format
+            const months = { 'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
+                           'Jul': '07', 'Aug': '08', 'Sept': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12' };
+            
+            const checkInDate = `${checkInMatch[4]}-${months[checkInMatch[3]]}-${String(checkInMatch[2]).padStart(2, '0')}`;
+            const checkOutDate = `${checkOutMatch[4]}-${months[checkOutMatch[3]]}-${String(checkOutMatch[2]).padStart(2, '0')}`;
+            const guestName = guestMatch[1].trim();
+            const phoneNumber = phoneMatch[0].trim();
+            const bookingNumber = bookingMatch[1];
+
+            document.getElementById('bookingTemplate').value = '';
+
+            const formattedCheckIn = formatDate(checkInDate);
+            const formattedCheckOut = formatDate(checkOutDate);
+            const firstName = guestName.split(' ')[0];
+            const propertyName = '###';
+            const message =
+                `Booking.com
+        *Reservation No:* ${bookingNumber}
+        *Stay:* ${formattedCheckIn} - ${formattedCheckOut}
+        *Check-in:* 3 PM
+        *Luggage drop off:* From 11 AM
+        *Property:* ${propertyName}, Greater London, United Kingdom
+
+        Hi ${firstName}, I am Nima, your host for booking in London.
+        Check-in instruction will be sent to you tomorrow. Could you please confirm your estimated arrival time?
+
+        ⚠️ *If you drop off your luggage before check-in, please return the keys to the lockbox after leaving, so our cleaner can access the property.*`;
+
+            document.getElementById('generatedMessage').value = message;
+        }
+
+        function copyToClipboard() {
+            const message = document.getElementById('generatedMessage').value;
+            if (!message) {
+                alert('Please generate a message first.');
+                return;
+            }
+
+            navigator.clipboard.writeText(message).then(() => {
+                const button = document.querySelector('button[onclick="copyToClipboard()"]');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="bi bi-check me-2"></i>Copied!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            }).catch(() => {
+                alert('Failed to copy message. Please try again.');
+            });
+        }
+
+        function openWhatsApp() {
+            const message = document.getElementById('generatedMessage').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+
+            if (!message) {
+                alert('Please generate a message first.');
+                return;
+            }
+
+            if (!phoneNumber) {
+                alert('Please enter a phone number.');
+                return;
+            }
+
+            // Clean phone number - remove spaces, dashes, and plus sign
+            let cleanPhone = phoneNumber.replace(/[\s\-\+]/g, '');
+
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Grid row button handlers (scoped)
+        document.querySelectorAll('.send-whatsapp').forEach(button => {
+            button.addEventListener('click', function () {
+                const message = this.getAttribute('data-message') || '';
+                const phone = (this.getAttribute('data-phone') || '').trim();
+
+                if (!phone) {
+                    alert('Phone number not found.');
+                    return;
+                }
+
+                const cleanPhone = phone.replace(/\D/g, '');
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
+            });
+        });
+    </script>
+}

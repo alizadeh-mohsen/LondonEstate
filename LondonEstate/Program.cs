@@ -1,10 +1,7 @@
-using LondonEstate.Data;
-using LondonEstate.Services;
-using LondonEstate.Settings;
-using LondonEstate.Utils.Types;
+using LondonEstate.Core.Data;
+using LondonEstate.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 using QuestPDF.Infrastructure;
 using Serilog;
@@ -34,22 +31,14 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Add session configuration for 8-hour timeout
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromHours(8);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
 
 builder.Services.AddRazorPages();
 
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.Configure<UploadSettings>(builder.Configuration.GetSection("UploadSettings"));
-builder.Services.AddScoped(provider => provider.GetRequiredService<IOptions<UploadSettings>>().Value);
 
-builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
-builder.Services.AddScoped<IEstimateRequestService, EstimateRequestService>();
-builder.Services.AddScoped<ILogError, LogError>();
+// Register Flat service for dependency injection
+builder.Services.AddScoped<IFlatService, FlatService>();
+builder.Services.AddScoped<IReminderService, ReminderService>();
+
 
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
@@ -83,7 +72,7 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 // Add session middleware before routing
-app.UseSession();
+//app.UseSession();
 
 app.UseRouting();
 

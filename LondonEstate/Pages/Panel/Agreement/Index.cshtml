@@ -1,0 +1,132 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Guest Agreement Generator";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="mb-0">Guest Agreement Generator</h2>
+                    
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @Model.Message
+                        </div>
+                    }
+
+                    <form method="post">
+
+                        <div class="row">
+                            <div class="mb-2">
+                                    <strong>Accommodation Address:</strong>
+                                <select class="form-select"
+                                        asp-items="@(new SelectList(Model.AddressList))">
+                                  
+                                </select>
+                            </div>
+
+                            <div class="mb-2">
+                                <label for="AccommodationAddress" class="form-label">
+                                    <strong>Accommodation Address:</strong>
+                                </label>
+
+                                <input list="AddressOptions"
+                                       class="form-control"
+                                       id="AccommodationAddress"
+                                       asp-for="AgreementViewModel.AccommodationAddress"
+                                       required />
+
+                                <datalist id="AddressOptions">
+                                    @foreach (var address in Model.AddressList)
+                                    {
+                                        <option value="@address"></option>
+                                    }
+                                </datalist>
+
+                                <span asp-validation-for="AgreementViewModel.AccommodationAddress" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="col-md-4 mb-2">
+                                <label for="CheckInDate" class="form-label">
+                                    <strong>   Check-in Date:</strong>
+                                </label>
+                                <input type="date" 
+                                       class="form-control" 
+                                       id="CheckInDate" 
+                                       asp-for="AgreementViewModel.CheckInDate" 
+                                       required />
+                            </div>
+
+                            <div class="col-md-4 mb-2">
+                                <label for="CheckOutDate" class="form-label">
+                                    <strong>  Check-out Date:</strong>
+                                </label>
+                                <input type="date" 
+                                       class="form-control" 
+                                       id="CheckOutDate" 
+                                       asp-for="AgreementViewModel.CheckOutDate" 
+                                       required />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label for="Deposit" class="form-label">
+                                    <strong>Security Deposit (£):</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="Deposit"
+                                       asp-for="AgreementViewModel.Deposit"
+                                       @* placeholder="e.g., 100"  *@
+                                       required />
+                            </div> <div class="col-md-6 mb-2">
+                                <label for="Rent" class="form-label">
+                                    <strong> Rent (£):</strong>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="Rent"
+                                       asp-for="AgreementViewModel.Rent"
+                                       @* placeholder="e.g., 250.00"  *@
+                                       required />
+                            </div>
+
+
+                        </div>
+
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Guest & Host Information</h5> *@
+
+                        <div class="mb-2">
+                            <label for="GuestName" class="form-label">
+                                <strong> Guest Name:</strong>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="GuestName"
+                                   asp-for="AgreementViewModel.GuestName"
+                                   @* placeholder="e.g., John Smith"  *@
+                                   required />
+                        </div>
+                   
+                     
+
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-file-earmark-pdf"></i> Generate PDF Agreement
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Guest Agreement Generator";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="mb-0">Invoice Generator</h2>
+
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @Model.Message
+                        </div>
+                    }
+
+                    <form method="post">
+
+
+                        
+
+
+
+
+                        <div class="row">
+                           
+                        <div class="mb-2">
+                            <label for="Property" class="form-label">
+                                <strong>Property:</strong>
+                            </label>
+
+                            <select class="form-select"
+                                    id="Property"
+                                    asp-for="InvoiceViewModel.Property"
+                                    asp-items="@(new SelectList(Model.AddressList))"
+                                    required>
+                                <option value="">-- Select Address --</option>
+                            </select>
+                            <span asp-validation-for="InvoiceViewModel.Property" class="text-danger"></span>
+                        </div>
+                            <div class="col-md-4 mb-2">
+                                <label for="CheckInDate" class="form-label">
+                                    <strong>   Check-in Date:</strong>
+                                </label>
+                                <input type="date"
+                                       class="form-control"
+                                       id="CheckInDate"
+                                       asp-for="InvoiceViewModel.CheckInDate"
+                                       required />
+                            </div>
+
+                            <div class="col-md-4 mb-2">
+                                <label for="CheckOutDate" class="form-label">
+                                    <strong>  Check-out Date:</strong>
+                                </label>
+                                <input type="date"
+                                       class="form-control"
+                                       id="CheckOutDate"
+                                       asp-for="InvoiceViewModel.CheckOutDate"
+                                       required />
+                            </div>
+                        </div>
+
+
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Payment Details</h5> *@
+
+                        <div class="col-md-6 mb-2">
+                            <label for="IssuedTo" class="form-label">
+                                <strong>Issued To:</strong>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="IssuedTo"
+                                   asp-for="InvoiceViewModel.IssuedTo"
+                                   @* placeholder="e.g., 12-34-56"  *@
+                                   required />
+                        </div>
+
+                     
+                  
+                        <div class="col-md-6 mb-2">
+                            <label for="AmountPaid" class="form-label">
+                                <strong>Amount Paid (£):</strong>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="AmountPaid"
+                                   asp-for="InvoiceViewModel.AmountPaid"
+                                   @* placeholder="e.g., 100"  *@
+                                   required />
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <label for="PaymentDate" class="form-label">
+                                    <strong>  Payment Date:</strong>
+                                </label>
+                                <input type="date"
+                                       class="form-control"
+                                       id="PaymentDate"
+                                       asp-for="InvoiceViewModel.PaymentDate"
+                                       required />
+                            </div>
+
+                            
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="ReferenceNumber" class="form-label">
+                                <strong>Reference Number:</strong>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="ReferenceNumber"
+                                   asp-for="InvoiceViewModel.ReferenceNumber"
+                                   @* placeholder="e.g., 12345678"  *@
+                                   required />
+                        </div>
+
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Guest & Host Information</h5> *@
+
+
+
+
+                        @* <h5 class="border-bottom pb-2 mb-2 mt-4">Dates</h5> *@
+
+                        <input hidden="hidden" asp-for="InvoiceViewModel.IssuedBy"/>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-file-earmark-pdf"></i> Generate PDF Invoice
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

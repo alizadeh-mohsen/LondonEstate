@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LondonEstate.MAUI.Pages.SettingsPage"
+             Title="Settings">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+
+            <!-- Account Section -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Account" FontSize="18" FontAttributes="Bold" />
+
+                <Button 
+                    Text="Logout"
+                    BackgroundColor="#D32F2F"
+                    TextColor="White"
+                    Command="{Binding LogoutCommand}"
+                    Padding="20,15"
+                    CornerRadius="8" />
+            </VerticalStackLayout>
+
+            <!-- About Section -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="About" FontSize="18" FontAttributes="Bold" />
+
+                <!-- Use Border to get Background + CornerRadius -->
+                <Border Background="{AppThemeBinding Light=#F5F5F5, Dark=#2A2A2A}" Padding="15">
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="London Estate" FontSize="16" FontAttributes="Bold" />
+                        <Label Text="Version 1.0.0" FontSize="14" />
+                        <Label Text="© 2024 London Estate" FontSize="12" Opacity="0.7" />
+                    </VerticalStackLayout>
+                </Border>
+         </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
