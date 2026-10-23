@@ -204,7 +204,7 @@ namespace LondonEstate.Pages.Panel
                     int row = 2;
                     foreach (var flat in flats)
                     {
-                        bool isEmpty = flat.CheckOut?.Date == DateTime.Today.Date;
+                        bool isEmpty = flat.CheckOut?.Date <= DateTime.Today.Date;
 
                         worksheet.Cells[row, 1].Value = flat.Name ?? "";
                         worksheet.Cells[row, 2].Value = flat.OnlineName ?? "";

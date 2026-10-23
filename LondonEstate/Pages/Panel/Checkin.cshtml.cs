@@ -61,7 +61,7 @@ namespace LondonEstate.Pages.Panel
                 }
             }
 
-            return RedirectToPage("./bookings");
+            return RedirectToPage("./Index");
         }
 
         // Handler to move a booking from the current flat to another flat
@@ -113,7 +113,7 @@ namespace LondonEstate.Pages.Panel
 
             // Optionally keep source booking as-is. If you want to clear source, implement here.
 
-            return RedirectToPage("./bookings");
+            return RedirectToPage("./Index");
 
         }
 
