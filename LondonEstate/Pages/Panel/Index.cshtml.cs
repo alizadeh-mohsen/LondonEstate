@@ -191,7 +191,7 @@ namespace LondonEstate.Pages.Panel
                     var worksheet = package.Workbook.Worksheets.Add("Flats");
 
                     // Set up headers
-                    var headers = new[] { "Flat", "Listing", "Guest", "Check-In", "Check-Out", "Booking Number", "Phone" };
+                    var headers = new[] { "Flat", "Listing", "Guest", "Check-In", "Check-Out", "Booking Number", "Phone", "Tomorrow" };
                     for (int i = 0; i < headers.Length; i++)
                     {
                         worksheet.Cells[1, i + 1].Value = headers[i];
@@ -205,6 +205,7 @@ namespace LondonEstate.Pages.Panel
                     foreach (var flat in flats)
                     {
                         bool isEmpty = flat.CheckOut?.Date <= DateTime.Today.Date;
+                        bool isEmptyTomorrow = flat.CheckOut?.Date == DateTime.Today.Date.AddDays(1);
 
                         worksheet.Cells[row, 1].Value = flat.Name ?? "";
                         worksheet.Cells[row, 2].Value = flat.OnlineName ?? "";
@@ -213,6 +214,7 @@ namespace LondonEstate.Pages.Panel
                         worksheet.Cells[row, 5].Value = flat.CheckOut?.ToString("MMM-dd") ?? "";
                         worksheet.Cells[row, 6].Value = flat.BookingNumber ?? "";
                         worksheet.Cells[row, 7].Value = flat.GuestPhone ?? "";
+                        worksheet.Cells[row, 8].Value = isEmptyTomorrow ? "X" : "";
 
                         // Format date columns
                         if (flat.CheckIn.HasValue)
@@ -221,17 +223,18 @@ namespace LondonEstate.Pages.Panel
                             worksheet.Cells[row, 5].Style.Numberformat.Format = "mmm-dd";
 
                         // Highlight empty rows with yellow background
+
                         if (isEmpty)
                         {
                             for (int col = 1; col <= headers.Length; col++)
                             {
-
                                 worksheet.Cells[row, col].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[row, col].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(255, 255, 0)); // Yellow
+                                worksheet.Cells[row, col].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGreen); // Yellow
                                 worksheet.Cells[row, col].Style.Font.Bold = true;
-                                if (col > 2)
-                                    worksheet.Cells[row, col].Style.Font.Color.SetColor(System.Drawing.Color.FromArgb(255, 255, 0)); // Yellow
+                                //if (col > 2)
+                                //    worksheet.Cells[row, col].Style.Font.Color.SetColor(System.Drawing.Color.FromArgb(255, 255, 0)); // Yellow
                             }
+
                         }
 
                         row++;
