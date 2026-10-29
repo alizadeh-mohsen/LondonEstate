@@ -5,7 +5,7 @@
 }
 
 <div class="container-fluid py-4">
-    
+
 
     @if (!string.IsNullOrEmpty(Model.SuccessMessage))
     {
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                 </div>
-               
+
             </form>
         </div>
     </div>
@@ -58,7 +58,7 @@
                     <table class="table table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                               
+
                                 <th>Guest</th>
                                 <th>Flat</th>
                                 <th>Booking number</th>
@@ -98,7 +98,7 @@
         <div class="card-body">
             <form id="messageGeneratorForm" onsubmit="return false;">
                 <!-- Parse from Template Section -->
-                
+
                 <div class="mb-3">
                     <label for="bookingTemplate" class="form-label">Paste Booking Template</label>
                     <textarea class="form-control" id="bookingTemplate" rows="8" oninput="parseTemplate()"></textarea>
@@ -145,31 +145,33 @@
             const phoneMatch = template.match(/\+\d[\d\s\-()]{7,}/);
             const bookingMatch = template.match(/Booking number:\s*\n\s*(\d+)/);
 
-            if (!checkInMatch ) {
+            if (!checkInMatch) {
                 alert('Check-in date not found.');
                 return;
             }
-            if (!checkOutMatch ) {
+            if (!checkOutMatch) {
                 alert('Check-out date not found.');
                 return;
             }
-            if (!guestMatch ) {
+            if (!guestMatch) {
                 alert('Guest name not found.');
                 return;
             }
-            if (!phoneMatch ) {
+            if (!phoneMatch) {
                 alert('Phone number not found.');
                 return;
             }
-            if (!bookingMatch ) {
+            if (!bookingMatch) {
                 alert('Booking number not found.');
                 return;
             }
-           
+
             // Convert date strings to YYYY-MM-DD format
-            const months = { 'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
-                           'Jul': '07', 'Aug': '08', 'Sept': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12' };
-            
+            const months = {
+                'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
+                'Jul': '07', 'Aug': '08', 'Sept': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
+            };
+
             const checkInDate = `${checkInMatch[4]}-${months[checkInMatch[3]]}-${String(checkInMatch[2]).padStart(2, '0')}`;
             const checkOutDate = `${checkOutMatch[4]}-${months[checkOutMatch[3]]}-${String(checkOutMatch[2]).padStart(2, '0')}`;
             const guestName = guestMatch[1].trim();
@@ -183,17 +185,25 @@
             const firstName = guestName.split(' ')[0];
             const propertyName = '###';
             const message =
-                `Booking.com
-        *Reservation No:* ${bookingNumber}
-        *Stay:* ${formattedCheckIn} - ${formattedCheckOut}
-        *Check-in:* 3 PM
-        *Luggage drop off:* From 11 AM
-        *Property:* ${propertyName}, Greater London, United Kingdom
+                `Booking.com reservation details:
 
-        Hi ${firstName}, I am Nima, your host for booking in London.
-        Check-in instruction will be sent to you tomorrow. Could you please confirm your estimated arrival time?
+                *Reservation No:* ${bookingNumber}
+                *Stay:* ${formattedCheckIn} - ${formattedCheckOut}
+                *Check-in:* 3 PM
+                *Luggage drop off:* From 11 AM
+                *Property:* ${propertyName}, Greater London, United Kingdom
 
-        ⚠️ *If you drop off your luggage before check-in, please return the keys to the lockbox after leaving, so our cleaner can access the property.*`;
+                Hi ${firstName}, I am Nima, your host for booking in London.
+                Check-in instruction will be sent to you tomorrow. Could you please confirm your estimated arrival time?
+
+                ⚠️ If you drop off your luggage before check-in, please *return the keys to the lockbox after leaving*, so our cleaner can access the property.
+
+                ⚠️ *House Rules:*
+                    No Smoking
+                    No Parties/events
+                    Quiet hours 20:00-8:00
+                    Charge applies for pets`;
+
 
             document.getElementById('generatedMessage').value = message;
         }

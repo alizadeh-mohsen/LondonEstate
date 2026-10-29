@@ -115,7 +115,7 @@ namespace LondonEstate.Pages.Panel.Greetings
             string firstName = bookerName?.Split(' ')[0] ?? "Guest";
             string warningIcon = "⚠️ ";
             string message =
-                $"Booking.com" + Environment.NewLine +
+                $"Booking.com reservation details:" + Environment.NewLine + Environment.NewLine +
                 $"*Reservation No:* {reservationNo}" + Environment.NewLine +
                 $"*Stay:* {arrival:dd MMM yyyy} - {departure:dd MMM yyyy} " + Environment.NewLine +
                 $"*Check-in:* 3 PM" + Environment.NewLine +
@@ -124,8 +124,13 @@ namespace LondonEstate.Pages.Panel.Greetings
                 $"Hi {firstName}," + Environment.NewLine +
                 "Check-in instruction will be sent to you tomorrow. " +
                 "Could you please confirm your estimated arrival time?" + Environment.NewLine + Environment.NewLine +
-                $"{warningIcon} *If you drop off your luggage before check-in, please return the keys to the lockbox after " +
-                "leaving, so our cleaner can access the property.*";
+                $"{warningIcon} If you drop off your luggage before check-in, please *return the keys to the lockbox after " +
+                "leaving*, so our cleaner can access the property." + Environment.NewLine + Environment.NewLine +
+                $"{warningIcon} *House Rules*" + Environment.NewLine +
+                "No Smoking" + Environment.NewLine +
+                "No Parties/events" + Environment.NewLine +
+                "Quiet hours 20:00 to 8:00" + Environment.NewLine +
+                "Charge applies for pets";
 
             return message;
         }

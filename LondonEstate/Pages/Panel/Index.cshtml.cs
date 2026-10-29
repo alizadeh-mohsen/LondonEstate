@@ -207,6 +207,7 @@ namespace LondonEstate.Pages.Panel
                         bool isEmpty = flat.CheckOut?.Date <= DateTime.Today.Date;
                         bool isEmptyTomorrow = flat.CheckOut?.Date == DateTime.Today.Date.AddDays(1);
 
+                        //worksheet.Cells[row, 1].Value = isEmpty ? "X" : "";
                         worksheet.Cells[row, 1].Value = flat.Name ?? "";
                         worksheet.Cells[row, 2].Value = flat.OnlineName ?? "";
                         worksheet.Cells[row, 3].Value = flat.GuestName ?? "";
@@ -214,28 +215,45 @@ namespace LondonEstate.Pages.Panel
                         worksheet.Cells[row, 5].Value = flat.CheckOut?.ToString("MMM-dd") ?? "";
                         worksheet.Cells[row, 6].Value = flat.BookingNumber ?? "";
                         worksheet.Cells[row, 7].Value = flat.GuestPhone ?? "";
-                        worksheet.Cells[row, 8].Value = isEmptyTomorrow ? "X" : "";
+                        if (isEmpty)
+                        {
+                            worksheet.Cells[row, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            worksheet.Cells[row, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGreen);
+                        }
+                        if (isEmptyTomorrow)
+                        {
+                            worksheet.Cells[row, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            worksheet.Cells[row, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightSalmon);
+                        }
+
 
                         // Format date columns
                         if (flat.CheckIn.HasValue)
-                            worksheet.Cells[row, 4].Style.Numberformat.Format = "mmm-dd";
-                        if (flat.CheckOut.HasValue)
                             worksheet.Cells[row, 5].Style.Numberformat.Format = "mmm-dd";
+                        if (flat.CheckOut.HasValue)
+                            worksheet.Cells[row, 6].Style.Numberformat.Format = "mmm-dd";
 
                         // Highlight empty rows with yellow background
 
-                        if (isEmpty)
-                        {
-                            for (int col = 1; col <= headers.Length; col++)
-                            {
-                                worksheet.Cells[row, col].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[row, col].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGreen); // Yellow
-                                worksheet.Cells[row, col].Style.Font.Bold = true;
-                                //if (col > 2)
-                                //    worksheet.Cells[row, col].Style.Font.Color.SetColor(System.Drawing.Color.FromArgb(255, 255, 0)); // Yellow
-                            }
+                        //if (isEmpty)
+                        //{
+                        //    for (int col = 1; col <= headers.Length; col++)
+                        //    {
+                        //        worksheet.Cells[row, col].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        //        worksheet.Cells[row, col].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray); // Yellow
 
-                        }
+                        //        //if (col > 2)
+                        //        //    worksheet.Cells[row, col].Style.Font.Color.SetColor(System.Drawing.Color.FromArgb(255, 255, 0)); // Yellow
+                        //    }
+
+                        //}
+                        //if (isEmptyTomorrow)
+                        //{
+                        //    for (int col = 1; col <= headers.Length; col++)
+                        //    {
+                        //        worksheet.Cells[row, col].Style.Font.Bold = true;
+                        //    }
+                        //}
 
                         row++;
                     }
