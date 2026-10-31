@@ -191,7 +191,7 @@ namespace LondonEstate.Pages.Panel
                     var worksheet = package.Workbook.Worksheets.Add("Flats");
 
                     // Set up headers
-                    var headers = new[] { "Flat", "Listing", "Guest", "Check-In", "Check-Out", "Booking Number", "Phone", "Tomorrow" };
+                    var headers = new[] { "Flat", "Listing", "Guest", "Check-In", "Check-Out", "Booking Number", "Phone" };
                     for (int i = 0; i < headers.Length; i++)
                     {
                         worksheet.Cells[1, i + 1].Value = headers[i];
@@ -214,7 +214,7 @@ namespace LondonEstate.Pages.Panel
                         worksheet.Cells[row, 4].Value = flat.CheckIn?.ToString("MMM-dd") ?? "";
                         worksheet.Cells[row, 5].Value = flat.CheckOut?.ToString("MMM-dd") ?? "";
                         worksheet.Cells[row, 6].Value = flat.BookingNumber ?? "";
-                        worksheet.Cells[row, 7].Value = flat.GuestPhone ?? "";
+                        worksheet.Cells[row, 7].Value = flat.GuestPhone?.Replace("+", "") ?? "";
                         if (isEmpty)
                         {
                             worksheet.Cells[row, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;

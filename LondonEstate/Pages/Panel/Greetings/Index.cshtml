@@ -184,25 +184,27 @@
             const formattedCheckOut = formatDate(checkOutDate);
             const firstName = guestName.split(' ')[0];
             const propertyName = '###';
-            const message =
-                `Booking.com reservation details:
+            const message =`Booking.com reservation details:
 
-                *Reservation No:* ${bookingNumber}
-                *Stay:* ${formattedCheckIn} - ${formattedCheckOut}
-                *Check-in:* 3 PM
-                *Luggage drop off:* From 11 AM
-                *Property:* ${propertyName}, Greater London, United Kingdom
+            *Reservation No:* ${bookingNumber}
+            *Stay:* ${formattedCheckIn} - ${formattedCheckOut}
+            *Check-in:* 3 PM
+            *Luggage drop off:* From 11 AM
+            *Property:* ${propertyName}, Greater London, United Kingdom
 
-                Hi ${firstName}, I am Nima, your host for booking in London.
-                Check-in instruction will be sent to you tomorrow. Could you please confirm your estimated arrival time?
+            Hi ${firstName}, I am Nima, your host for booking in London.
+            Check-in instruction will be sent to you tomorrow. 
+            Could you please confirm your estimated arrival time?
 
-                ⚠️ If you drop off your luggage before check-in, please *return the keys to the lockbox after leaving*, so our cleaner can access the property.
+            ⚠️ If you drop off your luggage before check-in, please *return the keys to the lockbox after leaving*, so our cleaner can access the property.
 
-                ⚠️ *House Rules:*
-                    No Smoking
-                    No Parties/events
-                    Quiet hours 20:00-8:00
-                    Charge applies for pets`;
+            ⚠️ *House Rules:*
+             No Smoking
+             No Parties/events
+             Quiet hours 20:00-8:00
+                     Charge applies for pets`.split('\n')
+                .map(line => line.trim())
+                .join('\n');;
 
 
             document.getElementById('generatedMessage').value = message;
